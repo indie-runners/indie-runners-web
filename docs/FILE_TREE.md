@@ -122,8 +122,9 @@ indie-runners-web/
 ├── .env.example           # Documents all required environment variables
 ├── .gitattributes         # tickets/BACKLOG.csv eol=lf: the board stays LF whatever editor writes it (W-015)
 ├── .gitignore             # Includes cloud-sql-proxy: untracked since W-045, scripts/dev.sh downloads it on demand
-├── Dockerfile             # python:3.11-slim, installs requirements, runs uvicorn on $PORT
+├── Dockerfile             # python:3.11-slim, installs requirements.lock, runs uvicorn on $PORT
 ├── LICENSE                # AGPL-3.0, verbatim GNU text (W-059)
 ├── README.md              # What the service is, how the repo is built, copyright and license line
-└── requirements.txt       # Python dependencies
+├── requirements.lock      # exact pins, pip freeze of the serving image (W-112)
+└── requirements.txt       # direct Python dependencies
 ```
