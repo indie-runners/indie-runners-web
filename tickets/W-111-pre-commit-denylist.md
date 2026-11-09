@@ -85,3 +85,21 @@ that contains a term known to be private.
   protection only covers secret formats, not names (audit step 10).
 - **Scanning history.** The cleaned copy starts with fresh history, and
   the audit's step 7 scan covers it.
+
+## Verdict
+
+**VERDICT: APPROVED WITH FOLLOW-UPS — W-114** — 2026-11-09. Acceptance
+1–8 met. On top of the developer's cases, the PM ran copies of the scripts
+in a throwaway repo: `commit -a` and `commit <path>` are refused; a
+conflicted merge concluded with `git commit` is refused. A term in a
+filename passes, and so does a term file of blank lines (W-114). No
+ROUTED_CHECKS entry: `deploy: none`, and nothing in production changes.
+
+**Not verified:** a clean `git merge` doesn't run the check (no
+`pre-merge-commit`, W-114 acceptance 3). Locally the only merge is
+`origin/master`, which is already public. The seed terms were checked
+against `core.*` slug columns only, not event or race name columns. A
+name match would only show up as a false refusal, which `--no-verify`
+gets past; it can't leak anything. Until this merges and the main checkout
+pulls, `core.hooksPath` points at a directory `master` doesn't have, so
+commits there are not checked.
