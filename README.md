@@ -15,3 +15,7 @@ Licensed under the GNU Affero General Public License v3.0; see [LICENSE](LICENSE
 The Instagram, Strava and GitHub marks in `static/icons/` (`instagram.svg`, `strava.svg`, `github.svg`) belong to their owners and are not under this license. `static/maps/europe.json` is cropped from MapSVG's world map, licensed CC BY 4.0.
 
 The GCP project, Cloud SQL instance, bucket and service account names in this repo are public on purpose; access is controlled by IAM.
+
+## Notes
+
+This repo started with fresh history on 2026-11-09; earlier history is private. Commit hashes cited in docs/ refer to it.
