@@ -4,6 +4,34 @@ All notable changes to the Indie Runners Web project will be documented in this 
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.9.74] — 2026-11-09
+
+### Added — a git hook that refuses private terms (W-111)
+
+- **Wrong belief: reading your own diff is enough to keep private names
+  out of a public repo.** Cost: the pre-publication audit found crew
+  slugs, user ids and a real name in tracked files, caught only by a
+  one-off grep. Once pushed, a deleted commit still counts as published.
+  **New belief:** a fixed list of known private terms should be checked
+  on every commit, before the push. CI can't do that: it runs after the
+  push, so `.githooks/` does it locally.
+- **What it checks:** added lines of the staged diff and the commit
+  message. Terms come from an untracked file in the main checkout's
+  `exports/`, found from worktrees through `--git-common-dir`. With no
+  term file it refuses. Seeded from the audit's must-be-zero list,
+  without the surname that is in `LICENSE`. No seed term matches a
+  `core.*` event or race slug (query and results in `evidence W-111`).
+- **Verified** from the `irw-W111` worktree with throwaway commits on a
+  local scratch branch, deleted afterwards and never pushed. Refused: a
+  term in a file (mixed case, mid-line, reported as file and line), a
+  term in the message only (also on a `#` line, which `-m` keeps), a term
+  on a line after a `++ ` line, and any
+  commit with the term file moved away. Passed: a clean commit, a commit
+  removing a term line, an editor-mode commit, `commit -v` whose verbose
+  diff showed a removed term, and `--no-verify`. From the main checkout,
+  the term file resolves the same way. No `app/` code changed, so there is
+  no page to check in either tier. Details in `evidence W-111`.
+
 ## [1.9.73] — 2026-11-09
 
 ### Removed — the beta host's sign-in callback and domain mapping (W-018)
