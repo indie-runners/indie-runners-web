@@ -59,6 +59,7 @@ carries a migration, and why this one if a higher row was skipped.
 On Paulo's go-ahead:
 
 ```bash
+git pull --ff-only          # master moves only on GitHub now
 git worktree add ../irw-W### -b fix/<slug-of-the-defect>
 cd ../irw-W### && ln -s ../indie-runners-web/.env .env
 ln -s ../indie-runners-web/cloud-sql-proxy cloud-sql-proxy
@@ -102,19 +103,40 @@ git diff master --numstat -- docs/ | awk '{n+=$1} END {print n}'   # ≤ 100
 
 Then the PM's block: believed → found · changed, by file · verified,
 which tier and how · version · migration and deploy flag. Then set
-`status` → `review` on the branch and commit it — **that commit is the
-handover**, not the message; the PM reads the board, not your terminal.
+`status` → `review` on the branch, commit, push, and open the PR —
+**that commit is the handover**, not the message; the PM reads the board
+and the PR, not your terminal.
+
+```bash
+git push -u origin fix/<slug>
+gh pr create --base master --title "W-###: <title>" --body-file <file>
+```
+
+The body is the ticket id and the "Verified" summary. **It is public**:
+output with user data or counts goes to `evidence W-###`, cited by name.
+If `master` moves before the merge, bring it in yourself — `git fetch
+origin && git merge origin/master && git push`, never a rebase — and
+wait for `build` again.
 After a `BLOCKED` line, `wip` while you fix, `review` again. **Then wait.
 Do not clear while waiting.** Read the verdict line, not the paragraphs.
 
 ## 6. After an approving verdict
 
-Merge to `master`, `git push origin master`, remove the worktree,
-`status` → `done`, commit and push that too. An operator ticket has no
-branch: `done` is still yours, set on `master` when the line approves.
+The verdict is the last line of the PM's comment on the PR. `status` →
+`done` as the branch's last commit, push, then:
+
+```bash
+gh pr checks --watch && gh pr merge --merge   # GitHub deletes the branch
+cd ../indie-runners-web && git pull --ff-only
+git worktree remove ../irw-W### && git branch -D fix/<slug>
+```
+
+An operator ticket has no branch: `done` is still yours when the line
+approves, in a one-commit `done/W-###` PR, merged the same way.
 
 **Deploy only if the ticket says `deploy: immediate`.** A migration goes
-before the image, and only on Paulo's word.
+before the image, and only on Paulo's word. `deploy.sh` builds local
+`master`, so the pull above comes first.
 
 ```bash
 ./scripts/deploy.sh --check   # serving revision, changes nothing

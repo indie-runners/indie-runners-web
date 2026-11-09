@@ -47,7 +47,9 @@ counts, including a commit that applied it.
 
 One commit per request, edit and reply together. If it changes who writes
 which file, the README's roles table and `docs/FILE_TREE.md` change in
-the same commit. Push `master`.
+the same commit. The pass is one PR: `cos/<date>-<slug>`,
+`gh pr create --base master`, `gh pr merge --merge` once `build` is green
+(README § Boundaries), then `git pull --ff-only`.
 
 `docs/handoffs/<YYYY-MM-DD>-cos-to-<role>-<slug>.md`:
 
