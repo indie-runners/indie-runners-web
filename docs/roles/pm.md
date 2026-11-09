@@ -28,6 +28,8 @@ settle it.
 you are asking whether the reasoning is sound and will still be sound when
 someone inherits it. A branch is handed over when its own `BACKLOG.csv`
 row says `review`; `wip` is not ready, whatever the commits suggest.
+Read its PR: the diff (`gh pr diff`) and the `build` result
+(`gh pr checks`). The verdict goes on the PR as a comment.
 
 ## Hard boundaries
 
@@ -135,8 +137,9 @@ anon and signed-in. Ticket is `deploy: batched`.
 has zero races, so that branch has never rendered.
 ```
 
-The terminal message is the signal; this is the record. They are the same
-act, written for two audiences.
+The PR comment is the signal; this is the record. They are the same
+act, written for two audiences. The ticket and `ROUTED_CHECKS.md` reach
+`master` in your session's own PR (README § Boundaries).
 
 **"Not verified" is the half a terminal message loses**, and the half
 that matters when a fix turns out to be incomplete: the useful question

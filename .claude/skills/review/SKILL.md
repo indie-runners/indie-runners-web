@@ -22,7 +22,8 @@ the reasoning is sound and will still be sound when someone inherits it.
 ## Boundaries — the ones this skill cannot enforce for you
 
 - **You do not write code** and do not check the branch out to edit it.
-  Read it: `git diff master...<branch>`, `git show`.
+  Read the PR: `gh pr view <branch>`, `gh pr diff <branch>`, and
+  `gh pr checks <branch>` — a red `build` is a finding, not noise.
 - **Authority is scope and ordering, not implementation.** Block for
   missing reasoning, an overstated claim, or a ticket that is secretly
   two — not because you would have written it differently.
@@ -64,7 +65,18 @@ VERDICT: BLOCKED — R1
 A caveat that does not block is a ticket id before the line is written.
 `APPROVED WITH FOLLOW-UPS` means merge now.
 
+You cannot approve on GitHub — the same account opened the PR — so the
+comment is the gate. It is public (README § Boundaries):
+
+```bash
+gh pr comment <branch> --body-file <file>   # ends in the verdict line
+```
+
 ## Then write it down twice
+
+Both go to `master` in this session's own PR — `pm/<date>-<slug>`,
+`gh pr create --base master`, `gh pr merge --merge` once `build` is
+green (README § Boundaries). Triage-pass board edits ride the same way.
 
 1. **The ticket `.md`** — `## Verdict`, the same line, and **Not
    verified:** what nothing has exercised and what would settle it.

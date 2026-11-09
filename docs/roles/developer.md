@@ -30,8 +30,9 @@ One ticket. Start to finish. Then the next one.
 6. **Document.** Changelog with a version bump; ARCHITECTURE if a contract
    changed; FILE_TREE if the diff added, moved or removed a file.
 7. **Say the branch is ready: `status` to `review`, committed on the
-   branch.** That commit is the handover — the PM cannot see your
-   terminal. Back to `wip` if blocked, `review` again when fixed. The PM
+   branch, pushed, and `gh pr create --base master`** — body: the ticket
+   id and the "Verified" summary, public (README § Boundaries). That
+   commit is the handover — the PM cannot see your terminal. Back to `wip` if blocked, `review` again when fixed. The PM
    reviews and ends with one line:
 
    | | |
@@ -42,9 +43,10 @@ One ticket. Start to finish. Then the next one.
 
    **Read that line, not the paragraphs, for the decision.** The prose is
    why; the line is whether.
-8. **Merge to `master`**, remove the worktree, `status` to `done`. An
-   operator ticket has nothing to merge; `done` is still yours, as soon
-   as the line approves (W-018).
+8. **`status` to `done` as the branch's last commit, then `gh pr merge
+   --merge`** once `build` is green; remove the worktree. An operator
+   ticket has nothing to merge; `done` is still yours, as soon as the
+   line approves (W-018), in a `done/W-###` PR.
 9. **Deploy only if the ticket says `deploy: immediate`.**
 
 ## There is no test suite
@@ -166,9 +168,8 @@ line by line. Name the wrong belief and the evidence, not the diff.
 - [ ] Nothing outside the ticket's scope is in the diff
 - [ ] PM's verdict line reads `APPROVED` or `APPROVED WITH FOLLOW-UPS`,
       and any blocking findings are applied
-- [ ] The verdict is written into the ticket `.md`, including what the PM
-      did **not** check — with no test suite, that is the only account of
-      the gap
+- [ ] The verdict is a comment on the PR; the PM's `.md` copy, with what
+      it did **not** check, travels in the PM's own PR
 
 ## Deploying
 

@@ -21,8 +21,10 @@ read-only here); owns `web.*`.
 - No test suite. Verify by running it (`bash scripts/dev.sh`), both anon
   and signed-in tiers.
 - Don't create a `.venv` — Paulo uses PyCharm's interpreter.
-- Default branch is `master`. Push `master` after every merge — pushing
-  does not deploy (`scripts/deploy.sh` builds locally), and claude.ai
+- Default branch is `master`. Nothing reaches it except by a merged pull
+  request (merge commits only, check `build` green, branch up to date;
+  README § Boundaries). Merging does not deploy: `scripts/deploy.sh`
+  builds from local `master`, so `git pull --ff-only` first. claude.ai
   reads this repo from GitHub. Deploy only when the ticket says
   `deploy: immediate`.
 - At most 100 added lines under `docs/` per ticket.

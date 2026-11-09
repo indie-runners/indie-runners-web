@@ -93,8 +93,27 @@ means someone crossed the line.
   `docs/` is 4886 lines and nobody reads that much; a change that needs
   more prose than that is usually two changes, or one being explained
   twice. Over budget, cut — replacing existing lines is free.
-- **Tracked files are public, in all three repos.** Never write into a
-  tracked file: real user names, crew names or slugs, user IDs tied to
+- **Nothing reaches `master` except by a merged pull request** — ruleset
+  `protect master` since 2026-11-09, no bypass, Paulo included. Merge
+  commits only; check `build` (workflow `ci`) green on a branch up to
+  date with `master`. Every write: `git pull --ff-only` on `master`,
+  branch, commit, push, `gh pr create --base master`.
+  - **A ticket** (`fix/<slug>`) merges on the PM's approving line, which
+    is the gate: GitHub cannot record it as an approval, the same
+    account opens every PR. The developer runs `gh pr merge --merge`.
+    Paulo's production gates stay `deploy:` and migrations.
+  - **Board-only work** — one PM session's tickets, specs and
+    `ROUTED_CHECKS.md`; one CoS pass; an operator ticket's `done` — is
+    one PR (`pm/<date>-<slug>`, `cos/<date>-<slug>`, `done/W-###`),
+    merged by whoever opened it once `build` is green. Nobody reviewed
+    these before; a PR per edit would only multiply the next item.
+  - **Behind `master`**, whoever opened the PR runs `git fetch origin &&
+    git merge origin/master && git push`, then waits for `build`. Merge,
+    not rebase: rebased commits are not the ones the PM read.
+  - The scraper's and infra's `docs/IDEAS.md` still take direct pushes
+    until those repos get the ruleset.
+- **Tracked files, PR bodies and PR comments are public, in all three
+  repos.** Never write into a tracked file: real user names, crew names or slugs, user IDs tied to
   privacy settings, user/signup/traffic counts, visitor logs or search
   terms, pasted IAM policy or registry output, descriptions of unfixed
   privilege weaknesses, local machine paths, or any line tying a
