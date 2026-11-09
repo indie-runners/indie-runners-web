@@ -1,0 +1,5 @@
+{
+  "trail": {"shadow": "#33492f", "mid": "#4c6b45", "highlight": "#f4f2e8"},
+  "road":  {"shadow": "#3a4a4a", "mid": "#5a7070", "highlight": "#f4f2e8"},
+  "mixed": {"shadow": "#4a4530", "mid": "#6b6145", "highlight": "#f4f2e8"}
+}

@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+
+{% block title %}{{ crew.display_name }} — Indie Runners{% endblock %}
+
+{% block content %}
+<div class="crews-page crews-page--hub">
+
+  <a href="/profile" class="back-link">← My profile</a>
+
+  <header class="crews-head">
+    <div>
+      <p class="crews-label">Crew hub</p>
+      <h1 class="crews-title">{{ crew.display_name }}</h1>
+    </div>
+  </header>
+
+  {% if created %}
+    <div class="settings-flash">
+      Crew created. Share the invite link below to add your first member.
+    </div>
+  {% endif %}
+  {% if rotated %}
+    <div class="settings-flash">
+      Invite link rotated. The previous link no longer works.
+    </div>
+  {% endif %}
+  {% if joined %}
+    <div class="settings-flash">
+      You've joined {{ crew.display_name }}.
+    </div>
+  {% endif %}
+  {% if removed %}
+    <div class="settings-flash">
+      Member removed. They can rejoin with the current invite link.
+      {% if is_admin %}
+        <form method="post" action="/crews/{{ crew.slug }}/invite/rotate" class="crew-invite-rotate">
+          <button type="submit" class="crew-rotate-btn">Rotate link</button>
+        </form>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  <div class="crew-hub">
+  <div class="crew-agenda">
+    <form method="get" action="/" class="crew-find" role="search">
+      <label for="crew-find-input" class="crew-find-label">Find a race, mark yourself going or interested, and it shows up here.</label>
+      <div class="crew-find-box">
+        <input id="crew-find-input" name="search" type="search" class="filter-input" placeholder="name, location, terrain">
+        <button type="submit" class="settings-submit">Search</button>
+      </div>
+    </form>
+    {% if agenda %}
+      <p class="crew-legend">
+        <span class="crew-chip">Going</span>
+        <span class="crew-chip crew-chip--interested">Interested</span>
+      </p>
+      {% for month, rows in agenda %}
+        <h2 class="crew-month">{{ month.strftime('%B %Y') }}</h2>
+        {% for row in rows %}
+          <div class="crew-agenda-row">
+            <div class="crew-agenda-date">
+              {% if row.start_date %}
+                <div class="profile-race-date-day">{{ row.start_date.strftime('%-d') }}</div>
+                <div class="profile-race-date-mo">{{ row.start_date.strftime('%a') }}</div>
+              {% else %}
+                <div class="profile-race-date-tbc">TBC</div>
+              {% endif %}
+            </div>
+            <div class="crew-agenda-main">
+              <div class="profile-race-name">
+                {% if row.has_page %}
+                  <a href="/events/{{ row.event_slug }}/{{ row.occurrence_year }}">{{ row.display_name or 'Unknown event' }}</a>
+                {% else %}
+                  {{ row.display_name or 'Unknown event' }}
+                {% endif %}
+              </div>
+              {% if row.location or row.distances %}
+                <div class="profile-race-sub">
+                  {{ row.location or '' }}
+                  {%- if row.location and row.distances %} · {% endif -%}
+                  {%- for d in row.distances %}{{ d | int if d == d | int else d }} km{% if not loop.last %}, {% endif %}{% endfor %}
+                </div>
+              {% endif %}
+              <div class="crew-chips">
+                {% for name in row.going %}<span class="crew-chip">{{ name }}</span>{% endfor %}
+                {% for name in row.interested %}<span class="crew-chip crew-chip--interested">{{ name }}</span>{% endfor %}
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      {% endfor %}
+    {% else %}
+      <p class="crews-empty">No races on the crew's calendar yet.</p>
+    {% endif %}
+  </div>
+
+  <aside class="crew-sidebar">
+  <section class="settings-section">
+    <h2 class="section-title">Members</h2>
+    <ul class="crew-member-list">
+      {% for user, role in members %}
+        <li class="crew-member-row">
+          <a class="crew-member-link" href="/profile/{{ user.id }}">
+            {% if user.avatar_url %}
+              <img class="avatar" src="{{ user.avatar_url }}"
+                   alt="" referrerpolicy="no-referrer">
+            {% else %}
+              <span class="avatar avatar--initial">
+                {{ (user.display_name or '?')[:1] | upper }}
+              </span>
+            {% endif %}
+            <span class="crew-member-name">{{ user.display_name }}</span>
+          </a>
+          {% if role == 'admin' %}
+            <span class="crew-role-tag">Admin</span>
+          {% endif %}
+          {% if is_admin and user.id != current_user.id %}
+            <form method="post" action="/crews/{{ crew.slug }}/members/{{ user.id }}/remove"
+                  onsubmit='return confirm({{ ("Remove " ~ user.display_name ~ " from " ~ crew.display_name ~ "? They can rejoin with the current invite link.") | tojson }})'>
+              <button type="submit" class="crew-rotate-btn" aria-label="Remove {{ user.display_name }}">Remove</button>
+            </form>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <section class="settings-section">
+    <form method="post" action="/crews/{{ crew.slug }}/leave"
+          onsubmit='return confirm({{ (("You're the only member, so leaving deletes " ~ crew.display_name ~ ". Leave?") if members|length == 1 else ("Leave " ~ crew.display_name ~ "? Its members will no longer see your crews-only plans.")) | tojson }})'>
+      <button type="submit" class="crew-rotate-btn">Leave crew</button>
+    </form>
+  </section>
+
+  {% if invite_url %}
+    <section class="settings-section">
+      <h2 class="section-title">Invite link</h2>
+      <p class="settings-help">
+        Share this link in your group chat: anyone who opens it and
+        signs in joins the crew. It never expires, so anyone with the
+        link can join.
+      </p>
+      <div class="crew-invite-box">
+        <input id="crew-invite-input" type="text" readonly value="{{ invite_url }}">
+        <button type="button" id="crew-invite-copy" class="settings-submit">Copy</button>
+      </div>
+      {% if is_admin %}
+        <form method="post" action="/crews/{{ crew.slug }}/invite/rotate"
+              class="crew-invite-rotate">
+          <button type="submit" class="crew-rotate-btn">Rotate link</button>
+          <span class="settings-preview-note">
+            Rotating invalidates the current link and generates a fresh one.
+          </span>
+        </form>
+      {% endif %}
+    </section>
+  {% endif %}
+
+  </aside>
+  </div>
+
+</div>
+
+<script src="{{ static_url('js/crews.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+
+{% block title %}{{ target_user.display_name }} — Indie Runners{% endblock %}
+
+{# One row shape shared by the upcoming calendar and the past section — the
+   flag is what distinguishes them, so the markup must not diverge. It is the
+   crew hub's row (crews_detail.html), with the flag and badge in the chips slot (W-098). #}
+{% macro race_row(entry) %}
+  {% set row = entry.row %}
+  <div class="crew-agenda-row">
+    <div class="crew-agenda-date">
+      {% if row.race_date %}
+        <div class="profile-race-date-day">{{ row.race_date.strftime('%-d') }}</div>
+        <div class="profile-race-date-mo">{{ row.race_date.strftime('%a') }}</div>
+      {% else %}
+        <div class="profile-race-date-tbc">TBC</div>
+      {% endif %}
+    </div>
+    <div class="crew-agenda-main">
+      <div class="profile-race-name">
+        {% if row.has_page %}
+          <a href="/events/{{ row.event_slug }}/{{ row.occurrence_year }}">{{ row.display_name or 'Unknown event' }}</a>
+        {% else %}
+          {{ row.display_name or 'Unknown event' }}
+        {% endif %}
+      </div>
+      {% if row.location or row.distances %}
+        <div class="profile-race-sub">
+          {{ row.location or '' }}
+          {%- if row.location and row.distances %} · {% endif -%}
+          {%- for d in row.distances %}{{ d | int if d == d | int else d }} km{% if not loop.last %}, {% endif %}{% endfor %}
+        </div>
+      {% endif %}
+      <div class="crew-chips">
+        <span class="profile-flag profile-flag--{{ entry.flag }}">
+          {%- if entry.flag == 'been_there' %}Been there
+          {%- elif entry.flag == 'going' %}Going
+          {%- else %}Interested{% endif -%}
+        </span>
+        {% if row.event_type %}
+          <span class="profile-terrain-badge profile-terrain-badge--{{ row.event_type | lower }}">{{ row.event_type | capitalize }}</span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endmacro %}
+
+{# The hub's month heading, under the section's own h2 #}
+{% macro month_heading(entry) %}
+  <h3 class="crew-month">{{ entry.month.strftime('%B %Y') if entry.month else 'Date TBC' }}</h3>
+{% endmacro %}
+
+{% block content %}
+<div class="profile-page">
+
+  {% if preview_mode %}
+    <div class="preview-banner">
+      Preview: you're looking at your profile as a signed-in stranger would see it.
+      <a href="/settings">Back to settings</a>
+    </div>
+  {% endif %}
+
+  <a href="/" class="back-link">← All events</a>
+
+  <!-- HEADER -->
+  <header class="profile-head">
+    {% if target_user.avatar_url %}
+      <img class="profile-avatar profile-avatar--photo" src="{{ target_user.avatar_url }}" alt="{{ target_user.display_name or '' }}" referrerpolicy="no-referrer">
+    {% else %}
+      <div class="profile-avatar">{{ (target_user.display_name or '?')[0] | upper }}</div>
+    {% endif %}
+    <div class="profile-id">
+      <h1 class="profile-name">{{ target_user.display_name }}</h1>
+    </div>
+  </header>
+
+  <!-- VISIBILITY SUMMARY (own profile only) -->
+  {% if viewer_is_self %}
+  <div class="profile-visibility">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/></svg>
+    <div class="profile-visibility-text">
+      {% if target_user.visibility == 'public' %}
+        <strong>All indie runners</strong> — your calendar is visible to any signed-in indie runner. Signed-out visitors only see counts.
+      {% else %}
+        <strong>Crews only</strong> — your calendar is visible to your crew. Everyone else only sees counts.
+      {% endif %}
+      <a href="/settings">Change your visibility</a>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- STATS -->
+  <div class="profile-stats">
+    <div class="profile-stat">
+      <div class="profile-stat-num">{{ profile.going_past | length }}</div>
+      <div class="profile-stat-label">Been there</div>
+    </div>
+    <div class="profile-stat">
+      <div class="profile-stat-num">{{ profile.going_upcoming | length }}</div>
+      <div class="profile-stat-label">Going</div>
+    </div>
+    {% if viewer_is_self %}
+    <div class="profile-stat">
+      <div class="profile-stat-num">{{ profile.interested | length }}</div>
+      <div class="profile-stat-label">Interested</div>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- MY CREWS (own profile only) -->
+  {% if viewer_is_self %}
+  <section class="profile-section" id="crews">
+    <div class="crews-head">
+      <h2 class="section-title">My crews</h2>
+      <a href="/crews/new" class="crews-cta">Create a crew</a>
+    </div>
+    {% if left %}
+      {# shortcut: any ?left= text shows here, autoescaped; move it to the session if a crafted link is ever abused #}
+      <div class="settings-flash">You've left {{ left }}.</div>
+    {% endif %}
+    {% if crews %}
+      <ul class="crew-list">
+        {% for c, member_count in crews %}
+          <li class="crew-row">
+            <a href="/crews/{{ c.slug }}" class="crew-row-name">{{ c.display_name }}</a>
+            <span class="crew-row-meta">{{ member_count }} member{{ '' if member_count == 1 else 's' }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <div class="crews-empty">
+        <p>You're not in any crews yet.</p>
+        <p class="crews-empty-sub">
+          Create one, or ask a friend for an invite link.
+        </p>
+      </div>
+    {% endif %}
+  </section>
+  {% endif %}
+
+  <!-- RACE CALENDAR — going and interested interleaved by date -->
+  <section class="profile-section">
+    <div class="profile-section-head">
+      <h2 class="section-title">Race calendar</h2>
+    </div>
+    {% if profile.upcoming_timeline %}
+      {% for entry in profile.upcoming_timeline %}
+        {% if loop.changed(entry.month) %}{{ month_heading(entry) }}{% endif %}
+        {{ race_row(entry) }}
+      {% endfor %}
+    {% else %}
+      {% if viewer_is_self %}
+        <div class="crews-empty">
+          <p>No races on your calendar yet.</p>
+          <p class="crews-empty-sub">Find one and mark yourself going.</p>
+        </div>
+      {% else %}
+        <div class="crews-empty"><p>No races on this calendar yet.</p></div>
+      {% endif %}
+    {% endif %}
+  </section>
+
+  <!-- BEEN THERE — past races, most recent first -->
+  {% if profile.past_timeline %}
+  <section class="profile-section">
+    <div class="profile-section-head">
+      <h2 class="section-title">Been there</h2>
+    </div>
+    {% for entry in profile.past_timeline %}
+      {% if loop.changed(entry.month) %}{{ month_heading(entry) }}{% endif %}
+      {{ race_row(entry) }}
+    {% endfor %}
+  </section>
+  {% endif %}
+
+</div>
+{% endblock %}

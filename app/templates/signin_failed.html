@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}Sign-in failed — Indie Runners{% endblock %}
+
+{% block content %}
+<div class="profile-hidden">
+  <h1 class="profile-hidden-title">Sign-in didn't complete</h1>
+  <p class="crews-empty-sub">Google didn't accept the sign-in. This usually happens when the page was reloaded after signing in.</p>
+  <a href="/auth/google" class="back-link">Try again</a>
+</div>
+{% endblock %}

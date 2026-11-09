@@ -1,0 +1,53 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build .
+
+  migrations:
+    # Off until indie-runners-scraper is public: this job checks out its baseline.sql.
+    # Then delete this if and the token: line below.
+    if: false
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15   # live is POSTGRES_15, as in the scraper's CI
+        env:
+          POSTGRES_PASSWORD: ci   # a throwaway container, not a secret
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd pg_isready --health-interval 2s
+          --health-timeout 5s --health-retries 15
+    env:
+      PGHOST: localhost
+      PGUSER: postgres
+      PGPASSWORD: ci
+      PGDATABASE: postgres
+    steps:
+      - uses: actions/checkout@v4
+      # Scraper 0.80.4 (aad6a87); baseline.sql header says 079, its newest migration at this ref.
+      # Bump by hand when core.* changes in a way this app reads; the bump ticket quotes the scraper changelog entry.
+      - uses: actions/checkout@v4
+        with:
+          repository: indie-runners/indie-runners-scraper
+          ref: aad6a87e7e624b46accd66c7bcd30d82ac00e5e8
+          token: ${{ secrets.SCRAPER_READ_TOKEN }}   # fine-grained PAT, scraper only, Contents: read
+          path: scraper
+          sparse-checkout: database/baseline.sql
+          sparse-checkout-cone-mode: false
+      - run: psql -v ON_ERROR_STOP=1 -q -f scraper/database/baseline.sql
+      # The baseline's MVs are WITH NO DATA; 002 and 005 read this one.
+      - run: psql -v ON_ERROR_STOP=1 -c 'REFRESH MATERIALIZED VIEW core.mv_denormalized_event_data'
+      - run: |
+          for f in migrations/*.sql; do
+            echo "== $f"
+            psql -v ON_ERROR_STOP=1 -q -f "$f"
+          done

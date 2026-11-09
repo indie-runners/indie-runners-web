@@ -1,0 +1,33 @@
+{#- Colour is the avatar's position in its row, never the user: no identity in the markup. -#}
+{%- macro anon_avatar(index, size_cls='') -%}
+<span class="avatar{{ size_cls }} avatar--anon avatar--anon-{{ index % 5 }}" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+  <path d="M5 21c0-3.9 3.1-7 7-7s7 3.1 7 7" fill="none"
+        stroke="var(--off-white)" stroke-width="2.6" stroke-linecap="round"/>
+  <circle cx="12" cy="8.5" r="3.6" fill="var(--accent)"/>
+</svg></span>
+{%- endmacro -%}
+
+{%- macro avatar_strip(users, hidden_count, total, cap, size='') -%}
+  {%- set size_cls = (' avatar--lg' if size == 'lg' else '') -%}
+  {%- set shown_users = users[:cap] -%}
+  {%- set remaining = cap - shown_users | length -%}
+  {%- set stock_shown = [hidden_count, remaining] | min if remaining > 0 else 0 -%}
+  {%- for u in shown_users -%}
+    {%- set color_idx = u.id % 4 -%}
+    {%- if u.avatar_url -%}
+      <img class="avatar{{ size_cls }}" src="{{ u.avatar_url }}" alt="{{ u.display_name or '' }}"
+           referrerpolicy="no-referrer"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <span class="avatar{{ size_cls }} avatar--initial" style="display:none;background:var(--avatar-color-{{ color_idx }})">{{ (u.display_name or '?')[0] | upper }}</span>
+    {%- else -%}
+      <span class="avatar{{ size_cls }} avatar--initial" style="background:var(--avatar-color-{{ color_idx }})">{{ (u.display_name or '?')[0] | upper }}</span>
+    {%- endif -%}
+  {%- endfor -%}
+  {%- for i in range(stock_shown) -%}
+    {{ anon_avatar(shown_users | length + i, size_cls) }}
+  {%- endfor -%}
+  {%- set displayed = shown_users | length + stock_shown -%}
+  {%- if total > displayed -%}
+    <span class="avatar{{ size_cls }} avatar--overflow">+{{ total - displayed }}</span>
+  {%- endif -%}
+{%- endmacro -%}

@@ -1,0 +1,120 @@
+{# MAINTAINER: update the "Last revised" date below whenever the policy is changed. #}
+{% extends "base.html" %}
+
+{% block title %}Privacy Policy — Indie Runners{% endblock %}
+
+{% block content %}
+<article class="legal-page">
+  <h1>Privacy Policy</h1>
+
+  <p class="legal-lede">This page explains what personal data Indie Runners
+  collects, why, on what legal basis, who processes it on our behalf, and
+  how you can exercise your rights under the GDPR.</p>
+
+  <p class="legal-footnote">Last revised: 23 October 2026</p>
+
+  <h2>1. Data Controller</h2>
+  <p>Indie Runners – Paulo Morales Castillo<br>
+  c/o Online-Impressum #9671<br>
+  Europaring 90<br>
+  53757 Sankt Augustin<br>
+  Germany<br>
+  Email: <a href="mailto:paulo@indierunners.co">paulo@indierunners.co</a></p>
+
+  <h2>2. What data is collected and why</h2>
+
+  <h3>Google OAuth login</h3>
+  <p>When you sign in with Google, we receive your email address, display
+  name, and avatar URL from Google. Purpose: account creation and
+  identification. We do not receive or store your Google password.</p>
+
+  <h3>Attendance data</h3>
+  <p>When you mark yourself as going to or interested in a race occurrence,
+  we store your user ID, the occurrence ID, the race date, and the event
+  display name at the time you marked it. Purpose: this is the core
+  product function.</p>
+
+  <h3>Session cookie</h3>
+  <p>A single signed session cookie is set after login to keep you signed
+  in across requests. It is strictly necessary for the site to function
+  and does not require consent under the ePrivacy Directive.</p>
+
+  <h3>Server logs</h3>
+  <p>Standard Google Cloud Run and Google Cloud Platform server logs
+  record request metadata including IP address, user agent, timestamp,
+  and requested URL. Purpose: security, debugging, and abuse prevention.
+  Retention follows Google Cloud's standard logging defaults.</p>
+
+  <h2>3. Legal basis</h2>
+  <ul>
+    <li><strong>Art. 6(1)(b) GDPR</strong> — performance of a contract:
+      account creation, login, and attendance features.</li>
+    <li><strong>Art. 6(1)(f) GDPR</strong> — legitimate interest: security
+      logging and abuse prevention.</li>
+  </ul>
+
+  <h2>4. Third parties and processors</h2>
+  <ul>
+    <li><strong>Google (OAuth provider)</strong> — receives the fact that
+      you attempted to sign in to Indie Runners and returns the profile
+      fields listed above. No attendance or usage data is shared with
+      Google beyond what OAuth itself requires.</li>
+    <li><strong>Google Cloud Platform</strong> — hosts the application
+      (Cloud Run) and database (Cloud SQL Postgres). Data is stored in
+      the <code>europe-west1</code> region (Belgium).</li>
+  </ul>
+  <p>Google LLC is a US-based company. Transfers of personal data to the
+  United States rely on Google's certification under the EU-U.S. Data
+  Privacy Framework (adopted by the European Commission on 10 July 2023),
+  supplemented by the Standard Contractual Clauses adopted in Commission
+  Implementing Decision (EU) 2021/914 where required. Google Cloud
+  Platform infrastructure used for this service is located in the EU,
+  which reduces but does not eliminate the possibility of transfers
+  outside the EEA for support and administrative purposes.</p>
+
+  <h2>5. Analytics</h2>
+  <p>Indie Runners uses <a href="https://www.goatcounter.com/">GoatCounter</a>,
+  a privacy-friendly analytics tool, to measure aggregate site traffic
+  (visits, pages viewed, referring sites, browser type, and country).
+  GoatCounter does not set cookies and does not track individual visitors
+  across sessions or sites, so no consent is required under the ePrivacy
+  Directive. Session tracking is limited to distinguishing repeat page
+  loads within an 8-hour window and does not identify you personally.
+  Aggregate traffic data is retained for 365 days and then permanently
+  deleted. No data collected by GoatCounter is shared with or sold to
+  third parties.</p>
+
+  <h2>6. Data retention</h2>
+  <p>Account data (<code>web.users</code>, <code>web.auth_identities</code>)
+  and attendance rows (<code>web.attendance</code>) are retained until
+  you request deletion. There is no automatic expiry today. Past
+  attendance rows are deliberately preserved on the delete path so that
+  your race history is not silently discarded when you unmark a future
+  race; a full account deletion request removes them.</p>
+
+  <h2>7. Your rights</h2>
+  <p>Under the GDPR you have the right to:</p>
+  <ul>
+    <li>access your data (Art. 15)</li>
+    <li>have inaccurate data corrected (Art. 16)</li>
+    <li>have your data erased (Art. 17)</li>
+    <li>restrict processing (Art. 18)</li>
+    <li>receive your data in a portable format (Art. 20)</li>
+    <li>object to processing based on legitimate interest (Art. 21)</li>
+    <li>lodge a complaint with your local data protection authority.</li>
+  </ul>
+
+  <h2>8. How to request data deletion or access</h2>
+  <p>To request access to your data or deletion of your account, email
+  <a href="mailto:paulo@indierunners.co">paulo@indierunners.co</a>. We
+  will respond within 30 days.</p>
+  <p>You can also delete your account yourself under
+  <a href="/settings">Settings → Delete account</a>. It removes your
+  account, sign-in identity, all attendance rows (past ones included) and
+  crew memberships from the live database immediately. Copies remain in
+  automated database backups for up to 7 days, after which they expire
+  and are not restored. A crew you are the only
+  member of is deleted; a crew you run passes to its longest-standing
+  remaining member.</p>
+</article>
+{% endblock %}

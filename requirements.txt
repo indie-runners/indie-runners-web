@@ -1,0 +1,17 @@
+fastapi>=0.111.0
+uvicorn[standard]>=0.29.0
+# Pinned to a minor range: the connection-pool cap in app/db.py is
+# verified against 2.0.x defaults (QueuePool, pool_size/max_overflow
+# semantics). An unpinned major could change pooling behaviour without
+# the cap noticing. The other requirements remain unpinned -- pinning
+# them is a separate change.
+sqlalchemy>=2.0.0,<2.1
+psycopg[binary]>=3.1.0
+pydantic-settings>=2.2.0
+jinja2>=3.1.0
+python-dotenv>=1.0.0
+httpx>=0.27.0
+itsdangerous>=2.2.0
+python-multipart>=0.0.9
+Pillow>=10.0.0
+google-cloud-storage>=2.16.0

@@ -1,0 +1,2 @@
+# The board is the one file two roles write to; CRLF makes a one-cell edit diff as the whole file (W-015).
+tickets/BACKLOG.csv text eol=lf

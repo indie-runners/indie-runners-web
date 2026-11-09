@@ -1,0 +1,97 @@
+{% set date_label = race.race_date_display or '—' %}
+{% set terrain = race.terrain_type or '' %}
+{% set badge_label = terrain | capitalize %}
+{% set price_label = race.price_currency ~ ' ' ~ race.price if (race.price and race.price > 0) else ('Free' if race.price == 0 else '—') %}
+{% if race.price_max %}{% set price_label = price_label ~ ' – ' ~ (race.price_currency ~ ' ' if race.price == 0 else '') ~ race.price_max %}{% endif %}
+{% set is_mine = race.user_status is not none %}
+{% set gcal = gcal_url(race.name, race.race_date, race.race_date_end, race.location) if current_user and not race.is_tbc else none %}
+{% from "partials/avatar_strip.html" import avatar_strip %}
+
+<div class="tile {{ race.gradient_class }}{% if is_mine %} tile--mine{% endif %}{% if race.is_tbc %} tile--tbc{% endif %}" data-event-id="{{ race.event_id }}" data-occurrence-id="{{ race.occurrence_id }}"{% if gcal %} data-gcal-url="{{ gcal }}"{% endif %}>
+  {% if race.tile_image_url %}
+    {% set eager = tile_index is defined and tile_index < 4 %}
+    <img class="tile-photo" src="{{ race.tile_image_url }}" alt=""
+         width="600" height="800"
+         loading="{{ 'eager' if eager else 'lazy' }}"
+         decoding="async"
+         {% if eager %}fetchpriority="high"{% endif %}>
+  {% endif %}
+  <span class="tile-terrain-badge">{{ badge_label }}</span>
+  <a class="tile-link" href="/events/{{ race.event_slug }}/{{ race.occurrence_year }}" aria-label="{{ race.name }}"></a>
+  <div class="tile-base">
+    <div class="tile-name">{{ race.name }}</div>
+    <div class="tile-meta">{{ race.country | title if race.country else '—' }}&nbsp;·&nbsp;{{ date_label }}</div>
+    <div class="tile-attendees">
+      <div class="avatars">
+        {{ avatar_strip(race.going_users, race.going_hidden_count, race.going_count, 3) }}
+      </div>
+      <span class="going-count">{{ race.going_count }} going</span>
+    </div>
+    {% if race.interested_count > 0 %}
+    <div class="tile-attendees tile-attendees--interested">
+      <div class="avatars">
+        {{ avatar_strip(race.interested_users, race.interested_hidden_count, race.interested_count, 3) }}
+      </div>
+      <span class="going-count going-count--interested">{{ race.interested_count }} interested</span>
+    </div>
+    {% endif %}
+  </div>
+  <div class="tile-hover">
+    {% if race.registration_open and not race.is_tbc %}<span class="badge">Registration open</span>{% endif %}
+    <div class="hover-name">{{ race.name }}</div>
+    <div class="hover-rows">
+      <div class="hover-row">
+        <span class="hover-row-label">Date</span>
+        <span class="hover-row-val">{{ date_label }}</span>
+      </div>
+      <div class="hover-row">
+        <span class="hover-row-label">Country</span>
+        <span class="hover-row-val">{{ race.country | title if race.country else '—' }}</span>
+      </div>
+      {% if race.is_tbc %}
+      <hr class="hover-divider">
+      <p class="hover-tbc-notice">Race details will be confirmed closer to the date.</p>
+      {% else %}
+      <div class="hover-row hover-row-distances">
+        <span class="hover-row-label">Distances</span>
+        <div class="dist-pills">
+          {% if race.distances %}
+            {% for d in race.distances %}
+              <span class="dist-pill">{{ d | int if d == d | int else d }} km</span>
+            {% endfor %}
+          {% else %}
+            <span class="dist-pill">—</span>
+          {% endif %}
+        </div>
+      </div>
+      <div class="hover-row">
+        <span class="hover-row-label">Location</span>
+        <span class="hover-row-val hover-row-val--town"{% if race.location %} title="{{ race.location }}"{% endif %}>{{ race.location or '—' }}</span>
+      </div>
+      <hr class="hover-divider">
+      <div class="hover-row">
+        <span class="hover-row-label">Entry fee</span>
+        <span class="hover-row-val">{{ price_label }}</span>
+      </div>
+      {% endif %}
+    </div>
+    <div class="hover-attendees">
+      <div class="hover-attendee-label">{{ race.going_count }} from your community going</div>
+    </div>
+    {% if race.interested_count > 0 %}
+    <div class="hover-attendees hover-attendees--interested">
+      <div class="hover-attendee-label">{{ race.interested_count }} interested</div>
+    </div>
+    {% endif %}
+    {% if not current_user %}
+      <a href="/auth/google" class="hover-cta">Sign in to join →</a>
+    {% elif race.user_status %}
+      {# A status, not a control: the event page is the only place to mark a race (W-096) #}
+      <div class="attendance-status">
+        <span class="attendance-status-label">
+          {% if race.user_status == 'going' %}You are going{% else %}You are interested{% endif %}
+        </span>
+      </div>
+    {% endif %}
+  </div>
+</div>

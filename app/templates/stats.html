@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Stats — Indie Runners{% endblock %}
+
+{% block content %}
+<article class="legal-page">
+  <h1>Stats</h1>
+
+  <h2>{{ tracked }} events tracked</h2>
+  <p>Every event Indie Runners follows, whether or not it has a date coming up.</p>
+
+  <h2>{{ checked_30d }} events checked in the last 30 days</h2>
+  <p>Upcoming events whose details we went back and looked at.</p>
+
+  <h2>Recently checked</h2>
+  <ul>
+    {% for e in recent %}
+      <li>
+        {% if e.event_slug and e.occurrence_year %}
+          <a href="/events/{{ e.event_slug }}/{{ e.occurrence_year }}">{{ e.name or e.event_slug }}</a>
+        {% else %}
+          {{ e.name or 'Unknown event' }}
+        {% endif %}
+        — last checked {{ e.checked_at.astimezone(utc).strftime('%-d %b %Y, %H:%M UTC') }}
+      </li>
+    {% endfor %}
+  </ul>
+
+  <h2>Upcoming events by country</h2>
+  {# The map repeats the list below for sighted pointer users; the list is the accessible version. #}
+  <svg class="stats-map" viewBox="{{ europe_map.viewBox }}" aria-hidden="true">
+    {% for cc, d in europe_map.paths.items() %}
+      {% set c = on_map.get(cc) %}
+      {% if c %}
+        <a href="/?country={{ c.name | urlencode }}" tabindex="-1">
+          <path d="{{ d }}" class="stats-map-on" style="fill-opacity: {{ c.shade }}"><title>{{ c.name | title }}: {{ c.n }}</title></path>
+        </a>
+      {% else %}
+        <path d="{{ d }}"/>
+      {% endif %}
+    {% endfor %}
+  </svg>
+  <ol class="stats-countries">
+    {% for c in countries %}
+      <li><a href="/?country={{ c.name | urlencode }}">{{ c.name | title }}</a> — {{ c.n }}</li>
+    {% endfor %}
+  </ol>
+  <p class="stats-credit">Map: <a href="https://mapsvg.com/maps/world">MapSVG</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>, cropped and simplified.</p>
+</article>
+{% endblock %}

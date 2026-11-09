@@ -1,0 +1,524 @@
+{% extends "base.html" %}
+{% from "partials/avatar_strip.html" import avatar_strip %}
+
+{# W-066: the hidden-attendee line must stand alone when nobody is named above it. #}
+{%- macro hidden_line(named, n, verb) -%}
+  {% if n > 0 %}
+    <p class="whos-coming-others">{% if named %}and {{ n }} other {% else %}{{ n }} {% endif %}indie runner{{ 's' if n != 1 else '' }} {{ 'is' if n == 1 and not named else 'are' }} {{ verb }}</p>
+  {% endif %}
+{%- endmacro -%}
+
+{% block title %}{{ event.event_display_name }} — Indie Runners{% endblock %}
+
+{% block head %}
+  {% if meta_description %}
+    <meta name="description" content="{{ meta_description }}">
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="event-page">
+
+  <div class="event-back">
+    <a href="{{ back_href }}" class="back-link">← All events</a>
+  </div>
+
+  <!-- EVENT HERO -->
+  <header class="event-hero">
+    {% if tile_image_url %}
+      <img class="event-hero-photo" src="{{ tile_image_url }}" alt="" loading="eager" fetchpriority="high" referrerpolicy="no-referrer">
+    {% endif %}
+    {% if tile_attribution_name %}
+      {% if tile_attribution_url and tile_attribution_source_url %}
+        <span class="event-hero-credit">
+          Photo by
+          <a href="{{ tile_attribution_url }}" target="_blank" rel="noopener noreferrer">{{ tile_attribution_name }}</a>
+          on
+          <a href="{{ tile_attribution_source_url }}" target="_blank" rel="noopener noreferrer">Unsplash</a>
+        </span>
+      {% else %}
+        <span class="event-hero-credit">Photo · {{ tile_attribution_name }}</span>
+      {% endif %}
+    {% endif %}
+    <div class="event-hero-inner">
+      {% if event.event_type %}
+        <span class="event-type-badge">{{ event.event_type | capitalize }}</span>
+      {% endif %}
+      <h1 class="event-title">{{ event.event_display_name }}</h1>
+      {# Items first, separators between them: the first item is usually absent (W-065). #}
+      {% set meta = [] %}
+      {% if event.event_location %}{% set _ = meta.append(event.event_location) %}{% endif %}
+      {% if event.event_country_code %}{% set _ = meta.append(event.event_country_code | title) %}{% endif %}
+      {% if event.is_tbc and event.tbc_display %}
+        {% set _ = meta.append(event.tbc_display) %}
+      {% elif event.occurrence_start_date and event.occurrence_end_date %}
+        {% set _ = meta.append(event.occurrence_start_date ~ ' – ' ~ event.occurrence_end_date) %}
+      {% elif event.occurrence_start_date or event.occurrence_end_date %}
+        {% set _ = meta.append(event.occurrence_start_date or event.occurrence_end_date) %}
+      {% endif %}
+      <div class="event-meta">
+        {% for item in meta %}
+          {% if not loop.first %}<span class="event-meta-sep">·</span>{% endif %}
+          <span class="event-meta-item">{{ item }}</span>
+        {% endfor %}
+      </div>
+    </div>
+  </header>
+
+  <!-- ACTION BAR (carries the event description above the attendance row) -->
+  <div class="event-action-bar">
+    {# Outside the sign-in gate on purpose: this is the page's crawlable prose
+       and feeds the meta description. #}
+    {% if event.short_description %}
+      <p class="event-description"><span>{{ event.short_description }}</span></p>
+    {% endif %}
+    {% if event.event_website_url %}
+      <a href="{{ event.event_website_url }}" target="_blank" rel="noopener noreferrer" class="event-website-link">
+        Official website →
+      </a>
+    {% endif %}
+    {% set gcal = event.gcal_url if current_user else none %}
+    <div class="event-attendance" data-event-id="{{ event.event_id }}" data-occurrence-id="{{ event.occurrence_id }}"{% if gcal %} data-gcal-url="{{ gcal }}"{% endif %}>
+      {% if not current_user %}
+        <a href="/auth/google?next={{ request.url.path }}" class="attendance-btn attendance-btn--signin">Sign in to join</a>
+      {% elif user_status %}
+        <div class="attendance-status">
+          <span class="attendance-status-label">
+            {% if user_status == 'going' %}You are going{% else %}You are interested{% endif %}
+          </span>
+          {% if not attendance_locked %}
+          <div class="attendance-actions">
+            <button class="attendance-change" data-event-id="{{ event.event_id }}" data-occurrence-id="{{ event.occurrence_id }}"
+                    data-action="{% if user_status == 'going' %}interested{% else %}going{% endif %}">Change</button>
+            <button class="attendance-remove" data-event-id="{{ event.event_id }}" data-occurrence-id="{{ event.occurrence_id }}" data-action="remove">Remove</button>
+          </div>
+          {% endif %}
+        </div>
+      {% elif not attendance_locked %}
+        <div class="attendance-buttons attendance-buttons--row">
+          <button class="attendance-btn attendance-btn--going" data-event-id="{{ event.event_id }}" data-occurrence-id="{{ event.occurrence_id }}" data-action="going">Going</button>
+          <button class="attendance-btn attendance-btn--interested" data-event-id="{{ event.event_id }}" data-occurrence-id="{{ event.occurrence_id }}" data-action="interested">Interested</button>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="event-body">
+
+  {% if current_user %}
+    {% if event.is_tbc %}
+    <!-- TBC NOTICE -->
+    <div class="locked-panel">
+      <h2 class="locked-panel-title">This edition is not yet confirmed</h2>
+      <p class="locked-panel-body">
+        Distances, cutoffs, registration and prices will land here when the organiser publishes the date. Mark as Going or Interested to keep it in your profile.
+      </p>
+      {% if event.event_website_url %}
+        <a href="{{ event.event_website_url }}" target="_blank" rel="noopener noreferrer" class="attendance-btn attendance-btn--signin locked-panel-cta">
+          Visit the official website →
+        </a>
+      {% endif %}
+    </div>
+    {% else %}
+    <!-- RACE SELECTOR TABLE -->
+    <section class="race-selector">
+      <h2 class="section-title">Races</h2>
+      <div class="race-table-wrap">
+        <table class="race-table">
+          <thead>
+            <tr>
+              <th>Race</th>
+              <th>Distance</th>
+              {% if any_race_formats %}<th>Format</th>{% endif %}
+              <th>Ascent</th>
+              <th>Price</th>
+              <th>Cutoff</th>
+              <th>Registration</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for r in races %}
+              <tr class="race-table-row{% if r.race_slug == selected_race.race_slug %} race-table-row--selected{% endif %}">
+                <td>
+                  <a href="/events/{{ event.event_slug }}/{{ event.occurrence_year }}?race={{ r.race_slug }}" class="race-table-link">
+                    {{ r.race_display_name or r.race_name }}
+                  </a>
+                </td>
+                <td>{% if r.race_distance %}{{ r.race_distance | int if r.race_distance == r.race_distance | int else r.race_distance }} km{% endif %}</td>
+                {% if any_race_formats %}
+                  <td>
+                    {% for label in race_formats.get(r.race_slug, []) %}
+                      <span class="race-format-badge">{{ label }}</span>
+                    {% endfor %}
+                  </td>
+                {% endif %}
+                <td>{% if r.cumulative_ascent %}{{ r.cumulative_ascent | int }} m{% endif %}</td>
+                <td>{% if r.registration_price is not none %}{{ r.price_currency or '' }} {{ r.registration_price | int if r.registration_price == r.registration_price | int else r.registration_price }}{% endif %}</td>
+                <td>{% if r.cutoff_time %}{{ r.cutoff_time | int }}h{% endif %}</td>
+                <td>
+                  {% if r.registration_sold_out %}Sold out
+                  {% elif r.registration_open %}Open
+                  {% elif r.registration_open == false %}Closed
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- RACE DETAIL PANEL -->
+    <section class="race-detail">
+      <div class="race-detail-header">
+        <h2 class="race-detail-title">{{ selected_race.race_display_name or selected_race.race_name }}</h2>
+        <div class="race-detail-stats">
+          {% if selected_race.race_distance %}
+            <span class="race-stat">{{ selected_race.race_distance | int if selected_race.race_distance == selected_race.race_distance | int else selected_race.race_distance }} km</span>
+          {% endif %}
+          {% if selected_race.cumulative_ascent %}
+            <span class="race-stat">{{ selected_race.cumulative_ascent | int }} m ascent</span>
+          {% endif %}
+          {% if selected_race.cutoff_time %}
+            <span class="race-stat">{{ selected_race.cutoff_time | int }}h cutoff</span>
+          {% endif %}
+          {% for label in race_formats.get(selected_race.race_slug, []) %}
+            <span class="race-stat race-stat--format">{{ label }}</span>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="race-detail-cards">
+
+        <!-- REGISTRATION -->
+        {% set has_registration = (
+          selected_race.registration_start is not none or
+          selected_race.registration_open is not none or
+          selected_race.registration_sold_out is not none or
+          selected_race.registration_price is not none or
+          selected_race.lottery_system is not none
+        ) %}
+        {% if has_registration %}
+        <div class="detail-card">
+          <h3 class="detail-card-title">Registration</h3>
+          <dl class="detail-list">
+            {% if selected_race.registration_start is not none %}
+              <div class="detail-row">
+                <dt>Opens</dt>
+                <dd>{{ selected_race.registration_start }}</dd>
+              </div>
+            {% endif %}
+            {% if selected_race.registration_open is not none %}
+              <div class="detail-row">
+                <dt>Status</dt>
+                <dd>{{ 'Open' if selected_race.registration_open else 'Closed' }}</dd>
+              </div>
+            {% endif %}
+            {% if selected_race.registration_sold_out is not none %}
+              <div class="detail-row">
+                <dt>Sold out</dt>
+                <dd>{{ 'Yes' if selected_race.registration_sold_out else 'No' }}</dd>
+              </div>
+            {% endif %}
+            {% if selected_race.registration_price is not none %}
+              <div class="detail-row">
+                <dt>Price</dt>
+                <dd>{{ selected_race.price_currency or '' }} {{ selected_race.registration_price | int if selected_race.registration_price == selected_race.registration_price | int else selected_race.registration_price }}</dd>
+              </div>
+            {% endif %}
+            {% if selected_race.lottery_system is not none %}
+              <div class="detail-row">
+                <dt>Lottery</dt>
+                <dd>{{ 'Yes' if selected_race.lottery_system else 'No' }}</dd>
+              </div>
+            {% endif %}
+          </dl>
+        </div>
+        {% endif %}
+
+        <!-- ON THE DAY -->
+        {% set has_on_day = (
+          selected_race.race_date is not none or
+          selected_race.race_location is not none or
+          selected_race.start_time is not none or
+          selected_race.terrain_type is not none or
+          selected_race.aid_stations_count is not none or
+          selected_race.cutoff_time is not none or
+          selected_race.mandatory_gear is not none or
+          selected_race.bag_storage is not none
+        ) %}
+        {% if has_on_day %}
+        <div class="detail-card">
+          <h3 class="detail-card-title">On the day</h3>
+          <dl class="detail-list">
+            {% if selected_race.race_date is not none %}
+              <div class="detail-row">
+                <dt>Date</dt>
+                <dd>{{ selected_race.race_date.strftime('%-d %B %Y') }}</dd>
+              </div>
+            {% endif %}
+            {% if selected_race.race_location is not none %}
+              <div class="detail-row">
+                <dt>Location</dt>
+                <dd>{{ selected_race.race_location }}</dd>
+              </div>
+            {% endif %}
+            {% if selected_race.start_time is not none %}
+              <div class="detail-row">
+                <dt>Start time</dt>
+                <dd>{{ selected_race.start_time.strftime('%H:%M') }}</dd>
+              </div>
+            {% endif %}
+            {% if selected_race.terrain_type is not none %}
+              <div class="detail-row">
+                <dt>Terrain</dt>
+                <dd>{{ selected_race.terrain_type | capitalize }}</dd>
+              </div>
+            {% endif %}
+            {% if selected_race.aid_stations_count is not none %}
+              <div class="detail-row">
+                <dt>Aid stations</dt>
+                <dd>{{ selected_race.aid_stations_count }}</dd>
+              </div>
+            {% endif %}
+            {% if selected_race.cutoff_time is not none %}
+              <div class="detail-row">
+                <dt>Cutoff</dt>
+                <dd>{{ selected_race.cutoff_time | int }}h</dd>
+              </div>
+            {% endif %}
+            {% if selected_race.mandatory_gear is not none %}
+              <div class="detail-row">
+                <dt>Mandatory gear</dt>
+                <dd>{{ 'Yes' if selected_race.mandatory_gear else 'No' }}</dd>
+              </div>
+            {% endif %}
+            {% if selected_race.bag_storage is not none %}
+              <div class="detail-row">
+                <dt>Bag storage</dt>
+                <dd>{{ 'Yes' if selected_race.bag_storage else 'No' }}</dd>
+              </div>
+            {% endif %}
+          </dl>
+        </div>
+        {% endif %}
+
+        <!-- FINISHER AND ROUTE -->
+        {% set has_route = (
+          selected_race.race_distance is not none or
+          selected_race.cumulative_ascent is not none or
+          selected_race.gpx_available is not none
+        ) %}
+        {% if has_route %}
+        <div class="detail-card">
+          <h3 class="detail-card-title">Finisher and route</h3>
+          <dl class="detail-list">
+            {% if selected_race.race_distance is not none %}
+              <div class="detail-row">
+                <dt>Distance</dt>
+                <dd>{{ selected_race.race_distance | int if selected_race.race_distance == selected_race.race_distance | int else selected_race.race_distance }} km</dd>
+              </div>
+            {% endif %}
+            {% if selected_race.cumulative_ascent is not none %}
+              <div class="detail-row">
+                <dt>Ascent</dt>
+                <dd>{{ selected_race.cumulative_ascent | int }} m</dd>
+              </div>
+            {% endif %}
+            {% if selected_race.gpx_available is not none %}
+              <div class="detail-row">
+                <dt>GPX available</dt>
+                <dd>{{ 'Yes' if selected_race.gpx_available else 'No' }}</dd>
+              </div>
+            {% endif %}
+          </dl>
+        </div>
+        {% endif %}
+
+        <!-- EVENT-WIDE -->
+        {% set has_event_wide = (
+          selected_race.qualification_required is not none or
+          selected_race.early_bird_discounts is not none or
+          selected_race.registration_transferable is not none or
+          selected_race.registration_refundable is not none or
+          selected_race.registration_postponable is not none or
+          selected_race.national_league is not none or
+          selected_race.additional_fees is not none or
+          selected_race.pacers_allowed is not none or
+          selected_race.finisher_apparel is not none or
+          selected_race.accommodation_recommendations is not none or
+          selected_race.live_tracking is not none or
+          selected_race.finisher_medal is not none
+        ) %}
+        {% if has_event_wide %}
+        <div class="detail-card detail-card--event-wide">
+          <h3 class="detail-card-title">Event-wide — same for all races</h3>
+          <dl class="detail-list">
+            {% if selected_race.qualification_required is not none %}
+              <div class="detail-row">
+                <dt>Qualification required</dt>
+                <dd>{{ 'Yes' if selected_race.qualification_required else 'No' }}</dd>
+              </div>
+            {% endif %}
+            {% if selected_race.early_bird_discounts is not none %}
+              <div class="detail-row">
+                <dt>Early bird discounts</dt>
+                <dd>{{ 'Yes' if selected_race.early_bird_discounts else 'No' }}</dd>
+              </div>
+            {% endif %}
+            {% if selected_race.registration_transferable is not none %}
+              <div class="detail-row">
+                <dt>Transferable entry</dt>
+                <dd>{{ 'Yes' if selected_race.registration_transferable else 'No' }}</dd>
+              </div>
+            {% endif %}
+            {% if selected_race.registration_refundable is not none %}
+              <div class="detail-row">
+                <dt>Refundable entry</dt>
+                <dd>{{ 'Yes' if selected_race.registration_refundable else 'No' }}</dd>
+              </div>
+            {% endif %}
+            {% if selected_race.registration_postponable is not none %}
+              <div class="detail-row">
+                <dt>Postponable entry</dt>
+                <dd>{{ 'Yes' if selected_race.registration_postponable else 'No' }}</dd>
+              </div>
+            {% endif %}
+            {% if selected_race.national_league is not none %}
+              <div class="detail-row">
+                <dt>National league</dt>
+                <dd>{{ selected_race.national_league }}</dd>
+              </div>
+            {% endif %}
+            {% if selected_race.additional_fees is not none %}
+              <div class="detail-row">
+                <dt>Additional fees</dt>
+                <dd>{{ 'Yes' if selected_race.additional_fees else 'No' }}</dd>
+              </div>
+            {% endif %}
+            {% if selected_race.pacers_allowed is not none %}
+              <div class="detail-row">
+                <dt>Pacers allowed</dt>
+                <dd>{{ 'Yes' if selected_race.pacers_allowed else 'No' }}</dd>
+              </div>
+            {% endif %}
+            {% if selected_race.finisher_apparel is not none %}
+              <div class="detail-row">
+                <dt>Finisher apparel</dt>
+                <dd>{{ 'Yes' if selected_race.finisher_apparel else 'No' }}</dd>
+              </div>
+            {% endif %}
+            {% if selected_race.accommodation_recommendations is not none %}
+              <div class="detail-row">
+                <dt>Accommodation recommendations</dt>
+                <dd>{{ 'Yes' if selected_race.accommodation_recommendations else 'No' }}</dd>
+              </div>
+            {% endif %}
+            {% if selected_race.live_tracking is not none %}
+              <div class="detail-row">
+                <dt>Live tracking</dt>
+                <dd>{{ 'Yes' if selected_race.live_tracking else 'No' }}</dd>
+              </div>
+            {% endif %}
+            {% if selected_race.finisher_medal is not none %}
+              <div class="detail-row">
+                <dt>Finisher medal</dt>
+                <dd>{{ 'Yes' if selected_race.finisher_medal else 'No' }}</dd>
+              </div>
+            {% endif %}
+          </dl>
+        </div>
+        {% endif %}
+
+      </div>
+
+      <!-- ELEVATION PROFILE PLACEHOLDER -->
+      <div class="elevation-placeholder">
+        <span class="elevation-placeholder-label">Elevation profile — coming soon</span>
+      </div>
+
+    </section>
+    {% endif %}
+
+    <!-- WHO'S COMING -->
+    {% if attendance_summary.going_count > 0 or attendance_summary.interested_count > 0 %}
+    <section class="whos-coming">
+      <h2 class="section-title">Who's coming</h2>
+      <div class="whos-coming-cols">
+        {% if attendance_summary.going_count > 0 %}
+        <div class="whos-coming-col">
+          <h3 class="whos-coming-col-title">Going</h3>
+          <ul class="whos-coming-list">
+            {% for u in attendance_summary.going_users %}
+              <li class="whos-coming-row">
+                {% if u.avatar_url %}
+                  <img class="avatar" src="{{ u.avatar_url }}" alt="" referrerpolicy="no-referrer">
+                {% else %}
+                  <span class="avatar avatar--initial" style="background:var(--avatar-color-{{ u.id % 4 }})">{{ (u.display_name or '?')[:1] | upper }}</span>
+                {% endif %}
+                <a href="/profile/{{ u.id }}" class="whos-coming-name">{{ u.display_name or 'Runner' }}</a>
+              </li>
+            {% endfor %}
+          </ul>
+          {{ hidden_line(attendance_summary.going_users, attendance_summary.going_hidden_count, 'going') }}
+        </div>
+        {% endif %}
+        {% if attendance_summary.interested_count > 0 %}
+        <div class="whos-coming-col">
+          <h3 class="whos-coming-col-title">Interested</h3>
+          <ul class="whos-coming-list">
+            {% for u in attendance_summary.interested_users %}
+              <li class="whos-coming-row">
+                {% if u.avatar_url %}
+                  <img class="avatar" src="{{ u.avatar_url }}" alt="" referrerpolicy="no-referrer">
+                {% else %}
+                  <span class="avatar avatar--initial" style="background:var(--avatar-color-{{ u.id % 4 }})">{{ (u.display_name or '?')[:1] | upper }}</span>
+                {% endif %}
+                <a href="/profile/{{ u.id }}" class="whos-coming-name">{{ u.display_name or 'Runner' }}</a>
+              </li>
+            {% endfor %}
+          </ul>
+          {{ hidden_line(attendance_summary.interested_users, attendance_summary.interested_hidden_count, 'interested') }}
+        </div>
+        {% endif %}
+      </div>
+    </section>
+    {% endif %}
+  {% else %}
+    <div class="locked-panel">
+      <h2 class="locked-panel-title">See the full race lineup</h2>
+      <p class="locked-panel-body">
+        Distances, climb, prices, cutoffs and registration status for every race at this event. Free once you sign in.
+      </p>
+      <a href="/auth/google?next={{ request.url.path }}" class="attendance-btn attendance-btn--signin locked-panel-cta">
+        Sign in to see race details
+      </a>
+    </div>
+
+    {% if attendance_summary.going_count > 0 or attendance_summary.interested_count > 0 %}
+    <section class="whos-coming whos-coming--anon">
+      <h2 class="section-title">Who's coming</h2>
+      <div class="whos-coming-cols">
+        {% if attendance_summary.going_count > 0 %}
+        <div class="whos-coming-col">
+          <h3 class="whos-coming-col-title">Going</h3>
+          <div class="whos-coming-anon-row">
+            {{ avatar_strip([], attendance_summary.going_count, attendance_summary.going_count, 4) }}
+          </div>
+        </div>
+        {% endif %}
+        {% if attendance_summary.interested_count > 0 %}
+        <div class="whos-coming-col">
+          <h3 class="whos-coming-col-title">Interested</h3>
+          <div class="whos-coming-anon-row">
+            {{ avatar_strip([], attendance_summary.interested_count, attendance_summary.interested_count, 4) }}
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </section>
+    {% endif %}
+  {% endif %}
+  </div>
+</div>
+{% endblock %}

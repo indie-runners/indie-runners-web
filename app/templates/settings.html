@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Settings — Indie Runners{% endblock %}
+
+{% block content %}
+<div class="settings-page">
+
+  <a href="/" class="back-link">← All events</a>
+
+  <header class="settings-head">
+    <h1 class="settings-title">Settings</h1>
+  </header>
+
+  {% if saved %}
+    <div class="settings-flash">Saved.</div>
+  {% endif %}
+
+  {% if error %}
+    <div class="settings-error">{{ error }}</div>
+  {% endif %}
+
+  <section class="settings-section">
+    <h2 class="section-title">Visibility</h2>
+    <p class="settings-help">
+      Who can see your race calendar: your name and avatar next to a race
+      you're going to or interested in. Counts always contribute either way.
+    </p>
+
+    <form method="post" action="/settings" class="settings-form">
+      <label class="settings-radio">
+        <input type="radio" name="visibility" value="public"
+               {% if current_visibility == 'public' %}checked{% endif %}>
+        <span class="settings-radio-label">
+          <strong>All indie runners</strong>
+          <span class="settings-radio-sub">Your calendar is visible to any signed-in indie runner. Signed-out visitors only see counts.</span>
+        </span>
+      </label>
+
+      <label class="settings-radio">
+        <input type="radio" name="visibility" value="crews_only"
+               {% if current_visibility == 'crews_only' %}checked{% endif %}>
+        <span class="settings-radio-label">
+          <strong>Crews only</strong>
+          <span class="settings-radio-sub">Your calendar is visible to your crew. Everyone else only sees counts.</span>
+        </span>
+      </label>
+
+      <button type="submit" class="settings-submit">Save</button>
+    </form>
+
+    <div class="settings-preview">
+      <a href="/profile/{{ current_user.id }}?preview=1">View my profile as others see it →</a>
+      <p class="settings-preview-note">
+        Preview mode drops the self-view short-circuit and renders
+        your profile the way a signed-in stranger would see it.
+      </p>
+    </div>
+  </section>
+
+  <section class="settings-section">
+    <h2 class="section-title">Delete account</h2>
+    <p class="settings-help">
+      Permanently removes your account, your sign-in link to Google, every
+      race you've marked (past ones too) and your crew memberships. A crew
+      with no one else in it is deleted; a crew you run passes to its
+      longest-standing remaining member. This cannot be undone.
+    </p>
+    <form method="post" action="/settings/delete-account" class="settings-form">
+      <label for="delete-confirm" class="settings-radio-sub">Type <strong>delete</strong> to confirm</label>
+      <input id="delete-confirm" name="confirm" type="text" autocomplete="off" required class="settings-input">
+      <button type="submit" class="settings-submit settings-submit--danger">Delete my account</button>
+    </form>
+  </section>
+
+</div>
+{% endblock %}

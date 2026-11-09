@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Private profile — Indie Runners{% endblock %}
+
+{% block content %}
+{% if preview_mode %}
+  <div class="preview-banner">
+    Preview: this is what a signed-in stranger sees on your profile.
+    <a href="/settings">Back to settings</a>
+  </div>
+{% endif %}
+<div class="profile-hidden">
+  <div class="profile-hidden-icon" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="48" height="48">
+      <rect x="4" y="11" width="16" height="9" rx="2"/>
+      <path d="M8 11V7a4 4 0 0 1 8 0v4"/>
+    </svg>
+  </div>
+  <h1 class="profile-hidden-title">This runner keeps their profile private</h1>
+  <a href="/" class="back-link">← Back to all events</a>
+</div>
+{% endblock %}

@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero">
+  <p class="hero-eyebrow">Your running community &nbsp;·&nbsp; Indie races &nbsp;·&nbsp; For runners, by runners</p>
+  <h1 class="hero-headline">Find out where your <em>friends</em> are running</h1>
+  <p class="hero-sub">Discover races across Europe and beyond, see who from your community is going, and let their plans inspire yours. Meet them at the start line and the finish.</p>
+</section>
+
+<form method="get" action="/" id="filter-form">
+  <div class="filters-bar">
+    <span class="filter-label">Filter</span>
+
+    <div class="filter-group">
+      <label>Search</label>
+      <input name="search" class="filter-input" type="text" placeholder="name, location, terrain"
+             value="{{ filters.search if filters.search else '' }}" style="width: 160px;">
+    </div>
+
+    <div class="filter-divider"></div>
+
+    <div class="filter-group">
+      <label>Distance</label>
+      <input name="distance_min" class="filter-input" type="number" placeholder="min km" min="0" max="400"
+             value="{{ filters.distance_min | trimnum }}">
+      <span style="font-size:12px; color: var(--text-light);">–</span>
+      <input name="distance_max" class="filter-input" type="number" placeholder="max km" min="0" max="400"
+             value="{{ filters.distance_max | trimnum }}">
+    </div>
+
+    <div class="filter-divider"></div>
+
+    <div class="filter-group">
+      <label>Date</label>
+      <input name="date_from" class="filter-input" type="date"
+             value="{{ filters.date_from if filters.date_from else '' }}">
+      <span style="font-size:12px; color: var(--text-light);">–</span>
+      <input name="date_to" class="filter-input" type="date"
+             value="{{ filters.date_to if filters.date_to else '' }}">
+    </div>
+
+    <div class="filter-divider"></div>
+
+    <div class="filter-group">
+      <label>Country</label>
+      <select name="country" class="filter-input">
+        <option value="">All countries</option>
+        {% for c in countries %}
+          <option value="{{ c }}" {% if filters.country == c %}selected{% endif %}>{{ c | title }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <button type="submit" class="apply-btn">Apply</button>
+
+    {% if has_active_filters %}
+      <a href="/" class="clear-filters">Clear filters</a>
+    {% endif %}
+
+    <span class="filter-results">Showing {{ races | length }}{% if total_races > races | length %} of {{ total_races }}{% endif %} races</span>
+
+    <a href="https://forms.gle/TSE2djQbkFyPLfXe7" target="_blank" rel="noopener noreferrer" class="suggest-btn">
+      <span class="suggest-btn-icon">+</span>
+      Suggest a race
+    </a>
+  </div>
+
+  {# <details> carries its own open/closed state, keyboard support and
+     no-JS operation, so the toggle needs no JavaScript. Opens on load when
+     an advanced filter is active, so a shared URL does not look empty. #}
+  <details class="filters-advanced"{% if has_advanced_filters %} open{% endif %}>
+    <summary class="filters-advanced-summary">Advanced filters</summary>
+    <div class="filters-advanced-body">
+
+      <div class="filter-group filter-group--wrap">
+        <label>Race format</label>
+        {% for slug, label in race_format_choices %}
+          <label class="filter-check">
+            <input type="checkbox" name="format" value="{{ slug }}"
+                   {% if slug in filters.formats %}checked{% endif %}>
+            {{ label }}
+          </label>
+        {% endfor %}
+      </div>
+
+      <div class="filter-divider"></div>
+
+      <div class="filter-group">
+        <label>Cutoff (hours)</label>
+        <input name="cutoff_min" class="filter-input" type="number" placeholder="min h" min="0" max="200" step="0.5"
+               value="{{ filters.cutoff_min | trimnum }}">
+        <span style="font-size:12px; color: var(--text-light);">–</span>
+        <input name="cutoff_max" class="filter-input" type="number" placeholder="max h" min="0" max="200" step="0.5"
+               value="{{ filters.cutoff_max | trimnum }}">
+      </div>
+
+    </div>
+  </details>
+</form>
+
+<script>
+  document.getElementById('filter-form').addEventListener('submit', function () {
+    // Blank fields are disabled so they stay out of the URL. Checkboxes are
+    // skipped: their value attribute is never empty, and unchecked boxes are
+    // already omitted by the browser.
+    this.querySelectorAll('input, select').forEach(function (el) {
+      if (el.type === 'checkbox') return;
+      if (el.value === '') el.disabled = true;
+    });
+  });
+</script>
+
+<section class="grid-section">
+  <div class="race-grid">
+    {% for race in races %}
+      {% set tile_index = loop.index0 %}
+      {% include "partials/race_tile.html" %}
+    {% endfor %}
+  </div>
+
+  <div class="suggest-banner">
+    <div class="suggest-banner-text">
+      <h3>Missing a race?</h3>
+      <p>Paste the link to any race website and we will add it to the platform. The more races we have, the easier it is for everyone to find their next adventure.</p>
+    </div>
+    <a href="https://forms.gle/TSE2djQbkFyPLfXe7" target="_blank" rel="noopener noreferrer" class="suggest-banner-cta">
+      <span style="font-size:16px; line-height:1;">+</span>
+      Suggest a race
+    </a>
+  </div>
+</section>
+{% endblock %}

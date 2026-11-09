@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Join {{ crew.display_name }} — Indie Runners{% endblock %}
+
+{% block content %}
+<div class="crews-page">
+
+  <header class="crews-head">
+    <h1 class="crews-title">Join {{ crew.display_name }}</h1>
+  </header>
+
+  <section class="settings-section">
+    <p class="settings-help">
+      You've been invited to this crew. Join to see members and events.
+    </p>
+    <form method="post" action="/crews/join/{{ token }}" class="settings-form">
+      <button type="submit" class="settings-submit">Join {{ crew.display_name }}</button>
+    </form>
+    <div class="settings-preview">
+      <a href="/">Cancel</a>
+    </div>
+  </section>
+
+</div>
+{% endblock %}

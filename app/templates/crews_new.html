@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}New crew — Indie Runners{% endblock %}
+
+{% block content %}
+<div class="crews-page">
+
+  <a href="/profile" class="back-link">← My profile</a>
+
+  <header class="crews-head">
+    <h1 class="crews-title">Create a crew</h1>
+  </header>
+
+  {% if error %}
+    <div class="settings-error">{{ error }}</div>
+  {% endif %}
+
+  <section class="settings-section">
+    <p class="settings-help">
+      Crews are invite-only. You'll be able to share a link with your
+      first member on the next page.
+    </p>
+
+    <form method="post" action="/crews/new" class="settings-form">
+      <label class="crews-new-label">
+        <span class="settings-radio-label"><strong>Crew name</strong></span>
+        <input type="text" name="display_name" class="crews-new-input"
+               value="{{ display_name }}" maxlength="120" required>
+      </label>
+
+      <button type="submit" class="settings-submit">Create crew</button>
+    </form>
+  </section>
+
+</div>
+{% endblock %}
