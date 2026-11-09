@@ -73,7 +73,7 @@ indie-runners-web/
 │   ├── IMAGING.md         # Ops reference for the offline tile image pipeline: bucket, CLI, add-a-photo, bump-a-version
 │   ├── stock_credits.md      # Photographer + Unsplash link per {terrain}_{NN} slot; source of stock_manifest.json
 │   └── dedicated_credits.md  # Photographer + Unsplash link per dedicated event slug
-├── exports/               # GITIGNORED: reports/ (audits), evidence/ (private detail per ticket), LOCAL.md; README § Boundaries
+├── exports/               # GITIGNORED: reports/ (audits), evidence/ (private detail per ticket), LOCAL.md, private-terms.txt (W-111); README § Boundaries
 ├── migrations/
 │   ├── 001_create_web_schema.sql   # Creates web schema, users, and attendance tables
 │   ├── 002_attendance_event_id.sql # Migrates web.attendance from race_id to event_id (event-level attendance)
@@ -114,6 +114,7 @@ indie-runners-web/
 │       ├── attendance.js  # Vanilla JS: fetch attendance routes, update tiles in place; mobile tap-to-reveal (first tap reveals, second navigates)
 │       ├── crews.js       # Vanilla JS: copy-invite-URL button on crews_detail.html (clipboard API + execCommand fallback)
 │       └── nav.js         # Vanilla JS: nav avatar dropdown toggle (click / outside-click / Escape)
+├── .githooks/             # pre-commit + commit-msg -> denylist.sh: refuse private terms from exports/private-terms.txt (W-111; ARCHITECTURE § Local development)
 ├── .github/
 │   └── workflows/
 │       └── ci.yml         # docker build, plus migrations/ applied on the scraper's pinned baseline (one read-only secret); no deploy

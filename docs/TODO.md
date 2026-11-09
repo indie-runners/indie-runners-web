@@ -1,19 +1,21 @@
-# TODO: W-102 — "← All events" on an event page drops the filters the user set
+# TODO: W-111 — Nothing stops a private term from being committed to a public repo
 
 > The developer's per-ticket checklist, overwritten by the next ticket.
 
-_2026-11-08_
+_2026-11-09_
 
 ## Steps
-- [x] Carry the state by referrer, not query param (why: CHANGELOG 1.9.71)
-- [x] `event_detail` builds `back_href`; `event.html` uses it
-- [x] Verify both tiers: curl per Referer, Chrome click-through
-- [x] CHANGELOG, ARCHITECTURE (referrer-policy paragraph), DEV_NOTES
+- [x] `.githooks/` pre-commit + commit-msg, one shared `denylist.sh`
+- [x] Term file `exports/private-terms.txt` in the main checkout, seeded
+- [x] Seed terms checked against every `core.*` slug column (evidence W-111)
+- [x] Proven both ways from the worktree (evidence W-111)
+- [x] ARCHITECTURE § Local development, CHANGELOG, FILE_TREE
 
 ## Measure
-- Back-link href for: no referrer, filtered index, /profile, bare /, other host,
-  `//host` path, an injected query. Done, results in CHANGELOG.
+- Refused / passed per case: done, see CHANGELOG 1.9.74.
 
 ## Unsure / disproved
-- Race switch on the event page drops to `/` (one hop). Left as a shortcut.
-- The 302 from a finished year: not exercised.
+- `core.hooksPath` is set in the shared config already. Until this merges,
+  the main checkout has no `.githooks/`, and git skips the hooks there
+  without a word.
+- Speed on a very large diff: not measured. It's a single awk pass.
