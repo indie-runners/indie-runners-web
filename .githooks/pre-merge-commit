@@ -1,0 +1,3 @@
+#!/bin/bash
+# A clean merge skips pre-commit; this runs the same staged check on the merge result.
+exec "$(dirname "$0")/denylist.sh"

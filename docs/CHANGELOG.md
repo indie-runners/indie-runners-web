@@ -4,6 +4,28 @@ All notable changes to the Indie Runners Web project will be documented in this 
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.9.77] — 2026-11-10
+
+### Fixed — the private-term hook checks paths, a blank list, and merges (W-114)
+
+- **Wrong belief: checking added lines and the message covers what a commit
+  makes public.** Cost: none yet. The PM showed a dummy term getting through
+  three ways in the W-111 review: in a file name, with a term file of only blank
+  lines, and in a `git merge` of a `--no-verify` commit. ARCHITECTURE said
+  "Every commit". **New belief:** paths are public as well, `[ ! -s ]` only
+  catches a zero-byte file, and a clean merge never runs `pre-commit`.
+- `denylist.sh` also matches staged added, renamed and copied paths, taken from
+  `git diff --cached --name-only`, because a pure rename or a binary file has no
+  `+++` line. It reports them as `<path>:filename hit: <term>`. A term file with
+  no non-blank line now refuses with the missing-file message.
+- **Acceptance 3: hook chosen.** The new `.githooks/pre-merge-commit` runs the
+  same staged check on the merge result. Existing clones get it through
+  `core.hooksPath` with nothing to re-run. ARCHITECTURE now names what is covered.
+- **Verified** in a throwaway repo with a dummy term (`evidence W-114`). These are
+  refused: a new file, a pure rename and a binary file with the term in the name;
+  a blank-only term file and a missing one; a content hit; a merge of a
+  `--no-verify` term commit. These pass: a clean commit and a clean true merge.
+
 ## [1.9.76] — 2026-11-10
 
 ### Added — one script for an Unsplash round (W-104)

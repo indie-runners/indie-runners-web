@@ -533,11 +533,13 @@ The active gcloud account must have the `cloudsql.client` role on the project (`
 The `DATABASE_URL` in `.env` uses the `postgresql+psycopg://` driver prefix required by SQLAlchemy 2.x with psycopg 3. The plain `postgresql://` prefix (used by psycopg 2 and psql) does not work with this setup.
 
 **Private-term hook (W-111).** Once per clone, run `git config core.hooksPath .githooks`
-(the setting lives in the shared `.git/config`, so worktrees get it too). Every commit then
-refuses an added line, or a commit message, that contains a term from
+(the setting lives in the shared `.git/config`, so worktrees get it too). `git commit` and a
+merge that makes a commit (`pre-merge-commit`, W-114) then refuse an added line, an added,
+renamed or copied path, or a commit message, that contains a term from
 `exports/private-terms.txt` in the main checkout (untracked, one term per line, any case).
-It refuses when that file is missing too. The refusal names the file and line and the term.
-`git commit --no-verify` skips it on purpose. It does not scan whole files or history.
+It refuses when that file is missing or has no non-blank term too. The refusal names the file
+and line (or `filename hit`) and the term. `--no-verify` skips it on purpose. It does not scan
+whole files, history, or what cherry-pick and rebase replay; a fast-forward makes no commit.
 
 **Cache policy for `/static/` (1.9.48, W-074 / W-064).** The templates write no `/static/`
 path by hand (`GET /favicon.ico` still redirects to the unversioned icon, so that one revalidates); `static_url('css/main.css')` renders `/static/css/main.css?v=<8 hex of md5>`,
