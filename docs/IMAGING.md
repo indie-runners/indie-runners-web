@@ -408,8 +408,10 @@ newly scraped events will appear there as they arrive.
    db.close()"
    ```
 
-   If a restart is not imminent, `python scripts/backfill_event_image_attribution.py`
-   writes the columns directly from the manifests.
+   The startup refresh only covers slugs in the serving image's baked
+   manifest. A photo published since that image was built needs
+   `python scripts/backfill_event_image_attribution.py`, which writes the
+   columns directly from the manifests.
 6. Verify the public url resolves, the tile renders on the site, and
    the credit pill shows the new photographer.
 

@@ -6,6 +6,8 @@
 # <file> has one event per line: `<slug> [query]`. The query is the rest of
 # the line and may contain spaces. Blank lines and lines starting with # are
 # ignored. Choosing the events is photo_candidates.py's job, before this.
+# After a stop, drop the lines already fetched before rerunning: the fetch
+# refuses a slug whose photo is already on disk.
 #
 # DATABASE: unsplash_fetch.py reads the index and the backfill writes
 # web.event_images, both through DATABASE_URL (.env), so the Cloud SQL proxy
@@ -56,7 +58,6 @@ done 3< "$LIST"
 step "manifest" python scripts/generate_dedicated_manifest.py
 step "publish" python -m app.imaging --style passthrough --tile-version v02
 
-echo; echo "== restart"
 step "restart: read serving revision" bash scripts/deploy.sh --check
 REV="$(gcloud run services describe "$SERVICE" --region="$REGION" --project="$PROJECT" \
   --format='value(status.traffic[0].revisionName)')" || { echo "STOPPED at step: restart" >&2; exit 1; }

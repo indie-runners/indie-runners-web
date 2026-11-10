@@ -445,8 +445,9 @@ therefore shows the new photo under the *stock* photographer's name — the
 licensing bug the heal's dedicated-skip rule exists to prevent, arriving by a
 different route. It is silent: the photo is right, the profile link resolves to
 a real photographer, and nothing errors. This bit 16 events at once during the
-1.8.0 batch. Restarting is the fix; `scripts/backfill_event_image_attribution.py`
-is the recovery path if a restart is not imminent.
+1.8.0 batch. A restart only rewrites slugs in the manifest baked into the
+serving image, so for photos published since that image was built,
+`scripts/backfill_event_image_attribution.py` is the fix (W-104).
 
 Terrain assignment: `EventImageService.get_or_create_for_events` inserts one
 row per event on first tile render with `on_conflict_do_nothing`, and
