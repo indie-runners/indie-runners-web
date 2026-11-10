@@ -61,3 +61,25 @@ the whole round.
 - Baking the manifest into a new image. That is a deploy, by
   `deploy.sh` or W-057's CD.
 - Changing any of the four scripts it calls.
+
+## Verdict
+
+**VERDICT: BLOCKED — R1, R2** — 2026-11-10. Reasoning and docs are sound.
+The PM ran a copy of the branch's script against stub `python`, `gcloud` and
+`deploy.sh`, and two input paths break acceptance 1. R1: a last line with
+no trailing newline is silently not fetched. R2: an unreadable (or empty)
+list file doesn't stop the round, which runs manifest and publish and
+reaches the restart prompt. Unblock: fix both, re-run those stubs, one
+line in the changelog. No ROUTED_CHECKS entry (`deploy: none`).
+
+**Not verified:** acceptance 5, a real round, was deferred by Paulo to
+W-115, whose acceptance 8 runs this script on a real list. So the real
+`gcloud run deploy --image <status.imageDigest>` restart, the backfill
+and the tile credit check have not been run.
+
+**VERDICT: APPROVED** — 2026-11-10, re-review of `304e1ae`. R1 and R2 are
+resolved. The PM re-ran the stub copy: an unterminated last line is
+fetched, and a missing file, a missing directory or a comments-only list
+stops with exit 1 before any step runs.
+
+**Not verified:** unchanged from above. Settled by W-115's acceptance 8.
