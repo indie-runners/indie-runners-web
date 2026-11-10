@@ -292,9 +292,13 @@ python scripts/generate_dedicated_manifest.py
 python -m app.imaging --style passthrough --tile-version v02
 ```
 
-Then **restart the app**. Until you do, the tile shows the new photo under
-the old stock photographer's credit — see the warning in the Adding a
-dedicated photo section below.
+Then **restart the app** and run `python scripts/backfill_event_image_attribution.py`.
+The restart reloads the dedicated slugs, but the serving image's baked
+manifest predates the round, so only the backfill writes the new credits.
+
+`bash scripts/unsplash_round.sh <file>` does all of the above from a file of
+`<slug> [query]` lines: the picks stay interactive, the restart asks for `y`,
+and it says so if the backfill did not run. It is a DB-touching session.
 
 Trail events need `--query` almost every time. The tile location is a
 trailhead village, and villages are not photographed: `Malaucène` returns
@@ -404,8 +408,10 @@ newly scraped events will appear there as they arrive.
    db.close()"
    ```
 
-   If a restart is not imminent, `python scripts/backfill_event_image_attribution.py`
-   writes the columns directly from the manifests.
+   The startup refresh only covers slugs in the serving image's baked
+   manifest. A photo published since that image was built needs
+   `python scripts/backfill_event_image_attribution.py`, which writes the
+   columns directly from the manifests.
 6. Verify the public url resolves, the tile renders on the site, and
    the credit pill shows the new photographer.
 

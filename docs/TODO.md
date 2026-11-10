@@ -1,20 +1,17 @@
-# TODO: W-112 — Every deploy installs whatever Python packages are newest that day
+# TODO: W-104 — An Unsplash round is five commands, and the one that sets the credits is easy to miss
 
 > The developer's per-ticket checklist, overwritten by the next ticket.
 
-_2026-11-09_
+_2026-11-10_
 
 ## Steps
-- [x] `pip freeze` of the serving image (00094-862, digest in spec) → `requirements.lock`
-- [x] Dockerfile installs the lock; `requirements.txt` comment points at it
-- [x] Local image freeze vs live freeze: empty diff (evidence W-112)
-- [x] Local image serves both tiers
-- [x] CHANGELOG, FILE_TREE
+- [x] `scripts/unsplash_round.sh`: fetch per line, manifest, publish, restart (asks y), backfill
+- [x] Dry run on stubs: parsing, tty stdin for the pick, stop-on-failure, decline, full path
+- [x] IMAGING batch pattern, FILE_TREE, CHANGELOG
+- [ ] Acceptance 5, a real round: Paulo, after W-115
 
 ## Unsure / disproved
-- The base tag `python:3.11-slim` still floats (out of scope). Both images
-  run 3.11.18 today. A 3.12 tag move would break the cp311 wheels loudly
-  at build time, not silently.
-- The regenerate command in the lock's header resolves fresh, so an
-  upgrade moves every transitive too. That's intended: it's a deliberate
-  diff someone reviews.
+- The fetch also opens a DB session (it reads the index), not only the
+  backfill. The header says the whole run is the session.
+- If traffic is pinned to an old revision (W-068), the restart's new
+  revision gets no traffic; the second `--check` would show the old name.
