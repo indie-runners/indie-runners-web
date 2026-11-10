@@ -84,3 +84,18 @@ digest is the only way to refer to it.
 the merge installs the same packages, and that is the point of the
 acceptance-4 diff. No routed check, because nothing in production is
 expected to change.
+
+## Verdict
+
+**VERDICT: APPROVED** — 2026-11-09. Acceptance 1–5 met. The sorted
+freezes of the locally built image and the live revision 00094-862 (by
+digest) diff empty: 51 packages, Python 3.11.18 in both (evidence W-112).
+The local image renders anon and signed-in. `deploy: batched`, and no
+ROUTED_CHECKS entry, because the first deploy should install the same
+packages.
+
+**Not verified:** the Cloud Build path that `deploy.sh` uses. Only a local
+`docker build` and CI's were run. What settles it: after the next deploy,
+`pip freeze` in the serving image equals `requirements.lock`. The sign-in
+flow wasn't run. The base tag still floats, and with it pip, setuptools
+and Python (out of scope).
