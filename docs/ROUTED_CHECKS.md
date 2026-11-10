@@ -1240,7 +1240,7 @@ zero ERROR logs on the revision. Not checked signed in, as above.*
 - **Retire:** seven consecutive sweeps with none, or the first routed
   repeat, whichever comes first. A routed repeat becomes infra's.
 
-### 56 — "← All events" on an event page keeps the filters from an index Referer (W-102) · LIVE from the gate
+### 56 — "← All events" on an event page keeps the filters from an index Referer (W-102) · LIVE — gate `00093-ljw`, image `b60e7b03…` (created 18:22:38Z, after W-102's merge at 18:20:49Z on 2026-11-08; first new digest after `00092-vzb`)
 
 - **Gate:** the first revision serving CHANGELOG 1.9.71 (W-102 merged). The
   developer's deploy output names it. W-102 is `deploy: batched`, so it may

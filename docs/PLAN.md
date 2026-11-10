@@ -58,11 +58,11 @@ new POST is as recoverable as today's. W-052 (a crew name over 120
 characters is a 500) is not reachable from a browser. W-057 and W-060
 stay gated on Paulo and block nothing here. After the arc,
 W-107, W-108 and W-103 shipped (1.9.68 to 1.9.70), then W-102 and W-018.
-Next: **W-111** (pre-commit denylist, before the public flip), then W-112
-(lock the Python dependencies, Paulo's "highest prio"), then W-109 (a
-malformed profile or event URL answers raw JSON, p2), W-083 (stats wording), W-088
-(registration wording), W-099 (search), W-097 (suggest copy). W-100
-dropped 2026-11-05, Paulo.
+W-111, W-112 and W-104 followed (1.9.74 to 1.9.76). Next (triage
+2026-11-10, the order is the Issues' labels): **#13** W-114 (denylist hook
+gaps), #14 W-109 (raw JSON on a malformed URL), #15 W-115 (Unsplash
+skill), then #16 W-083, #17 W-088, #18 W-099, #19 W-097. W-100 dropped
+2026-11-05, Paulo.
 
 ## What this arc excludes
 

@@ -1638,7 +1638,7 @@ same last slot and still falls out of view after W-096. That is the hover
 panel's layout, not the buttons; likely its own ticket after W-096.
 
 ## GPX files on the event page: what the scraper knows today, and what it does not
-2026-11-06 · raw · source: scraper PM triage 2026-11-06, carrying Paulo's idea of 2026-11-05 from `indie-runners-scraper`'s `docs/IDEAS.md`, "of high priority"
+2026-11-06 · raw (web triage 2026-11-10: left raw; settled by Paulo's hosting-vs-linking ruling on the scraper side, then render-vs-link and per-race-vs-per-event; the only candidate next arc on the table, so Paulo's to pick) · source: scraper PM triage 2026-11-06, carrying Paulo's idea of 2026-11-05 from `indie-runners-scraper`'s `docs/IDEAS.md`, "of high priority"
 
 Paulo: *"of high priority, start exploring ideas as to how to extract the gpx file automatically, and then how to use it on the web interface. I am thinking, having a sole repository which has all gpx files for all events and races. A script that renders the file into image tiles and connects them to their respective events/races/editions. Another script analyzes scraped content and determines whether the gpx file could be extracted automatically at scraping time or also as a manual process."*
 
