@@ -10,8 +10,8 @@ Read `docs/roles/README.md` first, then this.
 
 **Inbound — turn findings into tickets.** Read `exports/reports/AUDIT_*.md`,
 `docs/DEV_NOTES.md` and `docs/IDEAS.md`. Decide what is worth doing, in
-what order, split into what units. Write `tickets/W-###-<slug>.md` and a
-row in `tickets/BACKLOG.csv`. A finding marked `Routes to: scraper repo`
+what order, split into what units. File each as an Issue (§ Writing a
+ticket). A finding marked `Routes to: scraper repo`
 or `infra repo` is not ticketed: append the auditor's paste-ready entry
 to that repo's `docs/IDEAS.md` — the only writes you make outside this
 repo (README § The other repo).
@@ -26,8 +26,8 @@ settle it.
 
 **Outbound — review the branch before it merges.** Not "does it work" —
 you are asking whether the reasoning is sound and will still be sound when
-someone inherits it. A branch is handed over when its own `BACKLOG.csv`
-row says `review`; `wip` is not ready, whatever the commits suggest.
+someone inherits it. A branch is handed over when its PR is out of
+draft; a draft is not ready, whatever the commits suggest.
 Read its PR: the diff (`gh pr diff`) and the `build` result
 (`gh pr checks`). The verdict goes on the PR as a comment.
 
@@ -37,9 +37,9 @@ Read its PR: the diff (`gh pr diff`) and the `build` result
   second developer whose own work nobody reviews.
 - **You do not check out the developer's branch to edit it.** Read it
   (`git diff master...`) and write findings.
-- **You own `priority` `effort` `area` `deploy` `source` `notes`, and
-  `status` only as `open` when you create a row and `dropped` when you
-  drop one. Never `wip` `review` `done`, never `branch`.**
+- **You own the Issue: title, body, labels, and closing it as not
+  planned with the reason in a comment. Never the PR, never closing an
+  Issue as completed** (README § Single writer per field).
 - **Your authority is scope and ordering, not implementation.** Block a
   merge for missing reasoning, an overstated claim, or a ticket that is
   secretly two. Not because you would have written the code differently.
@@ -98,7 +98,7 @@ exact form**, and nothing after it:
 
 ```
 VERDICT: APPROVED
-VERDICT: APPROVED WITH FOLLOW-UPS — W-007, W-008
+VERDICT: APPROVED WITH FOLLOW-UPS — #12, #13
 VERDICT: BLOCKED — R1
 ```
 
@@ -122,24 +122,15 @@ guessing, and forcing the choice is work you owe the review anyway.
 `APPROVED WITH FOLLOW-UPS` means **merge now**. The follow-ups are
 already on the board; they are not conditions.
 
-### Then write it to the ticket
+### Not verified, in the same comment
 
-The same three-line verdict goes at the bottom of `tickets/W-###-<slug>.md`,
-which is tracked, and add what you did **not** check:
+The PR comment is the signal and the record; nothing is copied into a
+file. Above the line, say what you did **not** check:
 
 ```markdown
-## Verdict
-
-**VERDICT: APPROVED** — 2026-08-28. R1 resolved. Verified in the browser,
-anon and signed-in. Ticket is `deploy: batched`.
-
 **Not verified:** the empty-state path — no event in the corpus currently
 has zero races, so that branch has never rendered.
 ```
-
-The PR comment is the signal; this is the record. They are the same
-act, written for two audiences. The ticket and `ROUTED_CHECKS.md` reach
-`master` in your session's own PR (README § Boundaries).
 
 **"Not verified" is the half a terminal message loses**, and the half
 that matters when a fix turns out to be incomplete: the useful question
@@ -161,16 +152,22 @@ the gap.
 
 ## Writing a ticket
 
-`tickets/W-###-<slug>.md`. Sequential, never reused. `W-` so cross-repo
-references stay unambiguous.
+An Issue, from `.github/ISSUE_TEMPLATE/ticket.md` (yours), filed with
+`gh issue create --title … --body-file … --label …`. GitHub numbers it.
 
 Sections: what is wrong (the defect, not the symptom) · evidence, **quoted
 inline** as far as README's public rule allows, the rest named as
-`AUDIT_<ts> F<n>` or `evidence W-###` · acceptance (observable, checkable) · out of scope, and why.
+`AUDIT_<ts> F<n>` or `evidence #N` · acceptance (observable, checkable) ·
+out of scope, and why · source.
 
 **Always write "Out of scope".** It stops the ticket growing mid-work.
 
-## `deploy: immediate | batched`
+**Labels carry the fields**, one of each: `p1`–`p5`, `effort:S|M|L`,
+`deploy:immediate|batched|none`, `area:<name>` (new ones via `gh label
+create`); `not-next` plus a comment on what it waits on. **A frozen
+`W-###`** is refiled when wanted, body `Spec: tickets/W-###-<slug>.md`.
+
+## `deploy: immediate | batched | none`
 
 Set it when you write the ticket, not when the developer is tired.
 
@@ -181,6 +178,7 @@ your check 5 are all that stand between a broken page and traffic.
 
 - **immediate** — the site is broken or a user-facing defect is live.
 - **batched** — everything else.
+- **none** — nothing ships: an operator step, tooling, docs only.
 
 ## Prioritisation
 
@@ -201,10 +199,14 @@ write it, rewritten when the *arc* changes, not per ticket.
 
 `docs/TODO.md` is the developer's per-ticket working checklist. You read
 it — it is where a ticket's premise gets falsified — but you do not write
-it. The ticket `.md` is the per-ticket plan and it is yours.
+it. The Issue is the per-ticket plan and it is yours.
 
 When TODO says the ticket was wrong, amend the ticket. Do not let it be
 rescoped silently.
+
+**Next (noted 2026-11-10):** after about ten developer PRs, a second
+GitHub identity for this role, so the verdict is a review GitHub can
+require, and CODEOWNERS on `docs/`, `migrations/`, the deploy scripts.
 
 ## Clearing
 

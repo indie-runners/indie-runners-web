@@ -1,6 +1,12 @@
 # Tickets
 
-`BACKLOG.csv` is the board and is **authoritative** for open work.
+**Frozen 2026-11-10. Tickets are GitHub Issues from then on**, numbered
+from the first Issue filed after that date (Issues and PRs share one
+counter). Nothing here is edited again; a W ticket still wanted is
+refiled as an Issue whose body points at its file. What follows is how
+the board worked until then.
+
+`BACKLOG.csv` was the board and was **authoritative** for open work.
 
 Each ticket gets `W-###-<slug>.md` beside the CSV row when work is about
 to start. The CSV is the index; the `.md` is the spec the developer works

@@ -9,8 +9,8 @@ its scope.
 | Terminal | Brief | Model | Writes |
 |---|---|---|---|
 | Auditor | [auditor.md](auditor.md) | Sonnet 5, medium | `exports/reports/` only |
-| PM / gatekeeper | [pm.md](pm.md) | Opus 5, high | `tickets/`, `docs/PLAN.md`, `docs/ROUTED_CHECKS.md`, `exports/evidence/`; appends to the scraper's and infra's `docs/IDEAS.md` |
-| Developer | [developer.md](developer.md) | Opus 5, default | code, `docs/`, `exports/evidence/`, CSV `status` `wip` `review` `done` and `branch` |
+| PM / gatekeeper | [pm.md](pm.md) | Opus 5, high | Issues (body, labels, closing as not planned), review comments, `.github/ISSUE_TEMPLATE/`, `docs/PLAN.md`, `docs/ROUTED_CHECKS.md`, `exports/evidence/`; appends to the scraper's and infra's `docs/IDEAS.md` |
+| Developer | [developer.md](developer.md) | Opus 5, default | code, `docs/`, `exports/evidence/`, the PR (draft, ready, merge); closes an operator ticket's Issue |
 | Chief of staff | [chief-of-staff.md](chief-of-staff.md) | Opus 5, high | `docs/roles/`, `.claude/skills/`, `CLAUDE.md`, the `ROUTED_CHECKS.md` header, replies in `docs/handoffs/` |
 
 The fourth is not a peer of the other three. They do the work; it works
@@ -24,12 +24,12 @@ from the repo it came from.
 
 ```
 exports/reports/AUDIT_<date>T<time>.md   auditor findings   GITIGNORED
-exports/evidence/W-###.md                private detail     GITIGNORED
+exports/evidence/<N>.md                  private detail     GITIGNORED
 docs/IDEAS.md                            Paulo's inbox      tracked
 docs/DEV_NOTES.md                        developer drive-bys tracked
 docs/ROUTED_CHECKS.md                    PM -> auditor      tracked
-tickets/BACKLOG.csv                      the board          tracked
-tickets/W-###-<slug>.md                  the spec the developer works from
+GitHub Issue #N                          a ticket: the spec the developer works from
+tickets/                                 W-001..W-115 and BACKLOG.csv, frozen 2026-11-10
 docs/CHANGELOG.md                        where a release is declared
 docs/ARCHITECTURE.md                     why a decision was made
 docs/FILE_TREE.md                        what lives where
@@ -49,8 +49,8 @@ code), so each restates the ones it cannot.
 process rather than the work. Routine coordination belongs in a durable
 file instead.
 
-**Tickets are `W-###`** so a cross-repo reference is unambiguous — the
-scraper's board numbers `T-###` and findings travel between the two.
+**A ticket is a GitHub Issue, `#N`**, since 2026-11-10
+(`indie-runners-web#N` from another repo); `W-###` is a frozen one.
 
 **Only the audit reports are gitignored.** A finding survives its file
 being deleted: re-run the sweep. The two cross-session inboxes are
@@ -58,19 +58,14 @@ tracked, and `DEV_NOTES.md` is tracked for a reason learned the hard way
 next door: under `exports/` it was invisible from a worktree, so a note
 written while working never reached the branch or the reviewer.
 
-## Single-writer per column
+## Single writer per field
 
-`tickets/BACKLOG.csv` is written by two roles:
-
-| Column | Owner |
-|---|---|
-| `id` `title` `priority` `effort` `area` `deploy` `source` `notes` | PM |
-| `status`: `open` at creation, `dropped` when dropping | PM |
-| `status`: `wip` `review` `done`; `branch` | Developer |
-
-`status` is split by value, so each value still has one writer: the row's
-creator is the only role there to write `open`. A conflict on this file
-means someone crossed the line.
+A ticket's state is read from GitHub, never written: open = an Issue no
+PR names; wip = a **draft** PR saying `Closes #N`; review = out of
+draft; done = merged, or an operator Issue the developer closes;
+dropped = closed as not planned by the PM, reason in a comment. The
+Issue's title, body and labels are the PM's, the PR the developer's —
+a convention, since GitHub lets either edit both.
 
 ## Boundaries
 
@@ -98,22 +93,22 @@ means someone crossed the line.
   commits only; check `build` (workflow `ci`) green on a branch up to
   date with `master`. Every write: `git pull --ff-only` on `master`,
   branch, commit, push, `gh pr create --base master`.
-  - **A ticket** (`fix/<slug>`) merges on the PM's approving line, which
+  - **A ticket** (`fix/<slug>`, body `Closes #N`) merges on the PM's
+    approving line, which
     is the gate: GitHub cannot record it as an approval, the same
     account opens every PR. The developer runs `gh pr merge --merge`.
     Paulo's production gates stay `deploy:` and migrations.
-  - **Board-only work** — one PM session's tickets, specs and
-    `ROUTED_CHECKS.md`; one CoS pass; an operator ticket's `done` — is
-    one PR (`pm/<date>-<slug>`, `cos/<date>-<slug>`, `done/W-###`),
-    merged by whoever opened it once `build` is green. Nobody reviewed
-    these before; a PR per edit would only multiply the next item.
+  - **Board-only work** is on Issues and PR comments, no PR. One PM
+    session's `ROUTED_CHECKS.md`, `PLAN.md` and IDEAS outcomes, or one
+    CoS pass, is one PR (`pm/<date>-<slug>`, `cos/<date>-<slug>`),
+    merged by whoever opened it once `build` is green.
   - **Behind `master`**, whoever opened the PR runs `git fetch origin &&
     git merge origin/master && git push`, then waits for `build`. Merge,
     not rebase: rebased commits are not the ones the PM read.
   - The scraper's and infra's `docs/IDEAS.md` still take direct pushes
     until those repos get the ruleset.
-- **Tracked files, PR bodies and PR comments are public, in all three
-  repos.** Never write into a tracked file: real user names, crew names or slugs, user IDs tied to
+- **Tracked files, Issues, PR bodies and comments are public, in all
+  three repos.** Never write into a tracked file: real user names, crew names or slugs, user IDs tied to
   privacy settings, user/signup/traffic counts, visitor logs or search
   terms, pasted IAM policy or registry output, descriptions of unfixed
   privilege weaknesses, local machine paths, or any line tying a
@@ -124,7 +119,7 @@ means someone crossed the line.
   main checkout's `exports/`, cited by name, never by path:
   - an audit finding: `reports/AUDIT_<ts>.md`, cited `AUDIT_<ts> F<n>`;
   - anything else, such as a developer's "Verified" output or a PM's
-    measurement: `evidence/W-###.md`, cited `evidence W-###`. Whichever
+    measurement: `evidence/<N>.md`, cited `evidence #N`. Whichever
     role holds the detail appends a dated section and never edits one.
 
   From a worktree, the main checkout is the first line of
@@ -137,6 +132,10 @@ means someone crossed the line.
   again, not for understanding.
 - **Deploy is a decision, not a reflex** — `deploy: immediate | batched`,
   set when the ticket is written. This service is public.
+
+**Paulo's, not a session's:** rulesets, variables, environments, the
+org Projects board, interaction limits if strangers' Issues get noisy
+(never Issues off). No role reads the board; labels carry the fields.
 
 ## The other repo
 
@@ -168,7 +167,7 @@ how to observe it from their side, and the result. `core.*` race data
 **`indie-runners-infra` is the second route out.** It owns this service's
 shape (`indie-runners-infra/web/`), its grants, domain mappings and
 registry, fixed by a plan there, never by a hand grant here. The entry
-goes to its `docs/IDEAS.md` as `## web W-### <date> — <subject>`, then
+goes to its `docs/IDEAS.md` as `## web #N <date> — <subject>`, then
 `source: web-triage`, under the same rule; commit and push there. Its
 PM already reads ours, so traffic runs both ways.
 

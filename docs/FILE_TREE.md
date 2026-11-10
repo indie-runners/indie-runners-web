@@ -64,7 +64,7 @@ indie-runners-web/
 ├── .claude/skills/       # How each role is opened (/audit /triage /review /dev-ticket /cos); routes to docs/roles/, holds recipes not rules
 │   └── cos/scripts/inbox.py  # Lists handoffs to the chief of staff with no reply file; --count for /triage
 ├── docs/
-│   ├── handoffs/          # Requests between roles, one file each; a reply is its own file naming the request
+│   ├── handoffs/          # Requests between roles, one file each; a reply is its own file naming the request; README says who they are for
 │   ├── roles/             # The four role briefs and README (who writes what)
 │   ├── screenshots/        # Evidence a ticket asks to keep in the changelog (W-103)
 │   ├── ARCHITECTURE.md
@@ -117,6 +117,7 @@ indie-runners-web/
 │       └── nav.js         # Vanilla JS: nav avatar dropdown toggle (click / outside-click / Escape)
 ├── .githooks/             # pre-commit + commit-msg -> denylist.sh: refuse private terms from exports/private-terms.txt (W-111; ARCHITECTURE § Local development)
 ├── .github/
+│   ├── ISSUE_TEMPLATE/ticket.md  # The PM's ticket headings: what is wrong, evidence, acceptance, out of scope, source
 │   └── workflows/
 │       └── ci.yml         # docker build, plus migrations/ applied on the scraper's pinned baseline (one read-only secret); no deploy
 ├── .dockerignore          # Excludes .git, .venv, docs/, scripts/, migrations/, tickets/, .claude/, local-only dirs, .env from image

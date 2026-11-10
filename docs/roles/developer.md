@@ -10,15 +10,17 @@ Read `docs/roles/README.md` first, then this, then your ticket.
 
 One ticket. Start to finish. Then the next one.
 
-1. **Take the top open ticket** by `priority` from `tickets/BACKLOG.csv`.
-   Read `tickets/W-###-<slug>.md` in full, including "Out of scope".
+1. **Take the top open ticket**: the lowest `p` label among open Issues
+   no PR names (`gh issue list --label p1`, then `p2`…), skipping
+   `not-next`. Read the Issue in full, including "Out of scope".
    Summarise it for Paulo in plain English, then **end the turn and wait
    for his go-ahead** before step 2.
 2. **Worktree and branch**, from `master` (not `main`):
    ```bash
-   git worktree add ../irw-W003 -b fix/whatever
+   git worktree add ../irw-<N> -b fix/whatever
    ```
-   Branch in the `branch` column, `status` to `wip`.
+   With step 3's first commit, push and open a **draft** PR, body
+   `Closes #N`: that is `wip` (GitHub refuses a PR with no commits).
 3. **Rewrite `docs/TODO.md` for this ticket.** Keep its two-line header,
    with today's date and your ticket id; wipe the rest — it carries
    nothing across tickets. An item that outlives your
@@ -29,24 +31,22 @@ One ticket. Start to finish. Then the next one.
    anywhere.
 6. **Document.** Changelog with a version bump; ARCHITECTURE if a contract
    changed; FILE_TREE if the diff added, moved or removed a file.
-7. **Say the branch is ready: `status` to `review`, committed on the
-   branch, pushed, and `gh pr create --base master`** — body: the ticket
-   id and the "Verified" summary, public (README § Boundaries). That
-   commit is the handover — the PM cannot see your terminal. Back to `wip` if blocked, `review` again when fixed. The PM
-   reviews and ends with one line:
+7. **Say the branch is ready: push, put the "Verified" summary in the
+   PR body under `Closes #N`, and `gh pr ready`** — public (README
+   § Boundaries). Out of draft is the handover — the PM cannot see your
+   terminal. `gh pr ready --undo` while you fix a block, `gh pr ready`
+   again when fixed. The PM reviews and ends with one line:
 
    | | |
    |---|---|
    | `VERDICT: APPROVED` | merge |
-   | `VERDICT: APPROVED WITH FOLLOW-UPS — W-0xx` | merge; the named tickets are on the board, not conditions on you |
+   | `VERDICT: APPROVED WITH FOLLOW-UPS — #N` | merge; the named tickets are on the board, not conditions on you |
    | `VERDICT: BLOCKED — R#` | fix, then say ready again |
 
    **Read that line, not the paragraphs, for the decision.** The prose is
    why; the line is whether.
-8. **`status` to `done` as the branch's last commit, then `gh pr merge
-   --merge`** once `build` is green; remove the worktree. An operator
-   ticket has nothing to merge; `done` is still yours, as soon as the
-   line approves (W-018), in a `done/W-###` PR.
+8. **`gh pr merge --merge`** once `build` is green; remove the worktree.
+   An operator ticket: `gh issue close N` once the line approves.
 9. **Deploy only if the ticket says `deploy: immediate`.**
 
 ## There is no test suite
@@ -95,7 +95,7 @@ checklist items that imply a suite exists.
 ## Why one developer, one worktree
 
 **One worktree** because three terminals share this checkout; `master`
-stays checked out here and your ticket lives in `../irw-W###`.
+stays checked out here and your ticket lives in `../irw-<N>`.
 
 **One developer** because:
 
@@ -113,8 +113,9 @@ stream to contend for. That is not a virtue — see "Deploying".
 
 ## Hard boundaries
 
-- **You own `branch`, and `status` as `wip` `review` `done`, in the CSV.
-  Nothing else.** `open` and `dropped` are the PM's.
+- **You own the PR, and closing an operator ticket's Issue as
+  completed. Not the Issue's body or labels**, and not closing one as
+  not planned: those are the PM's.
 - **Scope is the ticket.** Not the ticket plus what you noticed.
 - **`core.*` is read-only.** `app/models/core.py` says so. If the data is
   wrong, that is the scraper repo's defect — route it, do not work around
@@ -166,10 +167,8 @@ line by line. Name the wrong belief and the evidence, not the diff.
 - [ ] `docs/` grew by 100 lines or fewer
 - [ ] Ticket acceptance criteria all checked
 - [ ] Nothing outside the ticket's scope is in the diff
-- [ ] PM's verdict line reads `APPROVED` or `APPROVED WITH FOLLOW-UPS`,
-      and any blocking findings are applied
-- [ ] The verdict is a comment on the PR; the PM's `.md` copy, with what
-      it did **not** check, travels in the PM's own PR
+- [ ] The PM's verdict comment on the PR ends `APPROVED` or
+      `APPROVED WITH FOLLOW-UPS`, and any blocking findings are applied
 
 ## Deploying
 
@@ -189,7 +188,7 @@ Keep the rollback line until the next audit sweep is clean.
 ## Clearing
 
 **One ticket, one session, start to finish.** Clear at the boundary —
-merged, `status: done`, worktree removed — and not before. What is not
+merged, Issue closed, worktree removed — and not before. What is not
 durable is what the work taught you: that the premise was wrong, what you
 already ruled out, why you rejected the obvious fix.
 
