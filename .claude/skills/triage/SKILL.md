@@ -33,7 +33,13 @@ Inbound duty only. A branch review is `/review`.
 2. `docs/DEV_NOTES.md` — developer drive-bys.
 3. `docs/IDEAS.md` — Paulo's; the one input that can change direction.
 4. The board: `gh issue list --state open --limit 200 --json
-   number,title,labels`, and `gh pr list` for what is in flight.
+   number,title,labels`, and `gh pr list` for what is in flight. Then
+   the frozen `tickets/BACKLOG.csv`'s rows still `open`: an empty Issue
+   list is not an empty board while one of them is wanted. Refile what
+   is as `W-###: <title>` (`pm.md` § Writing a ticket); drop one by
+   refiling it and closing it as not planned; leave the rest. A row
+   with an Issue of either state is done with (`gh issue list --state
+   all --search "W-### in:title"`).
 5. `docs/ROUTED_CHECKS.md` — your own standing predictions, to see which
    this report confirmed or falsified. `./scripts/deploy.sh --check`
    prints the serving revision the gates are stated against.
