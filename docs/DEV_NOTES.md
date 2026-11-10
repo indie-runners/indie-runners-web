@@ -710,3 +710,9 @@ a full navigation, or if Paulo wants the filters to survive it.
 `app/main.py:69` still lists `beta.indierunners.co`. Its mapping is gone, so
 the app no longer receives beta requests once Google's edge drops it. Harmless;
 removing it is a code change, out of W-018's scope.
+
+## 2026-11-10 — while on W-114: `gh pr edit` fails, so the dev-ticket recipe does too
+`gh pr edit 24 --body-file …` exits 1 on GitHub's Projects (classic)
+deprecation error (`repository.pullRequest.projectCards`) and leaves the body
+unchanged. What worked: `gh api -X PATCH repos/indie-runners/indie-runners-web/pulls/<N> -F body=@<file>`.
+`/dev-ticket` § 5 belongs to the chief of staff.

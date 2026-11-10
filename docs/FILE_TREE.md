@@ -115,7 +115,7 @@ indie-runners-web/
 │       ├── attendance.js  # Vanilla JS: fetch attendance routes, update tiles in place; mobile tap-to-reveal (first tap reveals, second navigates)
 │       ├── crews.js       # Vanilla JS: copy-invite-URL button on crews_detail.html (clipboard API + execCommand fallback)
 │       └── nav.js         # Vanilla JS: nav avatar dropdown toggle (click / outside-click / Escape)
-├── .githooks/             # pre-commit + commit-msg -> denylist.sh: refuse private terms from exports/private-terms.txt (W-111; ARCHITECTURE § Local development)
+├── .githooks/             # pre-commit + pre-merge-commit + commit-msg -> denylist.sh: refuse private terms in added lines, paths, messages, from exports/private-terms.txt (W-111, W-114; ARCHITECTURE § Local development)
 ├── .github/
 │   ├── ISSUE_TEMPLATE/ticket.md  # The PM's ticket headings: what is wrong, evidence, acceptance, out of scope, source
 │   └── workflows/

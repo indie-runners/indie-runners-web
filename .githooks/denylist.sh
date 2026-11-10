@@ -2,12 +2,13 @@
 # Refuse a commit whose added lines or message contain a private term (W-111).
 # Terms: one per line, fixed strings, any case, in the MAIN checkout's
 # exports/ (untracked), found from worktrees via --git-common-dir.
-# Usage: denylist.sh             scan the staged diff's added lines
+# Usage: denylist.sh             scan the staged diff's added lines and paths
 #        denylist.sh --msg FILE  scan a commit message
 set -u
 common=$(cd "$(git rev-parse --git-common-dir)" && pwd)
 terms="$(dirname "$common")/exports/private-terms.txt"
-if [ ! -s "$terms" ]; then
+# A missing file, or one with no non-blank term, would load no terms and pass everything.
+if ! grep -q '[^[:space:]]' "$terms" 2>/dev/null; then
     echo "denylist: no term file at $terms; refusing. Create it (one term per line)," >&2
     echo "or commit with --no-verify if you mean to skip the check." >&2
     exit 1
@@ -22,6 +23,9 @@ else
         h && /^\+\+\+ / { f = substr($0, 7); next }
         /^@@/ { h = 0; split($3, a, ","); n = substr(a[1], 2); next }
         /^\+/ { print f "\t" n "\t" substr($0, 2); n++ }')
+    # Paths are public too; a pure rename or a binary file has no +++ line, so ask git.
+    paths=$(git -c core.quotePath=false diff --cached --name-only --diff-filter=ACR | awk '{ print $0 "\tfilename hit\t" $0 }')
+    lines=$(printf '%s\n%s' "$lines" "$paths")
 fi
 # One pass: fixed-string, case-insensitive; blank term lines are ignored.
 hits=$(printf '%s\n' "$lines" | awk -v tf="$terms" '
