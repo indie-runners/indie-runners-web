@@ -299,6 +299,9 @@ manifest predates the round, so only the backfill writes the new credits.
 `bash scripts/unsplash_round.sh <file>` does all of the above from a file of
 `<slug> [query]` lines: the picks stay interactive, the restart asks for `y`,
 and it says so if the backfill did not run. It is a DB-touching session.
+`/unsplash-round` (Claude Code) prepares that file: it runs the shortlist,
+agrees a query per event in chat, and prints the command. The picks stay in
+your own terminal; Claude Code's `!` gives them no stdin.
 
 Trail events need `--query` almost every time. The tile location is a
 trailhead village, and villages are not photographed: `Malaucène` returns
