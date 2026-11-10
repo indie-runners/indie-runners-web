@@ -4,6 +4,27 @@ All notable changes to the Indie Runners Web project will be documented in this 
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.9.75] — 2026-11-09
+
+### Changed — the image installs exact pinned versions (W-112)
+
+- **Wrong belief: `requirements.txt` defined what production runs.** It
+  set floors (only SQLAlchemy had a ceiling), so every `deploy.sh` build
+  installed whatever was newest that day. Cost: the same commit built
+  twice could differ, and with no test suite a regression couldn't be
+  split into "our change" and "a dependency moved". **New belief:** the
+  versions are part of the commit. `requirements.lock` is the `pip
+  freeze` of the serving image, and the Dockerfile installs only it.
+  `requirements.txt` stays as the direct dependencies.
+- **Upgrading now:** edit `requirements.txt`, regenerate the lock with
+  the command in its header, review the diff, deploy.
+- **Verified:** froze revision 00094-862 by digest, built the branch
+  image locally, and diffed the two sorted freezes: empty, 51 packages,
+  both Python 3.11.18 (`evidence W-112`). Ran the local image against
+  the DB: `/` renders tiles for anon and for a minted signed-in cookie
+  (the signed-in render, not sign-in), and `/stats` renders. Nothing
+  upgraded. The base tag still floats (out of scope).
+
 ## [1.9.74] — 2026-11-09
 
 ### Added — a git hook that refuses private terms (W-111)

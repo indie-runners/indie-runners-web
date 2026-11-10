@@ -3,8 +3,8 @@ uvicorn[standard]>=0.29.0
 # Pinned to a minor range: the connection-pool cap in app/db.py is
 # verified against 2.0.x defaults (QueuePool, pool_size/max_overflow
 # semantics). An unpinned major could change pooling behaviour without
-# the cap noticing. The other requirements remain unpinned -- pinning
-# them is a separate change.
+# the cap noticing. Direct dependencies only; the exact versions the
+# image installs are in requirements.lock.
 sqlalchemy>=2.0.0,<2.1
 psycopg[binary]>=3.1.0
 pydantic-settings>=2.2.0
