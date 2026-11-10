@@ -98,6 +98,7 @@ indie-runners-web/
 │   ├── generate_dedicated_manifest.py # Parses docs/dedicated_credits.md into app/imaging/dedicated_manifest.json; aborts on mismatch with inputs/dedicated/
 │   ├── photo_candidates.py          # Read-only: ranked shortlist of stock-tile events worth a dedicated photo (engagement, then stock collisions); reads tile locations from RaceService so they match the rendered tile; flags events with no location
 │   ├── unsplash_fetch.py            # Interactive: searches Unsplash for an event's tile location, contact sheet in the browser, on pick triggers download_location, downloads the original, appends the credit entry, regenerates the manifest and publishes; --no-publish for batching, --query for trail events
+│   ├── unsplash_round.sh            # One round from a `<slug> [query]` file: fetch each (--no-publish), manifest, publish, restart (asks y; redeploys the serving digest), backfill (sets the credits). DB session for the whole run
 │   ├── backfill_event_image_attribution.py # One-shot: writes attribution_{name,url,source_url} for every event_images row, sourced from the two manifests
 │   └── backfill_event_image_terrain.py     # One-shot: rewrites stock terrain + stock_filename + attribution for event_images rows that silently defaulted to 'mixed' when source terrain_type was NULL at insert time; dry-run by default, --apply commits
 ├── static/

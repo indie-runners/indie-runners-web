@@ -4,6 +4,33 @@ All notable changes to the Indie Runners Web project will be documented in this 
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.9.76] — 2026-11-10
+
+### Added — one script for an Unsplash round (W-104)
+
+- **Wrong belief: a restart finishes a round.** The docs said "restart the
+  app". Cost: on 2026-11-01 the new photos went live under the old stock
+  photographers' credits. **New belief:** the restart reloads the
+  dedicated slugs from GCS, but startup only writes credits for slugs in
+  the manifest baked into the serving image, which predates the round
+  (`event_image_service.py` `refresh_dedicated_attributions`; revision
+  00086 redeployed 00085's digest 31 s before round 5's manifest commit).
+  The backfill is what sets them.
+- `scripts/unsplash_round.sh <file>` runs fetch (per line, interactive),
+  manifest, publish, restart and backfill, stops naming the failing step,
+  and warns on exit if the backfill did not run. The restart redeploys
+  the serving revision's own image digest, after `deploy.sh --check` and
+  a `y`. The four scripts it calls are unchanged.
+- **Verified:** with stub `python` and `gcloud` on `PATH` (no production,
+  no DB): comments and blank lines skipped, a multi-word query passed as
+  one argument, the fetch's stdin is the terminal, not the list; a failing
+  publish stops with "STOPPED at step: publish" and the backfill warning;
+  declining the restart stops there with the same warning; the full path
+  ends in the backfill. The real digest read
+  (`status.imageDigest` of the serving revision) was run read-only
+  against production. **Not yet run for a real round** (acceptance 5):
+  Paulo runs it after W-115.
+
 ## [1.9.75] — 2026-11-09
 
 ### Changed — the image installs exact pinned versions (W-112)
