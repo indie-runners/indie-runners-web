@@ -1652,7 +1652,7 @@ Paulo: *"of high priority, start exploring ideas as to how to extract the gpx fi
 3. Paulo has been asked on the scraper side whether re-serving organisers' files is acceptable at all, as against linking to them. Hold design on hosting until he rules.
 
 ## A skill that starts an Unsplash photo round
-2026-11-06 · raw · source: scraper analyst 2026-11-06 (Paulo's session), written on his behalf in that repo's `docs/IDEAS.md`, carried by the scraper PM at triage 2026-11-06. The decisions quoted are his, everything else is the analyst's. A, B or C is for this repo to take to him
+2026-11-06 · ticketed W-115 (Paulo chose A, 2026-11-10; after W-104) · source: scraper analyst 2026-11-06 (Paulo's session), written on his behalf in that repo's `docs/IDEAS.md`, carried by the scraper PM at triage 2026-11-06. The decisions quoted are his, everything else is the analyst's. A, B or C is for this repo to take to him
 
 
 Paulo: *"create a skill to start the process of selecting photos in unsplash, seemlessly."*
