@@ -30,9 +30,8 @@ to `docs/DEV_NOTES.md`.
 
 - **Scope is the ticket.** Drive-bys go to `docs/DEV_NOTES.md`; a
   thought about direction to `docs/IDEAS.md`.
-- **`branch`, and `status` as `wip` `review` `done`, in `BACKLOG.csv`.
-  Nothing else** (`open` and `dropped` are the PM's). Not
-  `docs/PLAN.md`.
+- **The PR is yours, and closing an operator ticket's Issue. Not the
+  Issue's body or labels** (the PM's). Not `docs/PLAN.md`.
 - **`core.*` is read-only.** Wrong data routes to the scraper; a template
   workaround hides it.
 - **Never run a migration without Paulo's explicit approval.** Writing
@@ -42,17 +41,23 @@ to `docs/DEV_NOTES.md`.
 
 ## 1. Take the ticket
 
-Top `open` row by `priority` in `tickets/BACKLOG.csv` — **read `notes`
-first** and skip it if they say `NOT THE NEXT TICKET`. No
-`tickets/W-###-<slug>.md` beside the row means not ready; do not
-improvise a spec.
+The lowest `p` label among open Issues that no PR names, skipping
+`not-next` (its comment says what to take instead):
+
+```bash
+gh issue list --label p1 --json number,title,labels   # then p2, p3…
+gh pr list --search '"Closes #<N>" in:body'           # empty = untaken
+```
+
+A frozen `W-###` in `tickets/` is not a ticket until the PM refiles it
+as an Issue; do not improvise a spec.
 
 Read the spec in full, including "Out of scope". **Stop: your next
 message is Paulo's summary**, then these fields — ticket, defect,
 evidence (quoted), acceptance, out of scope, deploy flag and whether it
 carries a migration, and why this one if a higher row was skipped.
-**Then end the turn and wait for his go-ahead** — no worktree,
-`BACKLOG.csv` edit or other command until he replies.
+**Then end the turn and wait for his go-ahead** — no worktree, PR or
+other command until he replies.
 
 ## 2. Worktree
 
@@ -60,16 +65,20 @@ On Paulo's go-ahead:
 
 ```bash
 git pull --ff-only          # master moves only on GitHub now
-git worktree add ../irw-W### -b fix/<slug-of-the-defect>
-cd ../irw-W### && ln -s ../indie-runners-web/.env .env
+git worktree add ../irw-<N> -b fix/<slug-of-the-defect>
+cd ../irw-<N> && ln -s ../indie-runners-web/.env .env
 ln -s ../indie-runners-web/cloud-sql-proxy cloud-sql-proxy
 ```
 
-`status` → `wip`, branch in `branch`. Rewrite `docs/TODO.md` for this
-ticket, keeping its header with the date and ticket id updated — steps, what you must measure, what you are unsure of, and later
+Rewrite `docs/TODO.md` for this ticket, keeping its header with the date and ticket id updated — steps, what you must measure, what you are unsure of, and later
 what the work disproved. Nothing carries across tickets: an item that
 outlives yours goes to `docs/DEV_NOTES.md`, for the board. A false premise is told to the PM, not silently
-rescoped.
+rescoped. Commit it, then open the draft — that is `wip`:
+
+```bash
+git push -u origin fix/<slug>
+gh pr create --draft --base master --title "<title>" --body "Closes #<N>"
+```
 
 ## 3. Build, then verify by running it
 
@@ -88,7 +97,7 @@ ss -ltnp | grep :8000        # then: ls -l /proc/<pid>/cwd
 
 Changelog with a version bump — wrong belief, cost, new belief, evidence,
 **and what you verified and how**; output with user data or counts goes
-to `evidence W-###` (README § Boundaries). ARCHITECTURE if a decision changed,
+to `evidence #N` (README § Boundaries). ARCHITECTURE if a decision changed,
 claims scoped to what you ran. FILE_TREE in the same diff if a file was
 added, moved or removed.
 
@@ -102,37 +111,37 @@ git diff master --numstat -- docs/ | awk '{n+=$1} END {print n}'   # ≤ 100
 ```
 
 Then the PM's block: believed → found · changed, by file · verified,
-which tier and how · version · migration and deploy flag. Then set
-`status` → `review` on the branch, commit, push, and open the PR —
-**that commit is the handover**, not the message; the PM reads the board
-and the PR, not your terminal.
+which tier and how · version · migration and deploy flag. Push, put
+that block in the PR body under `Closes #N`, and mark it ready —
+**out of draft is the handover**, not the message; the PM reads the
+PR, not your terminal.
 
 ```bash
-git push -u origin fix/<slug>
-gh pr create --base master --title "W-###: <title>" --body-file <file>
+git push && gh pr edit --body-file <file> && gh pr ready
 ```
 
-The body is the ticket id and the "Verified" summary. **It is public**:
-output with user data or counts goes to `evidence W-###`, cited by name.
+**The body is public**: output with user data or counts goes to
+`evidence #N`, cited by name.
 If `master` moves before the merge, bring it in yourself — `git fetch
 origin && git merge origin/master && git push`, never a rebase — and
 wait for `build` again.
-After a `BLOCKED` line, `wip` while you fix, `review` again. **Then wait.
+After a `BLOCKED` line, `gh pr ready --undo` while you fix, `gh pr
+ready` again. **Then wait.
 Do not clear while waiting.** Read the verdict line, not the paragraphs.
 
 ## 6. After an approving verdict
 
-The verdict is the last line of the PM's comment on the PR. `status` →
-`done` as the branch's last commit, push, then:
+The verdict is the last line of the PM's comment on the PR. The merge
+closes the Issue:
 
 ```bash
 gh pr checks --watch && gh pr merge --merge   # GitHub deletes the branch
 cd ../indie-runners-web && git pull --ff-only
-git worktree remove ../irw-W### && git branch -D fix/<slug>
+git worktree remove ../irw-<N> && git branch -D fix/<slug>
 ```
 
-An operator ticket has no branch: `done` is still yours when the line
-approves, in a one-commit `done/W-###` PR, merged the same way.
+An operator ticket has no branch: close its Issue when the line
+approves, `gh issue close <N> --comment "<what was done>"`.
 
 **Deploy only if the ticket says `deploy: immediate`.** A migration goes
 before the image, and only on Paulo's word. `deploy.sh` builds local

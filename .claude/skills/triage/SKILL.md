@@ -17,11 +17,9 @@ Inbound duty only. A branch review is `/review`.
 ## Boundaries — the ones this skill cannot enforce for you
 
 - **You do not write code.** Not a fix, not a one-line correction.
-- **`BACKLOG.csv`: `priority` `effort` `area` `deploy` `source` `notes`
-  are yours, and `status` as `open` at creation or `dropped`. Never
-  `wip` `review` `done` or `branch`.** While a ticket is in flight,
-  leave its row alone entirely — a row is one line and git conflicts on
-  it however the columns are divided.
+- **The Issue is yours** — title, body, labels, closing as not planned.
+  Never a PR, never closing as completed. While a PR names the Issue,
+  amend it only by comment, so the developer sees the change.
 - **`docs/ROUTED_CHECKS.md` entries are yours; its header is the chief
   of staff's.**
 - **Two writes outside this repo:** a `core.*` finding goes to the
@@ -34,7 +32,8 @@ Inbound duty only. A branch review is `/review`.
    against the previous sweep.
 2. `docs/DEV_NOTES.md` — developer drive-bys.
 3. `docs/IDEAS.md` — Paulo's; the one input that can change direction.
-4. `tickets/BACKLOG.csv` — the board.
+4. The board: `gh issue list --state open --limit 200 --json
+   number,title,labels`, and `gh pr list` for what is in flight.
 5. `docs/ROUTED_CHECKS.md` — your own standing predictions, to see which
    this report confirmed or falsified. `./scripts/deploy.sh --check`
    prints the serving revision the gates are stated against.
@@ -50,12 +49,12 @@ Nothing is left silent:
 
 | Outcome | What it means |
 |---|---|
-| **Ticket** | new `W-###` row + `.md`; next free id, never reused |
-| **Raise / lower** | an existing ticket's priority changes; say why |
+| **Ticket** | a new Issue (§ 3) |
+| **Raise / lower** | swap its `p` label; say why in a comment |
 | **Retire / amend a check** | in the check's header, which wins over its body |
 | **New check** | something shipped that a future sweep must read correctly |
-| **Route** | `core.*` → scraper `docs/IDEAS.md`, public rule (README), `source: web-audit`; infra → infra `docs/IDEAS.md`, `## web W-### <date> — <subject>`, `source: web-triage`; commit and push there |
-| **Drop** | **with a reason** |
+| **Route** | `core.*` → scraper `docs/IDEAS.md`, public rule (README), `source: web-audit`; infra → infra `docs/IDEAS.md`, `## web #N <date> — <subject>`, `source: web-triage`; commit and push there |
+| **Drop** | close as not planned, **the reason in a comment** |
 | **Leave raw** | with what would settle it |
 
 An `IDEAS.md` entry saying the arc is the wrong shape is a `docs/PLAN.md`
@@ -63,14 +62,21 @@ rewrite, not a set of tickets. Record each entry's outcome on it.
 
 ## 3. Tickets
 
-`tickets/W-###-<slug>.md`: what is wrong · evidence **pasted verbatim**
-where README's public rule allows it, otherwise named as `AUDIT_<ts> F<n>`
-· acceptance that is observable · **out of scope**, always · no `Status:`
-line (the CSV is authoritative) · `deploy: immediate | batched`, set now.
+An Issue from `.github/ISSUE_TEMPLATE/ticket.md`: what is wrong ·
+evidence **pasted verbatim** where README's public rule allows it,
+otherwise named as `AUDIT_<ts> F<n>` · acceptance that is observable ·
+**out of scope**, always · source. Labels, one of each, set now:
 
-Priority order is the brief's. A ticket that is ranked high but not next
-says `NOT THE NEXT TICKET` in `notes`, what it waits on, and which to
-take instead.
+```bash
+gh issue create --title "<defect>" --body-file <file> \
+  --label p3,effort:S,deploy:batched,area:templates
+```
+
+Priority order is the brief's. A ticket ranked high but not next gets
+`not-next` and a comment: what it waits on, which to take instead. A
+frozen `W-###` is refiled this way when wanted (`pm.md` § Writing a
+ticket). Tickets, drops and label changes need no PR; `PLAN.md`,
+IDEAS outcomes and routed checks go in one `pm/<date>-<slug>` PR.
 
 ## 4. Routed checks
 

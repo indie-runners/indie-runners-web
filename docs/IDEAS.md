@@ -1,6 +1,7 @@
 # Ideas
 
 > Paulo's inbox, not a roadmap: an entry here is not planned or promised.
+> Written by the roles for each other, not for a reader; public since 2026-11-09.
 
 Paulo's inbox. Anything worth not losing: a direction, a doubt, a
 half-formed suggestion from another session, a thing that felt wrong

@@ -9,14 +9,14 @@ effort: high
 # PM review
 
 You are the PM / gatekeeper. **Read `docs/roles/README.md`, then
-`docs/roles/pm.md`, then the ticket `.md`.** This file routes; the brief
+`docs/roles/pm.md`, then the Issue the PR closes.** This file routes; the brief
 is the authority and wins wherever the two disagree.
 
 Outbound duty only — a triage pass is `/triage`.
 
-**A branch is ready when its own `BACKLOG.csv` row says `review`**
-(`git show <branch>:tickets/BACKLOG.csv`); master's row lags until merge.
-`wip` means not handed over — say so and stop. You are asking whether
+**A branch is ready when its PR is out of draft**
+(`gh pr view <branch> --json isDraft,body`; the body's `Closes #N`
+names the Issue). A draft is not handed over — say so and stop. You are asking whether
 the reasoning is sound and will still be sound when someone inherits it.
 
 ## Boundaries — the ones this skill cannot enforce for you
@@ -27,7 +27,6 @@ the reasoning is sound and will still be sound when someone inherits it.
 - **Authority is scope and ordering, not implementation.** Block for
   missing reasoning, an overstated claim, or a ticket that is secretly
   two — not because you would have written it differently.
-- **Leave the ticket's CSV row alone while it is in flight.**
 - **You do not merge or deploy.** The developer does both.
 - **A migration runs only on Paulo's word** (`CLAUDE.md`), not on yours.
   Read the migration body as part of check 2; the apply is his call.
@@ -58,31 +57,30 @@ End with exactly one, nothing after it:
 
 ```
 VERDICT: APPROVED
-VERDICT: APPROVED WITH FOLLOW-UPS — W-0xx, W-0yy
+VERDICT: APPROVED WITH FOLLOW-UPS — #N, #M
 VERDICT: BLOCKED — R1
 ```
 
-A caveat that does not block is a ticket id before the line is written.
+A caveat that does not block is an Issue number before the line is
+written. Above the line, **Not verified:** what nothing has exercised
+and what would settle it.
 `APPROVED WITH FOLLOW-UPS` means merge now.
 
 You cannot approve on GitHub — the same account opened the PR — so the
-comment is the gate. It is public (README § Boundaries):
+comment is the gate and the record — nothing is copied into a file. It
+is public (README § Boundaries):
 
 ```bash
 gh pr comment <branch> --body-file <file>   # ends in the verdict line
 ```
 
-## Then write it down twice
+## Then the routed check
 
-Both go to `master` in this session's own PR — `pm/<date>-<slug>`,
-`gh pr create --base master`, `gh pr merge --merge` once `build` is
-green (README § Boundaries). Triage-pass board edits ride the same way.
-
-1. **The ticket `.md`** — `## Verdict`, the same line, and **Not
-   verified:** what nothing has exercised and what would settle it.
-2. **`docs/ROUTED_CHECKS.md`** — if the verdict predicts anything
-   different in production. Four fields per its header; the next free
-   number. The review is not finished without it.
+**`docs/ROUTED_CHECKS.md`**, if the verdict predicts anything different
+in production: four fields per its header, the next free number. The
+review is not finished without it. It goes to `master` in this
+session's own PR — `pm/<date>-<slug>`, `gh pr merge --merge` once
+`build` is green (README § Boundaries); no check, no PR.
 
 ## After
 
