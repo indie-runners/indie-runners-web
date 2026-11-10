@@ -698,6 +698,7 @@ argument and `.avatar--lg` are now dead. `.hover-avatar` in `main.css` was dead
 already. Left alone, out of W-107's scope.
 
 ## 2026-11-08 — while on W-102: the back link's filters survive one hop
+*PM 2026-11-10 — no ticket. Pre-existing, not a regression, and the upgrade trigger is named. Whether filters should survive the race-table hop is Paulo's call, raised at triage.*
 `shortcut:` in `main.py` `event_detail`: the back link reads the filters from
 `Referer`, so choosing a race in the event page's table (a full navigation to
 `?race=`) makes the event page the referrer and the link falls back to `/`.
@@ -705,6 +706,7 @@ Same as before W-102, not a regression. Upgrade if the race table stops being
 a full navigation, or if Paulo wants the filters to survive it.
 
 ## 2026-11-09 — while on W-018: `beta` in `_REDIRECTED_HOSTS` is now dead
+*PM 2026-11-09 — ticketed **W-113** (p5, still a frozen row; refiled when wanted).*
 `app/main.py:69` still lists `beta.indierunners.co`. Its mapping is gone, so
 the app no longer receives beta requests once Google's edge drops it. Harmless;
 removing it is a code change, out of W-018's scope.
