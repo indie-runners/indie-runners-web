@@ -70,7 +70,8 @@ No quotes around the query. Print the absolute path.
 
 ## 4. Hand over
 
-Print, for Paulo's own terminal, from the repo root:
+Print, for Paulo's own terminal (not Claude Code's `!` prefix: it gives the
+pick no stdin, so every event skips; tried 2026-11-10), from the repo root:
 
 ```bash
 bash scripts/unsplash_round.sh imports/unsplash_round_<date>.txt
