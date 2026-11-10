@@ -76,3 +76,10 @@ line in the changelog. No ROUTED_CHECKS entry (`deploy: none`).
 W-115, whose acceptance 8 runs this script on a real list. So the real
 `gcloud run deploy --image <status.imageDigest>` restart, the backfill
 and the tile credit check have not been run.
+
+**VERDICT: APPROVED** — 2026-11-10, re-review of `304e1ae`. R1 and R2 are
+resolved. The PM re-ran the stub copy: an unterminated last line is
+fetched, and a missing file, a missing directory or a comments-only list
+stops with exit 1 before any step runs.
+
+**Not verified:** unchanged from above. Settled by W-115's acceptance 8.
