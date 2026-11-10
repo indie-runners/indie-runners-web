@@ -26,7 +26,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   one argument, the fetch's stdin is the terminal, not the list; a failing
   publish stops with "STOPPED at step: publish" and the backfill warning;
   declining the restart stops there with the same warning; the full path
-  ends in the backfill. The real digest read
+  ends in the backfill. After the W-104 review (R1, R2): a last line with
+  no newline is fetched; a missing file or directory, and a list of only
+  comments, stop with exit 1 before any fetch, publish or restart. The real digest read
   (`status.imageDigest` of the serving revision) was run read-only
   against production. **Not yet run for a real round** (acceptance 5):
   Paulo runs it after W-115.

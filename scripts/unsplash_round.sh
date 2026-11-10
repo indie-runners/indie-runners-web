@@ -30,6 +30,9 @@ SERVICE="indie-runners-web"
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 LIST="$(realpath "${1:?usage: bash scripts/unsplash_round.sh <file of slug [query] lines>}")"
 cd "$ROOT"
+# Unreadable, or no event lines: stop before anything publishes or restarts.
+grep -qvE '^[[:space:]]*(#|$)' "$LIST" 2>/dev/null \
+  || { echo "STOPPED: $1 is unreadable or has no event lines" >&2; exit 1; }
 
 BACKFILLED=0
 trap '[[ $BACKFILLED == 1 ]] || {
@@ -46,7 +49,7 @@ step() {  # step <name> <command...>: run it, or stop the round naming the step
 }
 
 # Fetch. fd 3 carries the list so the photo pick keeps the terminal as stdin.
-while read -r slug query <&3; do
+while read -r slug query <&3 || [[ -n "$slug" ]]; do  # || keeps an unterminated last line
   [[ -z "$slug" || "$slug" == \#* ]] && continue
   if [[ -n "$query" ]]; then
     step "fetch $slug" python scripts/unsplash_fetch.py "$slug" --no-publish --query "$query"
