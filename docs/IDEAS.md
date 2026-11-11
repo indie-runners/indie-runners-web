@@ -1693,3 +1693,20 @@ Paulo: *"please draft it in ideas, as highest prio at the moment"*
 **A starting shape, not a spec.** Keep `requirements.txt` as the direct dependencies. Generate a fully pinned file from the image now live (`pip freeze` inside it), so the pins equal what production already runs. The Dockerfile installs from the pinned file. Upgrades become a deliberate change. Once public, Dependabot (free) raises security bumps against the pins. Hashes (`--require-hashes`) are optional.
 
 **Not a blocker for the move to the public repo.** A good first change after the flip.
+
+## Nothing writes to the database before Paulo has seen it and said yes: the rule reaches this repo too
+2026-11-11 · raw · source: indie-runners-scraper, chief of staff's ruling `docs/handoffs/2026-11-11-cos-to-pm-sql-preview.md`, carried by the scraper's PM
+
+Paulo, 2026-11-06: *"extra instructions for all skill, whenver an sql will be run to something other than read the database, a preview of the script has to be presented to paulo"*. Asked 2026-11-11 whether it reaches the other repos: *"Both repos"*.
+
+**The rule as the scraper words it** (its `CLAUDE.md`, verbatim):
+
+> **Nothing writes to the database before Paulo has seen it and said yes** (Paulo, 2026-11-06; scope ruled 2026-11-11). Anything beyond a read is covered: a typed statement, a migration apply, or a script that writes through code (`accuracy_spot_check.py load`, an importer, `router.py --job delete_target`). Show him the exact SQL, or the exact command plus the tables and rows or keys it will touch, from its dry run or a count. Then wait. For a migration this comes on top of the PM's apply read, not instead of it. **One exception:** production is broken and the write is the fix. Then apply it, show him straight after, and disclose it in the handoff. A headless session cannot wait, so it parks. Not covered: the deployed jobs, and the test suite.
+
+**His other rulings, 2026-11-11:**
+- Q3, does he need to answer or only see it: *"Needs my yes"*.
+- Q4, writes made through code: *"Yes, cover them"*.
+
+**For this repo's chief of staff to word for its own skills:** where it applies to `web.*` writes, `web.*` migrations and any script that writes. `core.*` stays read-only from this side, so nothing here changes that.
+
+**Why it bit the same day.** On the scraper side, a command run as a "preview" deleted a test target outright: its dry-run default was documented and not enforced (scraper T-220). A preview has to be one that cannot write.
