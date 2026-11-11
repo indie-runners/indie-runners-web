@@ -4,6 +4,26 @@ All notable changes to the Indie Runners Web project will be documented in this 
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.9.79] — 2026-11-11
+
+### Added — round 2026-11-10's manifest and credits are committed (#26)
+
+- **Wrong belief: a round is finished when its photos are live.** Cost: six
+  events (`brighton_half_marathon`, `trail_des_brosses`, `trail_gorges_la`,
+  `trail_lac_villerest`, `trail_petites_roches`, `trail_urbain_sete`) have had
+  a credits entry on `master` since the first public commit (6f9c0f6) and no
+  manifest entry, so every deploy since 2026-11-09 baked a manifest without
+  them. Production still showed their credits, because the database already held
+  them. **New belief:** a round ends when both `dedicated_manifest.json` and
+  `dedicated_credits.md` are on `master`, as `unsplash_round.sh`'s last line says.
+- Credits add 10 entries, this round's picks. The manifest adds 16: those 10,
+  plus the six above. `generate_dedicated_manifest.py` rebuilds it from disk, so
+  the round repaired drift older than itself.
+- **Verified:** with `comm` over the added `## <slug>` lines and the added
+  manifest `event_slug`s, I found 10 in both and 6 in the manifest only, each with one
+  credits entry on `master`. The 10 render on production (#25); the PM curled
+  the six and found the credits the new manifest names. No app code changed.
+
 ## [1.9.78] — 2026-11-10
 
 ### Added — `/unsplash-round`, a skill that starts a photo round (W-115)

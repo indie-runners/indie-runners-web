@@ -56,6 +56,13 @@
     "photo_url": "https://unsplash.com/photos/rose-wine-glass-on-grass-with-people-by-a-lake-uEQlHoz2FOE?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
   },
   {
+    "event_slug": "alpenstadt_city_trail",
+    "title": "Alpenstadt City Trail",
+    "photographer_name": "Bryan Dijkhuizen",
+    "photographer_url": "https://unsplash.com/@bryandijkh?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText",
+    "photo_url": "https://unsplash.com/photos/a-church-with-a-steeple-surrounded-by-trees-7NIVY5q2pEo?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
+  },
+  {
     "event_slug": "alpin_team_trail",
     "title": "Alpin Team Trail",
     "photographer_name": "John O'Nolan",
@@ -210,6 +217,13 @@
     "photo_url": "https://unsplash.com/photos/aerial-view-of-city-during-daytime-8rtZkhmqsN4?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
   },
   {
+    "event_slug": "brighton_half_marathon",
+    "title": "Brighton Half Marathon",
+    "photographer_name": "Nick Fewings",
+    "photographer_url": "https://unsplash.com/@jannerboy62?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText",
+    "photo_url": "https://unsplash.com/photos/a-pier-on-a-beach-with-a-blue-sky-in-the-background-TefuwyhN7ws?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
+  },
+  {
     "event_slug": "brighton_marathon",
     "title": "Brighton Marathon",
     "photographer_name": "Janice Kwong",
@@ -329,6 +343,13 @@
     "photo_url": "https://unsplash.com/photos/two-people-biking-and-other-people-walking-on-pathway-near-buildings-under-white-and-blue-sky-0PSCd1wIrm4?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
   },
   {
+    "event_slug": "country_capital_ultra",
+    "title": "Country Capital Ultra",
+    "photographer_name": "Brent Jenkins",
+    "photographer_url": "https://unsplash.com/@brentjenkins?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText",
+    "photo_url": "https://unsplash.com/photos/a-dirt-road-running-through-a-lush-green-field-nz3cmUgmZrE?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
+  },
+  {
     "event_slug": "cracovia_royal_half",
     "title": "Cracovia Royal Half",
     "photographer_name": "Ostap Senyuk",
@@ -348,6 +369,13 @@
     "photographer_name": "Jisca Lucia",
     "photographer_url": "https://unsplash.com/@wanderlandjournal?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText",
     "photo_url": "https://unsplash.com/photos/the-sun-is-shining-through-the-trees-in-the-forest--sidLcag5lo?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
+  },
+  {
+    "event_slug": "desafio_la_codosera",
+    "title": "Desafio La Codosera",
+    "photographer_name": "M\u00edriam Judit TH",
+    "photographer_url": "https://unsplash.com/@mijutoh?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText",
+    "photo_url": "https://unsplash.com/photos/a-large-body-of-water-surrounded-by-a-lush-green-hillside-wZ99v-1u6fo?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
   },
   {
     "event_slug": "deutsche_post_marathon",
@@ -651,6 +679,13 @@
     "photo_url": "https://unsplash.com/photos/gray-concrete-road-surrounded-by-trees-during-daytime--2ii0_ctxpQ?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
   },
   {
+    "event_slug": "hexenstieg_ultramarathon",
+    "title": "Hexenstieg Ultramarathon",
+    "photographer_name": "Daniel Bi",
+    "photographer_url": "https://unsplash.com/@daniel_bi?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText",
+    "photo_url": "https://unsplash.com/photos/red-train-on-rail-near-green-trees-during-daytime-S9RZCprxOZ8?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
+  },
+  {
     "event_slug": "hochfuegen_hightrails_festival",
     "title": "Hochfuegen Hightrails Festival",
     "photographer_name": "Tobias Reich",
@@ -831,6 +866,13 @@
     "photographer_name": "Mathias Arlund",
     "photographer_url": "https://unsplash.com/@arlund?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText",
     "photo_url": "https://unsplash.com/photos/gray-road-surrounded-by-trees-during-daytime-in-aerial-view-photography-11IjMuza0r4?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
+  },
+  {
+    "event_slug": "lindkogel_trail",
+    "title": "Lindkogel Trail",
+    "photographer_name": "Fajar Al Hadi",
+    "photographer_url": "https://unsplash.com/@fizer0?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText",
+    "photo_url": "https://unsplash.com/photos/rolling-hills-lead-to-a-distant-city--b3Z5TDc528?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
   },
   {
     "event_slug": "linz_marathon",
@@ -1218,6 +1260,13 @@
     "photo_url": "https://unsplash.com/photos/brown-concrete-building-on-green-grass-field-during-daytime-mHjfQwWKqJI?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
   },
   {
+    "event_slug": "rag_hartfuessler_trail",
+    "title": "Rag Hartfuessler Trail",
+    "photographer_name": "Pieter van de Sande",
+    "photographer_url": "https://unsplash.com/@planner1963?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText",
+    "photo_url": "https://unsplash.com/photos/brown-concrete-building-under-blue-sky-during-daytime-lK5DbWMv7Qg?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
+  },
+  {
     "event_slug": "reykjavik_marathon",
     "title": "Reykjavik Marathon",
     "photographer_name": "Einar H. Reynis",
@@ -1582,6 +1631,13 @@
     "photo_url": "https://unsplash.com/photos/green-and-purple-plants-near-lake-during-daytime-ifx74GcxUKw?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
   },
   {
+    "event_slug": "trail_des_brosses",
+    "title": "Trail Des Brosses",
+    "photographer_name": "Emilien Muller",
+    "photographer_url": "https://unsplash.com/@mil68?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText",
+    "photo_url": "https://unsplash.com/photos/aerial-view-of-green-trees-and-mountains-during-daytime-7cvT04Yt38o?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
+  },
+  {
     "event_slug": "trail_des_chateaux",
     "title": "Trail Des Chateaux",
     "photographer_name": "Alain ROUILLER",
@@ -1596,6 +1652,20 @@
     "photo_url": "https://unsplash.com/photos/assorted-color-of-houses-near-lake-3lxrM5yvkcI?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
   },
   {
+    "event_slug": "trail_gorges_la",
+    "title": "Trail Gorges La",
+    "photographer_name": "Carnet de Voyage d'Alex",
+    "photographer_url": "https://unsplash.com/@alexisribeyrecarnetdevoyage?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText",
+    "photo_url": "https://unsplash.com/photos/a-stone-bridge-over-a-river-next-to-a-lush-green-hillside-GYpzFJT61c8?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
+  },
+  {
+    "event_slug": "trail_lac_villerest",
+    "title": "Trail Lac Villerest",
+    "photographer_name": "Andr\u00e9a Villiers",
+    "photographer_url": "https://unsplash.com/@lemondeavecandrea?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText",
+    "photo_url": "https://unsplash.com/photos/a-long-white-bridge-over-a-forest-QwS1T0xajG4?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
+  },
+  {
     "event_slug": "trail_marathon_heidelberg",
     "title": "Trail Marathon Heidelberg",
     "photographer_name": "Mar\u00eda L\u00f3pez Jorge",
@@ -1603,11 +1673,25 @@
     "photo_url": "https://unsplash.com/photos/a-bridge-that-is-over-a-body-of-water-U9PZZx88CIE?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
   },
   {
+    "event_slug": "trail_petites_roches",
+    "title": "Trail Petites Roches",
+    "photographer_name": "Seif Sallam",
+    "photographer_url": "https://unsplash.com/@seif?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText",
+    "photo_url": "https://unsplash.com/photos/black-mountain-covered-by-melding-snow-XeJN67jOfUg?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
+  },
+  {
     "event_slug": "trail_saint_jacques",
     "title": "Trail Saint Jacques",
     "photographer_name": "Carnet de Voyage d'Alex",
     "photographer_url": "https://unsplash.com/@alexisribeyrecarnetdevoyage?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText",
     "photo_url": "https://unsplash.com/photos/a-european-street-with-colorful-buildings-7Bm-H6_NOOg?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
+  },
+  {
+    "event_slug": "trail_urbain_sete",
+    "title": "Trail Urbain Sete",
+    "photographer_name": "coulibaly dokoungo",
+    "photographer_url": "https://unsplash.com/@c100coul?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText",
+    "photo_url": "https://unsplash.com/photos/a-row-of-boats-sitting-next-to-each-other-on-a-river-hu0gSxB1gQs?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
   },
   {
     "event_slug": "trail_verbier_st",
@@ -1622,6 +1706,13 @@
     "photographer_name": "Gus Tav",
     "photographer_url": "https://unsplash.com/@skatienstuksuma?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText",
     "photo_url": "https://unsplash.com/photos/a-very-tall-mountain-with-some-trees-on-top-of-it-7UsGh8YNaT8?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
+  },
+  {
+    "event_slug": "trans_dimitile",
+    "title": "Trans Dimitile",
+    "photographer_name": "Marie Rouilly",
+    "photographer_url": "https://unsplash.com/@marie_rouilly?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText",
+    "photo_url": "https://unsplash.com/photos/waterfalls-in-the-middle-of-the-forest-during-daytime-DA3_xqEqolc?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
   },
   {
     "event_slug": "transgrancanaria",
@@ -1666,11 +1757,25 @@
     "photo_url": "https://unsplash.com/photos/a-rocky-hillside-with-trees-and-water-in-the-background-e51XDPkwEbU?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
   },
   {
+    "event_slug": "ultra_turnicki",
+    "title": "Ultra Turnicki",
+    "photographer_name": "Sylwia Bartyzel",
+    "photographer_url": "https://unsplash.com/@sylwiabartyzel?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText",
+    "photo_url": "https://unsplash.com/photos/a-man-in-a-red-jacket-walking-up-a-hill-CYZa_KKfau4?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
+  },
+  {
     "event_slug": "ultrakotlina",
     "title": "Ultrakotlina",
     "photographer_name": "Marcin Jozwiak",
     "photographer_url": "https://unsplash.com/@marcinjozwiak?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText",
     "photo_url": "https://unsplash.com/photos/mountain-under-white-clouds-and-blue-sky-during-daytime-6G017ZLUTho?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
+  },
+  {
+    "event_slug": "ultralauf_cottbus",
+    "title": "Ultralauf Cottbus",
+    "photographer_name": "Palle Knudsen",
+    "photographer_url": "https://unsplash.com/@palle1958?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText",
+    "photo_url": "https://unsplash.com/photos/people-riding-on-boat-on-river-during-daytime-iPGipEMxtO4?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
   },
   {
     "event_slug": "ultramarathon_gorski_3",
@@ -1685,6 +1790,13 @@
     "photographer_name": "Jared Lisack",
     "photographer_url": "https://unsplash.com/@jredl?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText",
     "photo_url": "https://unsplash.com/photos/city-skyline-across-body-of-water-during-daytime-nmoEU4u-y_c?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
+  },
+  {
+    "event_slug": "up_the_hill",
+    "title": "Up The Hill",
+    "photographer_name": "Mauricio Mu\u00f1oz",
+    "photographer_url": "https://unsplash.com/@mauricio_munoz_del?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText",
+    "photo_url": "https://unsplash.com/photos/aerial-view-of-green-trees-and-mountains-during-daytime-S4L1_EsvLHg?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
   },
   {
     "event_slug": "urdunako_mendi_lasterketa",
