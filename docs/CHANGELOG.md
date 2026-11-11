@@ -4,6 +4,36 @@ All notable changes to the Indie Runners Web project will be documented in this 
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.9.78] — 2026-11-10
+
+### Added — `/unsplash-round`, a skill that starts a photo round (W-115)
+
+- **Wrong belief: starting a round has to be done by hand.** Cost: six rounds
+  (2026-11-01 to 11-04, 82 events) each began with the shortlist read by eye,
+  a query chosen per event and one command typed per event. W-104 put this
+  part out of scope. **New belief:** everything before the pick can be done
+  in chat. Only the pick needs Paulo's terminal.
+- `.claude/skills/unsplash-round/SKILL.md`, Paulo's own command, built by the
+  developer on his word (the spec's "Who builds it"). It runs
+  `photo_candidates.py`, proposes a query per event (trail events get the
+  massif, and no-location events are flagged because without a query the
+  fetch exits 1 and stops the round), and writes up to 25 lines per file to
+  the main checkout's `imports/`. It then prints the `unsplash_round.sh`
+  command. It never runs the fetch itself.
+- **Acceptance 7, settled: `!` does not work.** Paulo ran
+  `! python scripts/unsplash_fetch.py junut_jurasteig_nonstop --no-publish --query "Altmühltal"`.
+  It printed the prompt, then `no input available, skipping`. Tested on the
+  fetch alone rather than a one-event round file, because a round also
+  publishes and restarts production. The skill says "your own terminal, not `!`".
+- **Verified (acceptance 8), one real round, 2026-11-10:** the skill's steps
+  were followed by hand. The skill cannot be invoked until it is on `master`,
+  because skills load from the main checkout. Steps: shortlist of 15, queries
+  edited by Paulo in chat, file written, and `unsplash_round.sh` run by Paulo
+  in his terminal on branch `round/2026-11-10`. 10 picked, 5 skipped. All 10
+  event pages on production show the new photographer's credit (curl of
+  `/events/<slug>/2026`, credit name from `docs/dedicated_credits.md`), so
+  the backfill ran. This is also W-104's first real round (its acceptance 5).
+
 ## [1.9.77] — 2026-11-10
 
 ### Fixed — the private-term hook checks paths, a blank list, and merges (W-114)

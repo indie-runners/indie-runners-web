@@ -62,6 +62,7 @@ indie-runners-web/
 │           ├── avatar_strip.html  # Shared macro: renders visible avatars, then stock silhouettes for hidden attendees, then +N overflow
 │           └── race_tile.html     # Single event tile with hover overlay; stretched .tile-link makes the whole tile navigate (overlay buttons keep priority)
 ├── .claude/skills/       # How each role is opened (/audit /triage /review /dev-ticket /cos); routes to docs/roles/, holds recipes not rules
+│   ├── unsplash-round/SKILL.md  # Paulo's /unsplash-round, not a role: shortlist, agreed queries, imports/ round file, prints the unsplash_round.sh command (W-115)
 │   └── cos/scripts/inbox.py  # Lists handoffs to the chief of staff with no reply file; --count for /triage
 ├── docs/
 │   ├── handoffs/          # Requests between roles, one file each; a reply is its own file naming the request; README says who they are for
