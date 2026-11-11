@@ -4,6 +4,20 @@ All notable changes to the Indie Runners Web project will be documented in this 
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.9.79] — 2026-11-11
+
+### Added — round 2026-11-10's manifest and credits are committed (#26)
+
+- **Wrong belief: a round is finished when its photos are live.** Cost: none
+  yet, but the two files sat uncommitted on one machine. A deploy from
+  `master` would have baked the pre-round manifest. **New belief:** a round
+  ends when `dedicated_manifest.json` and `dedicated_credits.md` are on
+  `master`, as `unsplash_round.sh`'s last line says.
+- 10 events from the W-115 run, the two files only.
+- **Verified:** the 10 `## <slug>` credit entries match the 10 events picked from
+  the round file, and all 10 event pages on production already show these
+  credits (#25). No app code changed.
+
 ## [1.9.78] — 2026-11-10
 
 ### Added — `/unsplash-round`, a skill that starts a photo round (W-115)
