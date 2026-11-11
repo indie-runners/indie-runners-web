@@ -1693,3 +1693,56 @@ Paulo: *"please draft it in ideas, as highest prio at the moment"*
 **A starting shape, not a spec.** Keep `requirements.txt` as the direct dependencies. Generate a fully pinned file from the image now live (`pip freeze` inside it), so the pins equal what production already runs. The Dockerfile installs from the pinned file. Upgrades become a deliberate change. Once public, Dependabot (free) raises security bumps against the pins. Hashes (`--require-hashes`) are optional.
 
 **Not a blocker for the move to the public repo.** A good first change after the flip.
+
+## Search Console: why pages aren't indexed
+2026-11-11 · source: Paulo, pasted from Google Search Console's page indexing report
+
+```
+info_filled
+Why pages aren’t indexed
+Pages that aren’t indexed can’t be served on Google
+Reason
+    Source
+
+    Validation
+    Trend    
+Pages
+Not found (404)
+    Website
+    
+Not Started
+    
+    6
+Excluded by ‘noindex’ tag
+    Website
+    
+Not Started
+    
+    3
+Page with redirect
+    Website
+    
+Not Started
+    
+    3
+Duplicate without user-selected canonical
+    Website
+    
+Not Started
+    
+    2
+Blocked due to other 4xx issue
+    Website
+    
+Not Started
+    
+    1
+Crawled - currently not indexed
+    Google systems
+    
+N/A
+    
+    0
+Rows per page:
+1-6 of 6
+```
