@@ -1693,3 +1693,18 @@ Paulo: *"please draft it in ideas, as highest prio at the moment"*
 **A starting shape, not a spec.** Keep `requirements.txt` as the direct dependencies. Generate a fully pinned file from the image now live (`pip freeze` inside it), so the pins equal what production already runs. The Dockerfile installs from the pinned file. Upgrades become a deliberate change. Once public, Dependabot (free) raises security bumps against the pins. Hashes (`--require-hashes`) are optional.
 
 **Not a blocker for the move to the public repo.** A good first change after the flip.
+
+## A page at `/bot` that says who the scraper is and how to opt out
+2026-11-12 · raw · source: scraper T-216 (Paulo's session with its developer), carried by the scraper PM at T-216's review 2026-11-12
+
+From 0.92.0 every request the scraper makes to a race organiser's site, robots.txt included, sends a user agent naming the crawler and pointing at `https://indierunners.co/bot`. The exact name and contact URL are set in the scraper's deploy configuration (scraper T-222), not in its code, and Paulo gives them when the page is built. About 700 hosts will see that URL in their logs. Today the page does not exist.
+
+**When it is needed.** Before the scraper repo goes public (Paulo, 2026-11-12, at the review: *"Before going public"*). It does not have to be live before 0.92.0 deploys. The scraper's arc (its `docs/PLAN.md` § Active) blocks going public on it.
+
+**What the page has to say.** The facts come from the scraper side, as of 0.92.0:
+- **Who:** the crawler, by the name its user agent carries, collects race facts (dates, distances, fees, registration) from organisers' own sites for indierunners.co.
+- **What it obeys:** robots.txt, read before every fetch. It follows the group for its own name if there is one, otherwise the `*` group. A group that names only AI crawlers (GPTBot, ClaudeBot, CCBot) is not read as covering it. `Crawl-delay` is honoured up to 60 s, and a host asking more is not crawled at all.
+- **How to opt out:** a `Disallow: /` group for its name in robots.txt, or an email to the address Paulo is creating (a mask, not yet given). The name and the address are the open inputs.
+- The scraper's `docs/CRAWLING.md` (its PLAN unit 8, not yet written) will be the long form. The page can quote it once it exists. Until then, the list above is the source.
+
+**Nothing here is a scraper-side defect.** It is a page that this repo owns.
