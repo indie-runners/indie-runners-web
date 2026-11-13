@@ -1695,7 +1695,7 @@ Paulo: *"please draft it in ideas, as highest prio at the moment"*
 **Not a blocker for the move to the public repo.** A good first change after the flip.
 
 ## Search Console: why pages aren't indexed
-2026-11-11 · source: Paulo, pasted from Google Search Console's page indexing report
+2026-11-11 · raw (web triage 2026-11-13: left raw. The paste has counts, not URLs, so any ticket would be a guess. Checked: no template or route sets `noindex`, `X-Robots-Tag` or `rel="canonical"`. Settled by the example URLs behind each row, exported from Search Console. Likely shapes to test them against, unproven: a finished event's page now `404`s (W-012), and filter or `?race=` URLs read as duplicates with no canonical) · source: Paulo, pasted from Google Search Console's page indexing report
 
 ```
 info_filled
@@ -1748,7 +1748,7 @@ Rows per page:
 ```
 
 ## Name who opens the PR after an Unsplash round
-2026-11-13 · raw · source: Paulo, in a developer session; written on his behalf, the decision to raise it is his
+2026-11-13 · handed to the chief of staff (web triage 2026-11-13, `docs/handoffs/2026-11-13-pm-to-cos-skill-gaps.md`; the skill is theirs) · source: Paulo, in a developer session; written on his behalf, the decision to raise it is his
 
 Paulo: *"after an unsplash round, who is meant to take care of opening a PR and handling all that jazz?"*
 
