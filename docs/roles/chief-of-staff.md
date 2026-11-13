@@ -26,9 +26,11 @@ suite here, and `scripts/deploy.sh` had no guards (it has since 1.9.4,
 `e101216`, and three briefs went on saying otherwise until 2026-10-23).
 Expect more to surface the first few times a ticket runs end to end.
 
-**Requests reach this seat as files in `docs/handoffs/`**, answered with
-a reply file per request; `/cos` lists the unanswered ones and `/triage`
-prints the count, so the seat is opened when something is waiting.
+**Requests reach this seat as Handoff items To CoS** on the Working
+board. A ruling is a Handoff item From CoS, and the request is set
+Absorbed; answered means Absorbed, nothing else. `/cos` lists the Sent
+ones and `/triage` prints the count, so the seat is opened when
+something is waiting.
 
 ## Hard boundaries
 
@@ -37,7 +39,8 @@ prints the count, so the seat is opened when something is waiting.
   fourth reviewer is precisely what the split exists to avoid — and one
   step past a second opinion, the PM's authority erodes and Paulo ends up
   arbitrating between two advisors instead of reading one review.
-- **It does not prioritise.** The board is the PM's.
+- **It does not prioritise.** The Issues and the board's statuses are
+  the PM's.
 - **It does not implement.** Amending a brief is its edit; changing `app/`
   is not.
 - **It has no authority over a role's decisions**, only over the
@@ -46,8 +49,8 @@ prints the count, so the seat is opened when something is waiting.
 
 ## What it owns
 
-`docs/roles/*`, `.claude/skills/*`, `CLAUDE.md`, the header of
-`docs/ROUTED_CHECKS.md`, replies in `docs/handoffs/`, the layout rules — which inbox exists, what is tracked
+`docs/roles/*`, `.claude/skills/*` (`board.py`, identical in all three
+repos), `CLAUDE.md`, Handoff items From CoS, the layout rules — which inbox exists, what is tracked
 versus gitignored, who writes which file — and the cross-repo routing
 between this repo and `indie-runners-scraper`.
 

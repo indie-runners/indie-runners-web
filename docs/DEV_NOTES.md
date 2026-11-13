@@ -1,5 +1,8 @@
 # Developer drive-by notes
 
+> **Frozen 2026-11-13: no new entries.** Drive-bys live on the private
+> Working board (`docs/roles/README.md` § Where things live); this is history.
+
 Append-only inbox. The developer writes here instead of widening a
 branch; the PM triages into tickets or drops.
 

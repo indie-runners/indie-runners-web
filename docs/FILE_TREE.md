@@ -63,9 +63,9 @@ indie-runners-web/
 │           └── race_tile.html     # Single event tile with hover overlay; stretched .tile-link makes the whole tile navigate (overlay buttons keep priority)
 ├── .claude/skills/       # How each role is opened (/audit /triage /review /dev-ticket /cos); routes to docs/roles/, holds recipes not rules
 │   ├── unsplash-round/SKILL.md  # Paulo's /unsplash-round, not a role: shortlist, agreed queries, imports/ round file, prints the unsplash_round.sh command, then opens and merges the round's PR (W-115)
-│   └── cos/scripts/inbox.py  # Lists handoffs to the chief of staff with no reply file; --count for /triage
+│   └── triage/scripts/board.py  # The private Working board (org Project #2): list/show/add/set/promote ideas, drive-bys, checks, handoffs; identical in web, scraper, infra; selftest
 ├── docs/
-│   ├── handoffs/          # Requests between roles, one file each; a reply is its own file naming the request; README says who they are for
+│   ├── handoffs/          # Frozen 2026-11-13: requests between roles, one file each; now Handoff items on the Working board
 │   ├── roles/             # The four role briefs and README (who writes what)
 │   ├── screenshots/        # Evidence a ticket asks to keep in the changelog (W-103)
 │   ├── ARCHITECTURE.md

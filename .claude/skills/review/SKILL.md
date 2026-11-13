@@ -77,11 +77,15 @@ gh pr comment <branch> --body-file <file>   # ends in the verdict line
 
 ## Then the routed check
 
-**`docs/ROUTED_CHECKS.md`**, if the verdict predicts anything different
-in production: four fields per its header, the next free number. The
-review is not finished without it. It goes to `master` in this
-session's own PR — `pm/<date>-<slug>`, `gh pr merge --merge` once
-`build` is green (README § Boundaries); no check, no PR.
+A Check on the Working board, if the verdict predicts anything different
+in production: the four fields in `pm.md`, in the body.
+
+```bash
+python3 .claude/skills/triage/scripts/board.py add --kind Check \
+  --title "<what it reads>" --body-file <file>   # numbers it, Status Live
+```
+
+The review is not finished without it. No PR: the board is not in git.
 
 ## After
 

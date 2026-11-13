@@ -29,7 +29,7 @@ hold the line the brief draws, not the harness:
 - **Write exactly one file:** `exports/reports/AUDIT_<YYYYMMDD>T<HHMM>.md`,
   timestamped **UTC** (`date -u +%Y%m%dT%H%M`) — the existing series is
   UTC. Never edit an earlier report.
-- **No tickets, no `docs/ROUTED_CHECKS.md` edits, no write to the scraper
+- **No tickets, no Working board writes, no write to the scraper
   or infra repo.** A wrong or stale routed check is a finding; a `core.*`
   or infra defect is a paste-ready entry in your report, which the PM
   carries.
@@ -43,15 +43,18 @@ hold the line the brief draws, not the harness:
    digest, never by creation order. A gate you cannot evaluate makes its
    entry unreadable.
 2. **Your previous report** — the newest `exports/reports/AUDIT_*.md`.
-3. **`docs/ROUTED_CHECKS.md`** — read it directly; it is short. Each
-   check's header says LIVE or RETIRED (the file's header defines
-   both), and the header wins over the body below it. A header with
-   neither is a finding; sweep it as LIVE.
+3. **The Live Checks** — `python3 .claude/skills/triage/scripts/board.py
+   list live-checks --bodies`. Its Status wins over anything its body
+   says (the four fields are in `pm.md`). A Check missing its Status is not in
+   this list; it surfaces in the PM's triage. Until the PM's migration
+   lands (README § Where things live), also sweep the frozen
+   `docs/ROUTED_CHECKS.md` entries whose header says LIVE; once the
+   board has a Check of the same number, the board's wins.
 
 ## 2. The sweep
 
 The brief's five checks, in its order: site up, 24h errors, pool within
-the cap, the serving view's movement, auth. Then every LIVE routed check.
+the cap, the serving view's movement, auth. Then every Live Check.
 **Open, query, close in one command** — you share 45 connections with the
 scraper's pipelines.
 

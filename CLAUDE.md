@@ -22,7 +22,11 @@ read-only here); owns `web.*`.
   is broken and the write is the fix. Apply it, show him straight after,
   and say so in the handoff. Not covered: the app's own writes when
   someone uses it, `dev.sh` sign-ins included.
-- `core.*` is read-only. Wrong data routes to the scraper's `docs/IDEAS.md`.
+- `core.*` is read-only. Wrong data becomes an Idea on the Working board
+  with Inbox scraper (README § The other repo).
+- `docs/IDEAS.md`, `DEV_NOTES.md`, `ROUTED_CHECKS.md` and `handoffs/`
+  are frozen since 2026-11-13; their entries go to the private Working
+  board through `.claude/skills/triage/scripts/board.py`.
 - One DB-touching session at a time, across both repos (45 shared
   connections).
 - No test suite. Verify by running it (`bash scripts/dev.sh`), both anon
@@ -38,10 +42,9 @@ read-only here); owns `web.*`.
 
 ## Ideas from claude.ai
 
-Paulo shapes ideas in claude.ai and brings them back as entries for
-`docs/IDEAS.md`. When asked to add one, append it verbatim — don't
-reorganise, rank or ticket it. If it carries something README's public
-rule forbids, ask Paulo before appending.
+Paulo shapes ideas in claude.ai and brings them back. When asked to add
+one, add it verbatim with `board.py add --kind Idea` — don't reorganise,
+rank or ticket it. claude.ai cannot see the board, which is private.
 
 ## Ponytail
 
@@ -49,5 +52,5 @@ The ponytail plugin is installed. Use it for the developer role:
 the smallest change that fully solves the ticket. It does not
 override the role briefs. Changelog entries still carry the full
 reasoning (wrong belief, cost, new belief, evidence), and
-`shortcut:` comments are drive-bys, so they also go to
-`docs/DEV_NOTES.md`. PM, auditor and chief of staff work don't use it.
+`shortcut:` comments are drive-bys, so they also go to the
+Working board as a Drive-by. PM, auditor and chief of staff work don't use it.

@@ -24,7 +24,7 @@ One ticket. Start to finish. Then the next one.
 3. **Rewrite `docs/TODO.md` for this ticket.** Keep its two-line header,
    with today's date and your ticket id; wipe the rest — it carries
    nothing across tickets. An item that outlives your
-   ticket goes to `docs/DEV_NOTES.md` for the PM to put on the board.
+   ticket goes to the Working board as a Drive-by, for the PM.
    You do **not** touch `docs/PLAN.md`; that is the PM's.
 4. **Build it.** Only what the ticket says.
 5. **Verify it in the browser** — see below. This matters more here than
@@ -124,16 +124,12 @@ stream to contend for. That is not a virtue — see "Deploying".
 
 ## Drive-by findings
 
-You will find other things. **Do not fix them.** Append to
-`docs/DEV_NOTES.md` and carry on.
-
-It is **tracked in git** deliberately: a worktree shares tracked files
-with its branch, so your note lands in the diff the PM reviews. The
-scraper learned this the hard way — under `exports/` the file was
-invisible from a worktree and a review was spent on it.
-
-A thought about *direction* goes to `docs/IDEAS.md` instead, which the PM
-reads as a possible `PLAN.md` rewrite.
+You will find other things. **Do not fix them.** Add a Drive-by to the
+Working board (`board.py add --kind Drive-by`) and carry on. It reaches
+the PM from any worktree; the board is private, so the evidence can go
+in it. A thought about *direction* is `--kind Idea` instead, which the
+PM reads as a possible `PLAN.md` rewrite. Handoffs to you:
+`board.py list inbox Developer`, read when you open a ticket.
 
 ## Documenting
 
