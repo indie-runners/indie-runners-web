@@ -34,13 +34,14 @@ docs/CHANGELOG.md                        where a release is declared
 docs/ARCHITECTURE.md                     why a decision was made
 docs/FILE_TREE.md                        what lives where
 docs/handoffs/<date>-<from>-to-<to>-<slug>.md  one message   tracked
-.claude/skills/<name>/SKILL.md           how each role is opened tracked
+.claude/skills/<name>/SKILL.md           how each role is opened (one is Paulo's) tracked
 ```
 
 **A skill is how a role is opened, not what it decides.** `/audit`,
 `/triage`, `/review`, `/dev-ticket` and `/cos` each start by reading this
 file and the role's brief, and say the brief wins where they disagree.
-They hold recipes and formats, never a rule of their own — a rule that
+`/unsplash-round` is the exception: Paulo's own command, which opens no
+role (W-115). They hold recipes and formats, never a rule of their own — a rule that
 lives only in a skill is a brief that has drifted. A skill cannot enforce
 a boundary either (the auditor's `Write` is the same tool that edits
 code), so each restates the ones it cannot.
@@ -87,7 +88,8 @@ a convention, since GitHub lets either edit both.
   one diff: `git diff master --numstat -- docs/`, first column summed.
   `docs/` is 4886 lines and nobody reads that much; a change that needs
   more prose than that is usually two changes, or one being explained
-  twice. Over budget, cut — replacing existing lines is free.
+  twice. Over budget, cut — replacing existing lines is free. Generated
+  lines in `docs/dedicated_credits.md` do not count (Paulo, 2026-11-13).
 - **Nothing reaches `master` except by a merged pull request** — ruleset
   `protect master` since 2026-11-09, no bypass, Paulo included. Merge
   commits only; check `build` (workflow `ci`) green on a branch up to
@@ -97,11 +99,16 @@ a convention, since GitHub lets either edit both.
     approving line, which
     is the gate: GitHub cannot record it as an approval, the same
     account opens every PR. The developer runs `gh pr merge --merge`.
-    Paulo's production gates stay `deploy:` and migrations.
+    Paulo's production gates stay `deploy:` and database writes
+    (`CLAUDE.md`).
   - **Board-only work** is on Issues and PR comments, no PR. One PM
     session's `ROUTED_CHECKS.md`, `PLAN.md` and IDEAS outcomes, or one
     CoS pass, is one PR (`pm/<date>-<slug>`, `cos/<date>-<slug>`),
     merged by whoever opened it once `build` is green.
+  - **An Unsplash round** (`round/<date>`) carries only the manifest and
+    the credits. The session that ran `/unsplash-round` opens it once
+    Paulo says the round finished, and merges it once `build` is green
+    (Paulo, 2026-11-13).
   - **Behind `master`**, whoever opened the PR runs `git fetch origin &&
     git merge origin/master && git push`, then waits for `build`. Merge,
     not rebase: rebased commits are not the ones the PM read.

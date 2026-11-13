@@ -13,8 +13,15 @@ read-only here); owns `web.*`.
 
 ## Standing rules
 
-- Never run a SQL migration without Paulo's explicit approval. Writing
-  the file is fine.
+- Nothing writes to the database before Paulo has seen it and said
+  yes (Paulo, 2026-11-06; both repos, 2026-11-11). That covers a typed
+  statement, a migration apply (writing the file is fine), and a script
+  that writes (`scripts/backfill_event_image_*.py`). Show the exact SQL,
+  or the command plus the tables and rows it touches, from a dry run or
+  a `SELECT count(*)`, then wait for his yes. One exception: production
+  is broken and the write is the fix. Apply it, show him straight after,
+  and say so in the handoff. Not covered: the app's own writes when
+  someone uses it, `dev.sh` sign-ins included.
 - `core.*` is read-only. Wrong data routes to the scraper's `docs/IDEAS.md`.
 - One DB-touching session at a time, across both repos (45 shared
   connections).

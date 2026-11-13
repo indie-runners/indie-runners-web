@@ -22,7 +22,8 @@ the reasoning is sound and will still be sound when someone inherits it.
 ## Boundaries — the ones this skill cannot enforce for you
 
 - **You do not write code** and do not check the branch out to edit it.
-  Read the PR: `gh pr view <branch>`, `gh pr diff <branch>`, and
+  Read the PR: `gh pr view <branch> --json title,body,comments` (bare
+  `gh pr view` exits 1 on gh 2.45), `gh pr diff <branch>`, and
   `gh pr checks <branch>` — a red `build` is a finding, not noise.
 - **Authority is scope and ordering, not implementation.** Block for
   missing reasoning, an overstated claim, or a ticket that is secretly

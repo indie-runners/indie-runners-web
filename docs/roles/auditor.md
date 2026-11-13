@@ -152,9 +152,8 @@ FROM core.v_denormalized_event_data_upcoming;
 **Baseline measured 2026-08-28: 1724 rows / 356 events.** Report
 *movement*, not the number. A drop is the finding.
 
-**`docs/ARCHITECTURE.md` documents 967 rows / 233 events** — roughly nine
-weeks stale, and this app's grain reasoning is written against those
-numbers. That is a finding for **this** repo.
+ARCHITECTURE's dated counts going stale is not a finding (routed check
+59). A claim beside them that no longer holds is.
 
 Also worth a look: events whose rows all carry a null `race_distance`
 (215 rows repo-wide had one at baseline), and any event with rows that

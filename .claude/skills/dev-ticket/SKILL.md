@@ -34,8 +34,10 @@ to `docs/DEV_NOTES.md`.
   Issue's body or labels** (the PM's). Not `docs/PLAN.md`.
 - **`core.*` is read-only.** Wrong data routes to the scraper; a template
   workaround hides it.
-- **Never run a migration without Paulo's explicit approval.** Writing
-  the file is fine.
+- **Nothing writes to the database before Paulo has seen it and said
+  yes** (`CLAUDE.md`): a migration apply, typed SQL, a backfill. Show
+  the exact SQL or command and what it touches, then wait. Writing the
+  file is fine.
 - **One DB-touching session across both repos.**
 - **You do not review your own work.** Say ready and wait.
 
@@ -117,8 +119,14 @@ that block in the PR body under `Closes #N`, and mark it ready —
 PR, not your terminal.
 
 ```bash
-git push && gh pr edit --body-file <file> && gh pr ready
+git push && gh pr ready && gh api -X PATCH \
+  repos/indie-runners/indie-runners-web/pulls/$(gh pr view --json number -q .number) \
+  -F body=@<file> >/dev/null
 ```
+
+Not `gh pr edit`: it exits 1 on GitHub's Projects (classic) deprecation
+and leaves the body unchanged (2026-11-10, gh 2.45). Bare `gh pr view` and
+`gh issue view` fail the same way; add `--json`.
 
 **The body is public**: output with user data or counts goes to
 `evidence #N`, cited by name.

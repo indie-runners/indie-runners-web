@@ -79,5 +79,20 @@ bash scripts/unsplash_round.sh imports/unsplash_round_<date>.txt
 
 Say what it will do: one interactive pick per event, then manifest, publish,
 a production restart that asks for `y`, and the backfill that sets the
-credits. Then commit `docs/dedicated_credits.md` and
-`app/imaging/dedicated_manifest.json` through a PR.
+credits. Then wait.
+
+## 5. The PR is yours
+
+When Paulo says the round finished, on the `round/<date>` branch, run these
+steps (README § Boundaries):
+
+1. Commit `docs/dedicated_credits.md` and
+   `app/imaging/dedicated_manifest.json`, and nothing else.
+2. Push, then `gh pr create --base master`.
+3. `gh pr checks --watch && gh pr merge --merge`.
+4. `git checkout master && git pull --ff-only`.
+
+Production already shows the round, because the backfill wrote
+`web.event_images`. But a deploy before this PR merges bakes the old
+manifest. Two rounds sat uncommitted for days before this step had an
+owner.
