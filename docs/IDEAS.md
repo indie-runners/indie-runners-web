@@ -1746,3 +1746,14 @@ N/A
 Rows per page:
 1-6 of 6
 ```
+
+## Name who opens the PR after an Unsplash round
+2026-11-13 · raw · source: Paulo, in a developer session; written on his behalf, the decision to raise it is his
+
+Paulo: *"after an unsplash round, who is meant to take care of opening a PR and handling all that jazz?"*
+
+**The gap (verified).** `/unsplash-round`'s hand-over (`.claude/skills/unsplash-round/SKILL.md`, step 4) ends "Then commit `docs/dedicated_credits.md` and `app/imaging/dedicated_manifest.json` through a PR" without naming who. `docs/roles/README.md` covers ticket PRs (developer) and PM/CoS passes, not a round.
+
+**Cost so far (verified).** Round 2026-11-10's files sat uncommitted until the PM found them reviewing #25 and filed #26 (PR #27). Round 2026-11-11's sat uncommitted for two days, until this session. Production is right in the meantime (the backfill writes `web.event_images`), but a deploy from `master` before the PR merges bakes the old manifest.
+
+**A starting shape, not a spec.** One line in step 4 naming the owner: Paulo straight after the round, or the session that ran `/unsplash-round` once he says the round finished. Skills are the chief of staff's (`docs/roles/README.md`).
