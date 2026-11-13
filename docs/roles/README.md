@@ -48,6 +48,9 @@ code), so each restates the ones it cannot.
 items: `Kind`, `Status` per Kind, `Inbox` the receiving repo, `From`/`To`,
 `Issue` once promoted. Every read and write goes through
 `.claude/skills/triage/scripts/board.py`, identical in all three repos.
+Its titles start with the repo an item came from, `[web] PM → CoS, …`,
+stamped by `board.py add`; Inbox is where it goes, so a role name always
+reads as that repo's role.
 Promotion makes a new Issue from a public rewrite; the draft stays.
 **Until the PM's migration lands** (a list Paulo sees, then one
 `board.py add` run), the frozen files' open entries are still read.
