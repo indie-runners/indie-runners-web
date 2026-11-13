@@ -1694,8 +1694,89 @@ Paulo: *"please draft it in ideas, as highest prio at the moment"*
 
 **Not a blocker for the move to the public repo.** A good first change after the flip.
 
+## Search Console: why pages aren't indexed
+2026-11-11 · raw (web triage 2026-11-13: left raw. The paste has counts, not URLs, so any ticket would be a guess. Checked: no template or route sets `noindex`, `X-Robots-Tag` or `rel="canonical"`. Settled by the example URLs behind each row, exported from Search Console. Likely shapes to test them against, unproven: a finished event's page now `404`s (W-012), and filter or `?race=` URLs read as duplicates with no canonical) · source: Paulo, pasted from Google Search Console's page indexing report
+
+```
+info_filled
+Why pages aren’t indexed
+Pages that aren’t indexed can’t be served on Google
+Reason
+    Source
+
+    Validation
+    Trend    
+Pages
+Not found (404)
+    Website
+    
+Not Started
+    
+    6
+Excluded by ‘noindex’ tag
+    Website
+    
+Not Started
+    
+    3
+Page with redirect
+    Website
+    
+Not Started
+    
+    3
+Duplicate without user-selected canonical
+    Website
+    
+Not Started
+    
+    2
+Blocked due to other 4xx issue
+    Website
+    
+Not Started
+    
+    1
+Crawled - currently not indexed
+    Google systems
+    
+N/A
+    
+    0
+Rows per page:
+1-6 of 6
+```
+
+## Name who opens the PR after an Unsplash round
+2026-11-13 · handed to the chief of staff (web triage 2026-11-13, `docs/handoffs/2026-11-13-pm-to-cos-skill-gaps.md`; the skill is theirs) · source: Paulo, in a developer session; written on his behalf, the decision to raise it is his
+
+Paulo: *"after an unsplash round, who is meant to take care of opening a PR and handling all that jazz?"*
+
+**The gap (verified).** `/unsplash-round`'s hand-over (`.claude/skills/unsplash-round/SKILL.md`, step 4) ends "Then commit `docs/dedicated_credits.md` and `app/imaging/dedicated_manifest.json` through a PR" without naming who. `docs/roles/README.md` covers ticket PRs (developer) and PM/CoS passes, not a round.
+
+**Cost so far (verified).** Round 2026-11-10's files sat uncommitted until the PM found them reviewing #25 and filed #26 (PR #27). Round 2026-11-11's sat uncommitted for two days, until this session. Production is right in the meantime (the backfill writes `web.event_images`), but a deploy from `master` before the PR merges bakes the old manifest.
+
+**A starting shape, not a spec.** One line in step 4 naming the owner: Paulo straight after the round, or the session that ran `/unsplash-round` once he says the round finished. Skills are the chief of staff's (`docs/roles/README.md`).
+
+## Nothing writes to the database before Paulo has seen it and said yes: the rule reaches this repo too
+2026-11-11 · handed to the chief of staff (web triage 2026-11-13, `docs/handoffs/2026-11-13-pm-to-cos-skill-gaps.md` item 4) · source: indie-runners-scraper, chief of staff's ruling `docs/handoffs/2026-11-11-cos-to-pm-sql-preview.md`, carried by the scraper's PM
+
+Paulo, 2026-11-06: *"extra instructions for all skill, whenver an sql will be run to something other than read the database, a preview of the script has to be presented to paulo"*. Asked 2026-11-11 whether it reaches the other repos: *"Both repos"*.
+
+**The rule as the scraper words it** (its `CLAUDE.md`, verbatim):
+
+> **Nothing writes to the database before Paulo has seen it and said yes** (Paulo, 2026-11-06; scope ruled 2026-11-11). Anything beyond a read is covered: a typed statement, a migration apply, or a script that writes through code (`accuracy_spot_check.py load`, an importer, `router.py --job delete_target`). Show him the exact SQL, or the exact command plus the tables and rows or keys it will touch, from its dry run or a count. Then wait. For a migration this comes on top of the PM's apply read, not instead of it. **One exception:** production is broken and the write is the fix. Then apply it, show him straight after, and disclose it in the handoff. A headless session cannot wait, so it parks. Not covered: the deployed jobs, and the test suite.
+
+**His other rulings, 2026-11-11:**
+- Q3, does he need to answer or only see it: *"Needs my yes"*.
+- Q4, writes made through code: *"Yes, cover them"*.
+
+**For this repo's chief of staff to word for its own skills:** where it applies to `web.*` writes, `web.*` migrations and any script that writes. `core.*` stays read-only from this side, so nothing here changes that.
+
+**Why it bit the same day.** On the scraper side, a command run as a "preview" deleted a test target outright: its dry-run default was documented and not enforced (scraper T-220). A preview has to be one that cannot write.
+
 ## A page at `/bot` that says who the scraper is and how to opt out
-2026-11-12 · raw · source: scraper T-216 (Paulo's session with its developer), carried by the scraper PM at T-216's review 2026-11-12
+2026-11-12 · ticketed #33 (web triage 2026-11-13: p3, `not-next` until Paulo gives the crawler name and the opt-out address) · source: scraper T-216 (Paulo's session with its developer), carried by the scraper PM at T-216's review 2026-11-12
 
 From 0.92.0 every request the scraper makes to a race organiser's site, robots.txt included, sends a user agent naming the crawler and pointing at `https://indierunners.co/bot`. The exact name and contact URL are set in the scraper's deploy configuration (scraper T-222), not in its code, and Paulo gives them when the page is built. About 700 hosts will see that URL in their logs. Today the page does not exist.
 

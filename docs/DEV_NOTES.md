@@ -712,12 +712,14 @@ the app no longer receives beta requests once Google's edge drops it. Harmless;
 removing it is a code change, out of W-018's scope.
 
 ## 2026-11-10 — while on W-114: `gh pr edit` fails, so the dev-ticket recipe does too
+*PM 2026-11-13: **handed to the chief of staff**, `docs/handoffs/2026-11-13-pm-to-cos-skill-gaps.md`. Theirs to fix; no ticket.*
 `gh pr edit 24 --body-file …` exits 1 on GitHub's Projects (classic)
 deprecation error (`repository.pullRequest.projectCards`) and leaves the body
 unchanged. What worked: `gh api -X PATCH repos/indie-runners/indie-runners-web/pulls/<N> -F body=@<file>`.
 `/dev-ticket` § 5 belongs to the chief of staff.
 
 ## 2026-11-10 — while on W-115: README says every skill opens a role
+*PM 2026-11-13: **handed to the chief of staff**, `docs/handoffs/2026-11-13-pm-to-cos-skill-gaps.md`. Theirs to fix; no ticket.*
 `docs/roles/README.md` § "A skill is how a role is opened" now has an exception:
 `/unsplash-round` is Paulo's own command (W-115, built by the developer on his
 word). FILE_TREE says so; the README line is the chief of staff's.
