@@ -85,11 +85,6 @@ tripwire for a changelog narrating the diff or a second copy of a decision
 that already lives in ARCHITECTURE, and cutting those is the fix. It is
 not a reason to block a change that genuinely needed the words.
 
-**`docs/ARCHITECTURE.md` currently documents the core read model as 967
-rows / 233 events. It is 1724 / 356** (2026-08-28) — roughly nine weeks
-stale, and the grain reasoning is written against those numbers. Worth a
-ticket early.
-
 ## The verdict line
 
 Write the review however it needs to be written — caveats, uncertainty and
