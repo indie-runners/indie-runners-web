@@ -1693,3 +1693,67 @@ Paulo: *"please draft it in ideas, as highest prio at the moment"*
 **A starting shape, not a spec.** Keep `requirements.txt` as the direct dependencies. Generate a fully pinned file from the image now live (`pip freeze` inside it), so the pins equal what production already runs. The Dockerfile installs from the pinned file. Upgrades become a deliberate change. Once public, Dependabot (free) raises security bumps against the pins. Hashes (`--require-hashes`) are optional.
 
 **Not a blocker for the move to the public repo.** A good first change after the flip.
+
+## Search Console: why pages aren't indexed
+2026-11-11 · source: Paulo, pasted from Google Search Console's page indexing report
+
+```
+info_filled
+Why pages aren’t indexed
+Pages that aren’t indexed can’t be served on Google
+Reason
+    Source
+
+    Validation
+    Trend    
+Pages
+Not found (404)
+    Website
+    
+Not Started
+    
+    6
+Excluded by ‘noindex’ tag
+    Website
+    
+Not Started
+    
+    3
+Page with redirect
+    Website
+    
+Not Started
+    
+    3
+Duplicate without user-selected canonical
+    Website
+    
+Not Started
+    
+    2
+Blocked due to other 4xx issue
+    Website
+    
+Not Started
+    
+    1
+Crawled - currently not indexed
+    Google systems
+    
+N/A
+    
+    0
+Rows per page:
+1-6 of 6
+```
+
+## Name who opens the PR after an Unsplash round
+2026-11-13 · raw · source: Paulo, in a developer session; written on his behalf, the decision to raise it is his
+
+Paulo: *"after an unsplash round, who is meant to take care of opening a PR and handling all that jazz?"*
+
+**The gap (verified).** `/unsplash-round`'s hand-over (`.claude/skills/unsplash-round/SKILL.md`, step 4) ends "Then commit `docs/dedicated_credits.md` and `app/imaging/dedicated_manifest.json` through a PR" without naming who. `docs/roles/README.md` covers ticket PRs (developer) and PM/CoS passes, not a round.
+
+**Cost so far (verified).** Round 2026-11-10's files sat uncommitted until the PM found them reviewing #25 and filed #26 (PR #27). Round 2026-11-11's sat uncommitted for two days, until this session. Production is right in the meantime (the backfill writes `web.event_images`), but a deploy from `master` before the PR merges bakes the old manifest.
+
+**A starting shape, not a spec.** One line in step 4 naming the owner: Paulo straight after the round, or the session that ran `/unsplash-round` once he says the round finished. Skills are the chief of staff's (`docs/roles/README.md`).
