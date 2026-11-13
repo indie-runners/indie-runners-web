@@ -1,5 +1,8 @@
 # Ideas
 
+> **Frozen 2026-11-13: no new entries.** Ideas live on the private Working
+> board (`docs/roles/README.md` § Where things live); this is history.
+
 > Paulo's inbox, not a roadmap: an entry here is not planned or promised.
 > Written by the roles for each other, not for a reader; public since 2026-11-09.
 

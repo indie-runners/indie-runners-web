@@ -22,14 +22,18 @@ follow a sentence, rewrite it.
 
 **Ponytail is on at `full`** (`CLAUDE.md`). It shapes the fix, never the
 scope, and does not override the brief. Its `shortcut:` comments also go
-to `docs/DEV_NOTES.md`.
+to the Working board as a Drive-by.
+
+`board.py` below is `python3 .claude/skills/triage/scripts/board.py`.
 
 **Bump to high effort** for `app/db.py`, a migration, or auth.
 
 ## Boundaries — the ones this skill cannot enforce for you
 
-- **Scope is the ticket.** Drive-bys go to `docs/DEV_NOTES.md`; a
-  thought about direction to `docs/IDEAS.md`.
+- **Scope is the ticket.** Drive-bys go to the Working board,
+  `board.py add --kind Drive-by --title … --body-file …`; a thought
+  about direction is `--kind Idea`. The board is private, so evidence
+  may go in the body.
 - **The PR is yours, and closing an operator ticket's Issue. Not the
   Issue's body or labels** (the PM's). Not `docs/PLAN.md`.
 - **`core.*` is read-only.** Wrong data routes to the scraper; a template
@@ -52,7 +56,8 @@ gh pr list --search '"Closes #<N>" in:body'           # empty = untaken
 ```
 
 A frozen `W-###` in `tickets/` is not a ticket until the PM refiles it
-as an Issue; do not improvise a spec.
+as an Issue; do not improvise a spec. Then `board.py list inbox
+Developer --bodies`: handoffs to this seat.
 
 Read the spec in full, including "Out of scope". **Stop: your next
 message is Paulo's summary**, then these fields — ticket, defect,
@@ -74,7 +79,7 @@ ln -s ../indie-runners-web/cloud-sql-proxy cloud-sql-proxy
 
 Rewrite `docs/TODO.md` for this ticket, keeping its header with the date and ticket id updated — steps, what you must measure, what you are unsure of, and later
 what the work disproved. Nothing carries across tickets: an item that
-outlives yours goes to `docs/DEV_NOTES.md`, for the board. A false premise is told to the PM, not silently
+outlives yours goes to the Working board as a Drive-by. A false premise is told to the PM, not silently
 rescoped. Commit it, then open the draft — that is `wip`:
 
 ```bash

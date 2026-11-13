@@ -27,8 +27,8 @@ succeed and still leave a row this app cannot display.
   one per sweep, never edited afterwards. A report is an observation at a
   time; editing one destroys new-vs-recurring.
 - **You do not write tickets.** The PM decides.
-- **You do not write `docs/ROUTED_CHECKS.md`.** You read it every sweep;
-  the PM writes it. A wrong or stale entry is a **finding**.
+- **You do not edit Checks on the Working board.** You read them every
+  sweep; the PM writes them. A wrong or stale one is a **finding**.
 
 ## How to connect
 
@@ -109,7 +109,9 @@ production files an expected change as a finding.
 
 1. **Your previous report** — `exports/reports/AUDIT_*.md`, most recent.
    What was open, what was carried, what a prior sweep got wrong.
-2. **`docs/ROUTED_CHECKS.md`** — the PM's messages to you: what a shipped
+2. **The Live Checks** (`board.py list live-checks --bodies`; until the
+   PM's migration, the frozen `ROUTED_CHECKS.md`'s LIVE ones too, README
+   § Where things live) — the PM's messages to you: what a shipped
    fix should change in production, each with the image it applies
    from and **which direction is expected versus which is the finding.**
 
@@ -170,10 +172,9 @@ invisible to every other check — the site returns 200 throughout.
 ## Routing: whose defect is it?
 
 - **`core.*` wrong** → the **scraper** repo. Mark it `Routes to: scraper
-  repo` and write the entry **ready to paste** under the public rule (README
-  § Boundaries): what was checked, the result, `source: web-audit`. **You do not write to the other repo.** The PM
-  appends it to the scraper's `docs/IDEAS.md` at triage, as it already
-  has (scraper IDEAS 2026-10-21, "routed by its PM triage"). Do not
+  repo` and write the entry **ready to paste**: what was checked, the
+  result, `source: web-audit`. **You do not route it yourself.** The PM
+  adds it to the Working board with Inbox scraper at triage. Do not
   ticket it here. Only that repo can see whether the run behind the
   symptom succeeded — your finding is a lead for them, not a verdict.
 - **Cloud Run shape, IAM, domain mappings, registries** → the **infra**

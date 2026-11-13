@@ -8,16 +8,16 @@ Read `docs/roles/README.md` first, then this.
 
 ## The job
 
-**Inbound — turn findings into tickets.** Read `exports/reports/AUDIT_*.md`,
-`docs/DEV_NOTES.md` and `docs/IDEAS.md`. Decide what is worth doing, in
-what order, split into what units. File each as an Issue (§ Writing a
-ticket). A finding marked `Routes to: scraper repo`
-or `infra repo` is not ticketed: append the auditor's paste-ready entry
-to that repo's `docs/IDEAS.md` — the only writes you make outside this
-repo (README § The other repo).
+**Inbound — turn findings into tickets.** Read `exports/reports/AUDIT_*.md`
+and `board.py list triage` (README § Where things live). Decide what is
+worth doing, in what order, split into what units. File each as an Issue
+(§ Writing a ticket); a board item becomes one by `board.py promote`,
+from a public rewrite. A finding marked `Routes to: scraper repo`
+or `infra repo` is not ticketed: add the auditor's paste-ready entry as
+an Idea with that Inbox (README § The other repo). An item already on
+the board is routed by changing its Inbox and leaving it Raw.
 
-`docs/IDEAS.md` is handled differently: human-authored, tracked because it
-exists nowhere else, and the only input that can **change direction**
+An Idea is handled differently: Paulo's, and the only input that can **change direction**
 rather than add work. An idea saying the current arc is the wrong shape is
 a `docs/PLAN.md` rewrite — say so plainly rather than shredding it into
 tickets that each miss the point. Every entry ends up ticketed (with the
@@ -132,12 +132,22 @@ that matters when a fix turns out to be incomplete: the useful question
 then is what the reviewer believed it covered.
 
 **But the auditor cannot read that here.** Their brief routes them to
-their previous report and to `docs/ROUTED_CHECKS.md`, never to a ticket
+their previous report and to the Live Checks, never to a ticket
 verdict. **So a verdict predicting a change in production is not
-delivered until it is also written into `docs/ROUTED_CHECKS.md`**, and
-the review is not finished without it. That file is yours. Naming the
-ticket id is not enough — four fields, defined in its header: gate,
-signature, reading in both directions, retire.
+delivered until it is a Live Check on the Working board** (`board.py add
+--kind Check` numbers it; numbers are never reused). Checks are yours.
+Naming the ticket id is not enough; four fields:
+
+- **Gate** — an image, never a date or "the first revision after the
+  merge" (an infra apply makes a new revision on the old image). Name the
+  revision serving at merge (`./scripts/deploy.sh --check`); the gate is
+  the first one after it whose `status.imageDigest` differs.
+- **Signature** — what will look different, and where.
+- **Reading** — both directions: which observation is confirmation, which
+  is the finding, and what NULL/empty/error means.
+- **Retire** — a condition. Status Live from day one until Retired, with
+  its evidence; a retired check stays on the board, so its silence is
+  explained. The frozen `ROUTED_CHECKS.md` holds 1 to 59.
 
 **With no test suite, this section carries more weight here.** "Verified"
 means someone ran it, so what was *not* run is the only honest account of

@@ -9,9 +9,9 @@ its scope.
 | Terminal | Brief | Model | Writes |
 |---|---|---|---|
 | Auditor | [auditor.md](auditor.md) | Sonnet 5, medium | `exports/reports/` only |
-| PM / gatekeeper | [pm.md](pm.md) | Opus 5, high | Issues (body, labels, closing as not planned), review comments, `.github/ISSUE_TEMPLATE/`, `docs/PLAN.md`, `docs/ROUTED_CHECKS.md`, `exports/evidence/`; appends to the scraper's and infra's `docs/IDEAS.md` |
-| Developer | [developer.md](developer.md) | Opus 5, default | code, `docs/`, `exports/evidence/`, the PR (draft, ready, merge); closes an operator ticket's Issue |
-| Chief of staff | [chief-of-staff.md](chief-of-staff.md) | Opus 5, high | `docs/roles/`, `.claude/skills/`, `CLAUDE.md`, the `ROUTED_CHECKS.md` header, replies in `docs/handoffs/` |
+| PM / gatekeeper | [pm.md](pm.md) | Opus 5, high | Issues (body, labels, closing as not planned), review comments, `.github/ISSUE_TEMPLATE/`, `docs/PLAN.md`, `exports/evidence/`; Working board items for any Inbox (status, routing, Checks), promotion |
+| Developer | [developer.md](developer.md) | Opus 5, default | code, `docs/`, `exports/evidence/`, the PR (draft, ready, merge); closes an operator ticket's Issue; Drive-by and Idea items |
+| Chief of staff | [chief-of-staff.md](chief-of-staff.md) | Opus 5, high | `docs/roles/`, `.claude/skills/` (`board.py` included), `CLAUDE.md`, Handoff items from CoS |
 
 The fourth is not a peer of the other three. They do the work; it works
 on **the thing that does the work** — the briefs, the boundaries, the
@@ -25,15 +25,13 @@ from the repo it came from.
 ```
 exports/reports/AUDIT_<date>T<time>.md   auditor findings   GITIGNORED
 exports/evidence/<N>.md                  private detail     GITIGNORED
-docs/IDEAS.md                            Paulo's inbox      tracked
-docs/DEV_NOTES.md                        developer drive-bys tracked
-docs/ROUTED_CHECKS.md                    PM -> auditor      tracked
+Working board (org Project #2)           ideas, drive-bys, checks, handoffs  PRIVATE
+docs/IDEAS.md, DEV_NOTES.md, ROUTED_CHECKS.md, handoffs/  frozen 2026-11-13, history
 GitHub Issue #N                          a ticket: the spec the developer works from
 tickets/                                 W-001..W-115 and BACKLOG.csv, frozen 2026-11-10
 docs/CHANGELOG.md                        where a release is declared
 docs/ARCHITECTURE.md                     why a decision was made
 docs/FILE_TREE.md                        what lives where
-docs/handoffs/<date>-<from>-to-<to>-<slug>.md  one message   tracked
 .claude/skills/<name>/SKILL.md           how each role is opened (one is Paulo's) tracked
 ```
 
@@ -46,7 +44,15 @@ lives only in a skill is a brief that has drifted. A skill cannot enforce
 a boundary either (the auditor's `Write` is the same tool that edits
 code), so each restates the ones it cannot.
 
-**Any role may write a handoff**: one message, read once, about the
+**The Working board** (org Project #2, Paulo 2026-11-13) holds draft
+items: `Kind`, `Status` per Kind, `Inbox` the receiving repo, `From`/`To`,
+`Issue` once promoted. Every read and write goes through
+`.claude/skills/triage/scripts/board.py`, identical in all three repos.
+Promotion makes a new Issue from a public rewrite; the draft stays.
+**Until the PM's migration lands** (a list Paulo sees, then one
+`board.py add` run), the frozen files' open entries are still read.
+
+**Any role may write a handoff**, a Handoff item: one message, read once, about the
 process rather than the work. Routine coordination belongs in a durable
 file instead.
 
@@ -54,10 +60,7 @@ file instead.
 (`indie-runners-web#N` from another repo); `W-###` is a frozen one.
 
 **Only the audit reports are gitignored.** A finding survives its file
-being deleted: re-run the sweep. The two cross-session inboxes are
-tracked, and `DEV_NOTES.md` is tracked for a reason learned the hard way
-next door: under `exports/` it was invisible from a worktree, so a note
-written while working never reached the branch or the reviewer.
+being deleted: re-run the sweep.
 
 ## Single writer per field
 
@@ -79,9 +82,9 @@ a convention, since GitHub lets either edit both.
   `APPROVED WITH FOLLOW-UPS — <ids>` / `BLOCKED — <finding>`, nothing
   after it. A caveat that does not block is filed as a ticket and named
   on the line, never left as prose for the operator to weigh.
-- **A verdict that predicts production is not delivered until it is in
-  `docs/ROUTED_CHECKS.md`.** The auditor reads their previous report and
-  that file — never a ticket verdict. A prediction left in the ticket
+- **A verdict that predicts production is not delivered until it is a
+  Live Check on the Working board.** The auditor reads their previous
+  report and those — never a ticket verdict. A prediction left in the ticket
   reaches nobody who will look for it.
 - **100 lines of `docs/` per ticket.** Whoever writes documentation —
   developer, PM, chief of staff — adds at most 100 lines under `docs/` in
@@ -101,9 +104,8 @@ a convention, since GitHub lets either edit both.
     account opens every PR. The developer runs `gh pr merge --merge`.
     Paulo's production gates stay `deploy:` and database writes
     (`CLAUDE.md`).
-  - **Board-only work** is on Issues and PR comments, no PR. One PM
-    session's `ROUTED_CHECKS.md`, `PLAN.md` and IDEAS outcomes, or one
-    CoS pass, is one PR (`pm/<date>-<slug>`, `cos/<date>-<slug>`),
+  - **Board-only work** is on Issues, PR comments and the Working
+    board, no PR. One PM session's `PLAN.md`, or one CoS pass, is one PR (`pm/<date>-<slug>`, `cos/<date>-<slug>`),
     merged by whoever opened it once `build` is green.
   - **An Unsplash round** (`round/<date>`) carries only the manifest and
     the credits. The session that ran `/unsplash-round` opens it once
@@ -112,8 +114,6 @@ a convention, since GitHub lets either edit both.
   - **Behind `master`**, whoever opened the PR runs `git fetch origin &&
     git merge origin/master && git push`, then waits for `build`. Merge,
     not rebase: rebased commits are not the ones the PM read.
-  - The scraper's and infra's `docs/IDEAS.md` still take direct pushes
-    until those repos get the ruleset.
 - **Tracked files, Issues, PR bodies and comments are public, in all
   three repos.** Never write into a tracked file: real user names, crew names or slugs, user IDs tied to
   privacy settings, user/signup/traffic counts, visitor logs or search
@@ -136,13 +136,15 @@ a convention, since GitHub lets either edit both.
   file has no history, is not in a worktree's tree, cannot be read by
   claude.ai or the other repos, and is gone with the machine. So the
   tracked file must stand on its own; the private one is for checking
-  again, not for understanding.
+  again, not for understanding. **The Working board is private**: evidence
+  may go there, and promotion rewrites it to this rule.
 - **Deploy is a decision, not a reflex** — `deploy: immediate | batched`,
   set when the ticket is written. This service is public.
 
 **Paulo's, not a session's:** rulesets, variables, environments, the
 org Projects board, interaction limits if strangers' Issues get noisy
-(never Issues off). No role reads the board; labels carry the fields.
+(never Issues off). No role reads that board; labels carry the fields.
+The Working board is a different one, and every role reads it.
 
 ## The other repo
 
@@ -162,25 +164,25 @@ writes to any (`app/models/core.py`, marked READ ONLY). This repo owns
 
 **This repo is the best-placed observer of `core.*` and the least able to
 fix it.** It reads the serving view on every page load. So a `core.*`
-finding is routed to the scraper repo's `docs/IDEAS.md` with
+finding is routed as an Idea item with Inbox scraper, body opening
 `source: web-audit` — never ticketed here, where no developer will do it.
 
-**The public rule holds across the boundary.** The other repos cannot
-read this one's `exports/`, so a cited `web AUDIT_<ts> F<n>` is only a
-pointer back to us. The entry must stand on its own: what was checked,
-how to observe it from their side, and the result. `core.*` race data
-(events, ids, values) may be quoted; user data never.
+**The item must stand on its own.** The other repos cannot read this
+one's `exports/`, so a cited `web AUDIT_<ts> F<n>` is only a pointer
+back to us: say what was checked, how to observe it from their side,
+and the result. Their PM rewrites it to the public rule if it promotes
+it.
 
 **`indie-runners-infra` is the second route out.** It owns this service's
 shape (`indie-runners-infra/web/`), its grants, domain mappings and
 registry, fixed by a plan there, never by a hand grant here. The entry
-goes to its `docs/IDEAS.md` as `## web #N <date> — <subject>`, then
-`source: web-triage`, under the same rule; commit and push there. Its
-PM already reads ours, so traffic runs both ways.
+is an Idea item with Inbox infra, its body opening
+`web #N <date> — <subject>` and `source: web-triage`, under the same
+rule. Its PM already reads ours, so traffic runs both ways.
 
-**Only the PM writes to either repo.** The auditor marks the finding
+**Only the PM routes to either repo.** The auditor marks the finding
 `Routes to:` with the entry ready to paste; the developer leaves a
-drive-by. One writer means one place to look for what was sent.
+Drive-by. One writer means one place to look for what was sent.
 
 **One connection budget, two repos.** 45 connections serve the scraper's
 pipelines, this service, and anything an operator runs. "Only one session

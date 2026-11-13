@@ -1,5 +1,8 @@
 # Routed checks — the PM's messages to the auditor
 
+> **Frozen 2026-11-13: no new entries; the contract below moved to
+> `docs/roles/pm.md`.** Checks live on the private Working board from 60.
+
 **Written by the PM. Read by the auditor every sweep. Edited by neither
 the auditor nor anyone else.**
 
