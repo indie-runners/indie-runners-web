@@ -1115,7 +1115,7 @@ zero ERROR logs on the revision. Not checked signed in, as above.*
   the auditor brief's error read widened to cover it. The PM hands the
   brief change to the chief of staff at W-051's review.
 
-### 50 — attendance is marked from event pages only, never from the index (W-096) · LIVE — gate `00089-wxs`; no attendance traffic yet (AUDIT_20261105T0851), carry it
+### 50 — attendance is marked from event pages only, never from the index (W-096) · RETIRED 2026-11-13, confirmed under `00089-wxs` onward (AUDIT_20261111T1224, AUDIT_20261113T0829): every attendance `POST`/`DELETE` in 7d a `200` with an event-page Referer, none from the index
 
 - **Gate:** the first revision created after W-096's merge whose image
   digest differs from the image serving at merge time. The developer's
@@ -1240,7 +1240,7 @@ zero ERROR logs on the revision. Not checked signed in, as above.*
 - **Retire:** seven consecutive sweeps with none, or the first routed
   repeat, whichever comes first. A routed repeat becomes infra's.
 
-### 56 — "← All events" on an event page keeps the filters from an index Referer (W-102) · LIVE — gate `00093-ljw`, image `b60e7b03…` (created 18:22:38Z, after W-102's merge at 18:20:49Z on 2026-11-08; first new digest after `00092-vzb`)
+### 56 — "← All events" on an event page keeps the filters from an index Referer (W-102) · RETIRED 2026-11-13, confirmed under gate `00093-ljw` (image `b60e7b03…`) and later images (AUDIT_20261111T1224, AUDIT_20261113T0829): `/?country=austria`, `/`, `/`
 
 - **Gate:** the first revision serving CHANGELOG 1.9.71 (W-102 merged). The
   developer's deploy output names it. W-102 is `deploy: batched`, so it may
@@ -1262,7 +1262,7 @@ zero ERROR logs on the revision. Not checked signed in, as above.*
   expected.
 
 
-### 57 — `beta.indierunners.co` no longer resolves or reaches the app (W-018) · LIVE from the gate
+### 57 — `beta.indierunners.co` no longer resolves or reaches the app (W-018) · RETIRED 2026-11-13, two sweeps confirmed (AUDIT_20261111T1224, AUDIT_20261113T0829). The second read NXDOMAIN from the system resolver, not `@8.8.8.8`; the PM re-read it through `https://dns.google/resolve?name=beta.indierunners.co&type=CNAME` the same day: `Status` 3, NXDOMAIN
 
 - **Gate:** no new image. The gate is infra `cd04912` applied (beta mapping
   destroyed) and the beta CNAME deleted, 2026-11-09 ~15:27Z. Every sweep
@@ -1282,3 +1282,41 @@ zero ERROR logs on the revision. Not checked signed in, as above.*
   to infra); a beta mapping listed (drift against infra); a beta request
   in the app's log after the 24h; `www` not answering 301.
 - **Retire:** two consecutive sweeps under the gate reading confirmation.
+
+### 58 — a crawler follows the event pages' "sign in" link, ignoring robots.txt · LIVE — standing read from `00097-8bs`
+
+- **Gate:** every sweep from `00097-8bs` onward. Nothing shipped: the PM
+  dispositioned AUDIT_20261113T0829 F1 as no ticket, and this is how a
+  repeat reads. `GET /auth/google` sets a session cookie and answers
+  `307` to Google, with no DB read (`app/main.py`, `google_login`), so
+  the crawl costs a request and nothing else. `robots.txt` already
+  disallows `/auth/`.
+- **Signature:** request log, 24h: `GET /auth/google` by status, its top
+  sources by range (last octet dropped), and `/auth/google/callback`
+  requests from the same ranges.
+- **Reading:** `307`s from a few ranges with no callback from them is
+  **confirmation**, one line. It is not a sign-in count: say so when
+  check 49 reads callbacks. **Finding:** a `5xx` on `/auth/google`; a
+  callback from a crawler range (it is completing Google's flow); the
+  same ranges on `POST` routes or on `/crews/join/*`; or starts above
+  2,000 in 24h.
+- **Retire:** seven consecutive sweeps with no crawler starts, or an edge
+  rule from infra that blocks them, whichever comes first.
+
+### 59 — ARCHITECTURE's dated view counts are not a finding; the claims beside them are · LIVE — standing read from `00097-8bs`
+
+- **Gate:** every sweep from `00097-8bs` onward. Nothing shipped:
+  AUDIT_20261113T0829 F4 dispositioned as no ticket. W-002 re-measured
+  the count once and it went stale again. `docs/ARCHITECTURE.md` dates
+  it on purpose ("measurements with a shelf life [...] conclusions drawn
+  from them are written to stand without them").
+- **Signature:** the view, one query: events whose rows carry more than
+  one distinct `occurrence_id`. The same section claims "Each event has
+  exactly one live occurrence", and the grouping key rests on it.
+- **Reading:** a dated count that differs from today's view is
+  **confirmation**, not reported. Zero multi-occurrence events is
+  **confirmation**, one line. **Finding:** any event with two live
+  occurrences in the view (the tile and event page group on the event
+  alone, so they would merge two editions), or a view count stated in
+  ARCHITECTURE with no date.
+- **Retire:** when a ticket changes how ARCHITECTURE states the grain.
