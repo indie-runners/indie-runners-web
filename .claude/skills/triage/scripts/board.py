@@ -20,7 +20,11 @@ is read from `origin`, so a role sees and promotes its own Inbox only.
   board.py promote ITEM --ticket T-###
   board.py selftest
 
-ITEM is an item id (PVTI_...) or an exact title in this Inbox.
+ITEM is an item id (PVTI_...) or an exact title in this Inbox, with or
+without its `[repo] ` prefix.
+`add` starts every title with the repo it ran from, `[scraper] …`, so the
+board shows where an item started; Inbox says where it goes. A prefix the
+writer typed is replaced, never doubled.
 `add --kind Check` numbers the title itself: `Check <next> — <title>`,
 numbered per Inbox (web and scraper each keep their own sequence).
 `--number N` keeps a migrated check's number; a number already on the
@@ -58,7 +62,7 @@ STATUSES = {
 FIRST = {"Idea": "Raw", "Drive-by": "New", "Check": "Live", "Handoff": "Sent"}
 # The last number in each repo's frozen ROUTED_CHECKS.md. Retired checks are
 # not migrated, so the board alone could hand out a retired number again.
-CHECK_FLOOR = {"web": 59, "scraper": 95, "infra": 0}  # infra: verify at its pass
+CHECK_FLOOR = {"web": 59, "scraper": 96, "infra": 13}
 PROMOTED = {"Idea": "Promoted", "Drive-by": "Ticketed"}
 # shortcut: only web's tickets are issues; add a repo here when its
 # tickets-are-issues pass lands, until then promotion records a ticket id.
@@ -135,7 +139,12 @@ def view(name, all_items, repo, role=None):
 def check_numbers(all_items, repo):
     return [int(m.group(1)) for i in all_items
             if i.get("kind") == "Check" and i.get("inbox") == repo
-            and (m := re.match(r"Check (\d+)\b", i.get("title", "")))]
+            and (m := re.match(r"(?:\[\w+\] )?Check (\d+)\b", i.get("title", "")))]
+
+
+def stamp(title, repo):
+    """`[repo] title`, the origin; a typed prefix is replaced."""
+    return f"[{repo}] " + re.sub(r"^\[(?:web|scraper|infra)\]\s*", "", title)
 
 
 def next_check(all_items, repo):
@@ -185,7 +194,8 @@ def set_field(pid, fields, item_id, name, value):
 
 def find(ref, all_items, repo):
     hits = [i for i in all_items if i["id"] == ref] or \
-           [i for i in all_items if i.get("title") == ref and i.get("inbox") == repo]
+           [i for i in all_items if i.get("title") in (ref, stamp(ref, repo))
+            and i.get("inbox") == repo]
     if len(hits) != 1:
         sys.exit(f"{len(hits)} items match {ref!r}; use the PVTI_ id")
     return hits[0]
@@ -262,6 +272,7 @@ def main():
             if n in check_numbers(board, a.inbox or repo):
                 sys.exit(f"Check {n} is already on the board for {a.inbox or repo}")
             title = f"Check {n} — {title}"
+        title = stamp(title, repo)
         with tempfile.NamedTemporaryFile("w", suffix=".txt") as t:
             t.write(title); t.flush()
             item = gql("mutation($p:ID!,$t:String!,$b:String!){addProjectV2DraftIssue("
@@ -334,10 +345,13 @@ def selftest():
     assert ids(view("inbox", board, "web", "PM")) == ["6"]
     assert ids(view("inbox", board, "web", "Developer")) == []
     assert check_numbers(board, "scraper") == [95]
+    assert check_numbers([{**board[0], "title": "[scraper] Check 98 — x"}], "scraper") == [98]
+    assert stamp("PM → CoS", "web") == "[web] PM → CoS"
+    assert stamp("[infra] Check 14 — x", "scraper") == "[scraper] Check 14 — x"
     assert ids(view("triage", board, "web")) == ["3", "6", "5"], ids(view("triage", board, "web"))
-    assert next_check(board, "scraper") == 96 and next_check(board, "web") == 60
-    assert next_check(board, "infra") == 1
-    assert next_check([], "scraper") == 96 and next_check([], "web") == 60
+    assert next_check(board, "scraper") == 97 and next_check(board, "web") == 60
+    assert next_check(board, "infra") == 14
+    assert next_check([], "scraper") == 97 and next_check([], "web") == 60
     assert promotion_target(board[2], "web") == ("web", None)
     assert promotion_target(board[2], "scraper")[1].startswith("Inbox is web")
     assert promotion_target(board[4], "web")[1].startswith("Inbox is empty")
