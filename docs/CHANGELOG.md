@@ -24,7 +24,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   the slug in `next` and no crew name. The Sign in href for `?joined=1` is
   `next=/crews/<crew-a>%3Fjoined%3D1`, and the session `/auth/google` sets holds
   `/crews/x?joined=1`. With minted cookies (the signed-in render, not sign-in):
-  a member gets the hub, a non-member the placeholder without a Sign in link,
+  a member gets the hub; a non-member gets the placeholder, without a Sign in
+  link, byte-identical for a real and a made-up slug;
   and `/profile`, `/crews`, `/crews/new` behave as before. Anon `POST
   /crews/new` still returns 401. The Google round trip itself was not run.
 
