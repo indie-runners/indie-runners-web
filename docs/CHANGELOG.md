@@ -4,6 +4,30 @@ All notable changes to the Indie Runners Web project will be documented in this 
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.9.80] — 2026-11-14
+
+### Fixed — a signed-out visitor on a crew link sees the invite-only page, not a 401 (#32)
+
+- **Wrong belief: only signed-in users reach the signed-in pages.** Four HTML
+  routes took `get_required_user`: `/crews/{slug}`, `/crews`, `/crews/new`,
+  `/profile`. Cost: in production a person opening a crew link a member had
+  sent them saw `{"detail":"not authenticated"}`, on 2026-11-11 and 2026-11-13
+  (AUDIT_20261113T0829, evidence #32). ARCHITECTURE § Crews claimed a bounce to
+  Google the route never had. **New belief:** members paste the crew URL, so
+  anon traffic on it is normal. Anon `/crews/{slug}` renders `crews_hidden.html`
+  with a Sign in link back to the same URL, query string kept. The other three
+  return a 303 through `/auth/google?next=`, the mechanism `/settings` uses.
+  POST routes and `/me` keep the 401.
+- **Verified** with `bash scripts/dev.sh` from the worktree (checked the
+  process cwd for `:8000`) and curl. Anon `GET` and `HEAD`: 303 to `?next=` on
+  the three, 200 on a real and a made-up slug, with bodies identical apart from
+  the slug in `next` and no crew name. The Sign in href for `?joined=1` is
+  `next=/crews/<crew-a>%3Fjoined%3D1`, and the session `/auth/google` sets holds
+  `/crews/x?joined=1`. With minted cookies (the signed-in render, not sign-in):
+  a member gets the hub, a non-member the placeholder without a Sign in link,
+  and `/profile`, `/crews`, `/crews/new` behave as before. Anon `POST
+  /crews/new` still returns 401. The Google round trip itself was not run.
+
 ## [1.9.79] — 2026-11-11
 
 ### Added — round 2026-11-10's manifest and credits are committed (#26)

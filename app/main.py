@@ -183,6 +183,12 @@ def get_required_user(user: Optional[User] = Depends(get_current_user)) -> User:
     return user
 
 
+def _signin_url(request: Request) -> str:
+    # Back to this exact URL after sign-in, query string kept (W-085).
+    target = request.url.path + (f"?{request.url.query}" if request.url.query else "")
+    return f"/auth/google?next={quote(target, safe='/')}"
+
+
 def _parse_filters(
     distance_min: Optional[str] = None,
     distance_max: Optional[str] = None,
@@ -595,7 +601,9 @@ def event_detail(
 
 
 @app.api_route("/profile", methods=["GET", "HEAD"])
-def profile_self(current_user: User = Depends(get_required_user)):
+def profile_self(request: Request, current_user: Optional[User] = Depends(get_current_user)):
+    if current_user is None:
+        return RedirectResponse(_signin_url(request), status_code=303)
     return RedirectResponse(f"/profile/{current_user.id}")
 
 
@@ -729,9 +737,12 @@ def settings_delete_account(
 
 @app.api_route("/crews", methods=["GET", "HEAD"])
 def crews_nav(
+    request: Request,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_required_user),
+    current_user: Optional[User] = Depends(get_current_user),
 ):
+    if current_user is None:
+        return RedirectResponse(_signin_url(request), status_code=303)
     # The nav's Crews link. A redirect rather than a per-crew href in
     # base.html, so no signed-in render pays a crews query (W-078).
     crews = CrewService(db).list_crews_for_user(current_user.id)
@@ -743,8 +754,10 @@ def crews_nav(
 @app.api_route("/crews/new", methods=["GET", "HEAD"])
 def crews_new_form(
     request: Request,
-    current_user: User = Depends(get_required_user),
+    current_user: Optional[User] = Depends(get_current_user),
 ):
+    if current_user is None:
+        return RedirectResponse(_signin_url(request), status_code=303)
     return templates.TemplateResponse(
         request,
         "crews_new.html",
@@ -784,17 +797,18 @@ def crews_detail(
     joined: Optional[str] = None,
     removed: Optional[str] = None,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_required_user),
+    current_user: Optional[User] = Depends(get_current_user),
 ):
     svc = CrewService(db)
-    crew = svc.get_crew_by_slug(slug)
-    # Non-existent and non-member collapse to the same placeholder — no
-    # crew name surfaces to a viewer without an invite. PLAN Decision 10.
+    # Anon gets the placeholder before any lookup, so a real and a made-up
+    # slug answer the same (W-085). No crew name surfaces without an
+    # invite. PLAN Decision 10.
+    crew = svc.get_crew_by_slug(slug) if current_user else None
     if crew is None or not svc.is_member(current_user.id, crew.id):
         return templates.TemplateResponse(
             request,
             "crews_hidden.html",
-            {"current_user": current_user},
+            {"current_user": current_user, "signin_url": _signin_url(request)},
             status_code=200,
         )
 
