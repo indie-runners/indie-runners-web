@@ -22,4 +22,5 @@ AUDIT_<ts> F<n> or evidence #N, never a path. -->
 
 ## Source
 
-<!-- The audit report, IDEAS entry, DEV_NOTES drive-by or review that raised it. -->
+<!-- The audit report, review, or Working board item that raised it, named by
+kind (Idea, Drive-by, Check, Handoff) and never linked: the board is private. -->
