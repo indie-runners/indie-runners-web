@@ -30,5 +30,5 @@ _2026-11-14_
 ## Disproved / found
 
 - A strict ASCII-digit check was enough; no global handler needed.
-- A 20-digit id still 500s (bigint out of range), as it did under `int` (pydantic parses 20 digits, checked):
-  Drive-by on the board, outside this ticket.
+- R1 (PM): `int()` refuses > 4300 digits, a 500 the unbounded check
+  created. Capped at 18 digits, which also closes the bigint Drive-by.

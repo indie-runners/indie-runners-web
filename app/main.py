@@ -417,7 +417,8 @@ def event_detail(
     current_user: Optional[User] = Depends(get_current_user),
 ):
     # str, not int: a malformed year (2027x) gets the not-found page, not FastAPI's JSON 422 (#14).
-    if not (occurrence_year.isascii() and occurrence_year.isdigit()):
+    # <= 18 digits: int() refuses > 4300 (#14 R1).
+    if not (occurrence_year.isascii() and occurrence_year.isdigit() and len(occurrence_year) <= 18):
         return templates.TemplateResponse(
             request, "event_not_found.html", {"current_user": current_user}, status_code=404
         )
@@ -623,7 +624,8 @@ def profile(
     current_user: Optional[User] = Depends(get_current_user),
 ):
     # str, not int: a malformed id (27+) gets the unknown-id placeholder, not FastAPI's JSON 422 (#14).
-    if not (user_id.isascii() and user_id.isdigit()):
+    # <= 18 digits: int() refuses > 4300, and any 18 digits fit Postgres bigint.
+    if not (user_id.isascii() and user_id.isdigit() and len(user_id) <= 18):
         return templates.TemplateResponse(
             request, "profile_hidden.html", {"current_user": current_user, "preview_mode": False}
         )
