@@ -1,9 +1,13 @@
-# TODO: #26 — Round 2026-11-10's manifest and credits are uncommitted in the main checkout
+# TODO: #32 — A signed-out visitor on a crew link gets a bare 401
 
 > The developer's per-ticket checklist, overwritten by the next ticket.
 
-_2026-11-11_
+_2026-11-14_
 
-- [x] Rename `round/2026-11-10#` -> `round/2026-11-10` (in place: the files exist only in the main checkout)
-- [x] Commit exactly the two round files; merge origin/master
-- [ ] PR, PM verdict, merge; main checkout back on master; `/unsplash-round` loads after a restart
+- [x] `/crews/{slug}` anon: 200 `crews_hidden.html` + Sign in link, `next` keeps the query string
+- [x] `/crews`, `/crews/new`, `/profile` anon: 303 to `/auth/google?next=…` (the `/settings` mechanism)
+- [x] Measure: anon GET/HEAD on all four, real and made-up slug (same body); member and non-member signed in
+- [x] Unsure: `next` with a query string must be URL-encoded or `?joined=1` is lost to `/auth/google`'s own query
+- [x] ARCHITECTURE § Crews line; changelog
+
+- Disproved: nothing; the encoding worry was real, `quote(target, safe='/')` covers it
