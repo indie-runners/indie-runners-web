@@ -6,12 +6,12 @@ _2026-11-14_
 
 ## Steps
 
-- [ ] `/profile/{user_id}` and `/events/{slug}/{occurrence_year}`: take the
+- [x] `/profile/{user_id}` and `/events/{slug}/{occurrence_year}`: take the
       segment as `str`, parse it in the route; not a bare ASCII integer →
       the page an unknown value already gets
-- [ ] Profile: `profile_hidden.html`, 200 (same as an unknown id)
-- [ ] Event: `event_not_found.html`, 404
-- [ ] Changelog, version bump
+- [x] Profile: `profile_hidden.html`, 200 (same as an unknown id)
+- [x] Event: `event_not_found.html`, 404
+- [x] Changelog, version bump
 
 ## Measure, both tiers (anon and minted cookie)
 
@@ -24,3 +24,9 @@ _2026-11-14_
 
 - FastAPI's `int` accepted `+27` / `-1`; a strict ASCII-digit check sends
   those to the placeholder too. Neither has a row, so the page is the same.
+
+## Disproved / found
+
+- A strict ASCII-digit check was enough; no global handler needed.
+- A 20-digit id still 500s (bigint out of range), as it did under `int`:
+  Drive-by on the board, outside this ticket.

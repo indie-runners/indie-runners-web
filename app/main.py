@@ -411,11 +411,17 @@ def clear_attendance(
 def event_detail(
     request: Request,
     event_slug: str,
-    occurrence_year: int,
+    occurrence_year: str,
     race: Optional[str] = None,
     db: Session = Depends(get_db),
     current_user: Optional[User] = Depends(get_current_user),
 ):
+    # str, not int: a malformed year (2027x) gets the not-found page, not FastAPI's JSON 422 (#14).
+    if not (occurrence_year.isascii() and occurrence_year.isdigit()):
+        return templates.TemplateResponse(
+            request, "event_not_found.html", {"current_user": current_user}, status_code=404
+        )
+    occurrence_year = int(occurrence_year)
     # ProfileService._load_rows mirrors this predicate (has_page) to decide what to link; change both.
     rows = db.execute(
         select(Race)
@@ -610,12 +616,18 @@ def profile_self(request: Request, current_user: Optional[User] = Depends(get_cu
 @app.api_route("/profile/{user_id}", methods=["GET", "HEAD"])
 def profile(
     request: Request,
-    user_id: int,
+    user_id: str,
     preview: Optional[str] = None,
     left: Optional[str] = None,
     db: Session = Depends(get_db),
     current_user: Optional[User] = Depends(get_current_user),
 ):
+    # str, not int: a malformed id (27+) gets the unknown-id placeholder, not FastAPI's JSON 422 (#14).
+    if not (user_id.isascii() and user_id.isdigit()):
+        return templates.TemplateResponse(
+            request, "profile_hidden.html", {"current_user": current_user, "preview_mode": False}
+        )
+    user_id = int(user_id)
     viewer_id = current_user.id if current_user else None
     # Preview mode: when the user is looking at their own profile via
     # the settings "View as others see it" link, drop the self
