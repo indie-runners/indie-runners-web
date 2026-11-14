@@ -17,7 +17,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   anything but ASCII digits gets the page an unknown value already gets:
   `profile_hidden.html` (200, so a malformed id says nothing an unknown one
   does not), and `event_not_found.html` with a 404 for the year. Not W-040's
-  redirect, which compares the year as a number.
+  redirect, which compares the year as a number. One change for a URL the
+  old `int` accepted: a signed year (`/events/<slug>/+2027`, `/-1`) used to
+  render or redirect, and is now 404. The site never links one.
 - **Verified** with `bash scripts/dev.sh` from the worktree (checked the
   process cwd for `:8000`) and curl, anon and with a minted cookie (the
   signed-in render, not sign-in). `/profile/27+`, `/profile/abc` and

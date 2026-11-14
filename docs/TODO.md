@@ -22,11 +22,13 @@ _2026-11-14_
 
 ## Unsure
 
-- FastAPI's `int` accepted `+27` / `-1`; a strict ASCII-digit check sends
-  those to the placeholder too. Neither has a row, so the page is the same.
+- FastAPI's `int` accepted `+27` / `-1` (pydantic, checked). The strict
+  check sends them to the placeholder: same page for a profile, but
+  `/events/<slug>/+2027` used to render the edition and `/-1` redirect;
+  both are now 404. The site never links a signed year; told the PM.
 
 ## Disproved / found
 
 - A strict ASCII-digit check was enough; no global handler needed.
-- A 20-digit id still 500s (bigint out of range), as it did under `int`:
+- A 20-digit id still 500s (bigint out of range), as it did under `int` (pydantic parses 20 digits, checked):
   Drive-by on the board, outside this ticket.
