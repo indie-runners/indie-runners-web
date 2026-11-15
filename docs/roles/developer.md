@@ -10,7 +10,11 @@ Read `docs/roles/README.md` first, then this, then your ticket.
 
 One ticket. Start to finish. Then the next one.
 
-1. **Take the top open ticket**: the lowest `p` label among open Issues
+1. **First, your own open PR.** An open `fix/` PR is your ticket, and
+   nothing new is taken over it. Draft: carry on. Out of draft: its
+   verdict is the last `VERDICT:` line in its comments (step 7), never
+   the board inbox; none yet, say you are waiting and end the turn.
+   **Otherwise take the top open ticket**: the lowest `p` label among open Issues
    no PR names (`gh issue list --label p1`, then `p2`…), skipping
    `not-next`. Read the Issue in full, including "Out of scope".
    Summarise it for Paulo in plain English, then **end the turn and wait
@@ -129,7 +133,8 @@ Working board (`board.py add --kind Drive-by`) and carry on. It reaches
 the PM from any worktree; the board is private, so the evidence can go
 in it. A thought about *direction* is `--kind Idea` instead, which the
 PM reads as a possible `PLAN.md` rewrite. Handoffs to you:
-`board.py list inbox Developer`, read when you open a ticket.
+`board.py list inbox Developer`, read when you open a ticket. It
+carries no verdicts; those are on the PR (step 1).
 
 ## Documenting
 
