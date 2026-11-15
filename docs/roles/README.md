@@ -52,8 +52,6 @@ Its titles start with the repo an item came from, `[web] PM → CoS, …`,
 stamped by `board.py add`; Inbox is where it goes, so a role name always
 reads as that repo's role.
 Promotion makes a new Issue from a public rewrite; the draft stays.
-**Until the PM's migration lands** (a list Paulo sees, then one
-`board.py add` run), the frozen files' open entries are still read.
 
 **Any role may write a handoff**, a Handoff item: one message, read once, about the
 process rather than the work. Routine coordination belongs in a durable
