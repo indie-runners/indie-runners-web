@@ -31,12 +31,12 @@ Inbound duty only. A branch review is `/review`.
 ## 1. Read the inboxes
 
 1. The newest `exports/reports/AUDIT_*.md` — its opening line is the diff
-   against the previous sweep.
+   against the previous sweep. A Handoff to the Auditor that the opening
+   names as acted on: `board.py set <id> --status Absorbed` (the auditor
+   writes nothing on the board).
 2. `board.py list triage --bodies` — Raw and Shaped ideas (Paulo's; the
    one input that can change direction), New drive-bys, handoffs to the
-   PM, and items missing a field. Until your migration lands (README
-   § Where things live), also the frozen `docs/DEV_NOTES.md` and
-   `docs/IDEAS.md` entries still open.
+   PM, and items missing a field.
 3. The Issues: `gh issue list --state open --limit 200 --json
    number,title,labels`, and `gh pr list` for what is in flight. Then
    the frozen `tickets/BACKLOG.csv`'s rows still `open`: an empty Issue

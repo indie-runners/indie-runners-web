@@ -47,7 +47,20 @@ to the Working board as a Drive-by.
 
 ## 1. Take the ticket
 
-The lowest `p` label among open Issues that no PR names, skipping
+**First, your own open PR**, before anything new. The verdict reaches
+you on the PR, never the board inbox:
+
+```bash
+gh pr list --json number,headRefName,isDraft -q '.[] | select(.headRefName|startswith("fix/"))'
+gh pr view <N> --json comments -q '.comments[].body' | grep '^VERDICT:' | tail -1
+```
+
+Draft → carry on from `docs/TODO.md`. Out of draft: no line → say you
+are waiting on the PM and end the turn; an approving line → § 6;
+`BLOCKED` → § 5's fix, unless you pushed after it (re-review pending:
+end the turn). Never take a new ticket over an open `fix/` PR.
+
+None open: the lowest `p` label among open Issues that no PR names, skipping
 `not-next` (its comment says what to take instead):
 
 ```bash
