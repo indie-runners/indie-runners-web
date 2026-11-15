@@ -50,6 +50,10 @@ hold the line the brief draws, not the harness:
    lands (README § Where things live), also sweep the frozen
    `docs/ROUTED_CHECKS.md` entries whose header says LIVE; once the
    board has a Check of the same number, the board's wins.
+4. **Handoffs to you** — `python3 .claude/skills/triage/scripts/board.py
+   list inbox Auditor --bodies`. Act on each; you write nothing on the
+   board, so name each in the report's opening line and the PM, reading
+   the report, sets it Absorbed.
 
 ## 2. The sweep
 
