@@ -8,8 +8,8 @@ _2026-11-16_
 
 - [x] stats.html: Paulo's copy for "tracked" and "checked", slips fixed
 - [x] Countries: `<ul>`, sorted by displayed (title-cased) name in `stats()`
-- [ ] Verify anon at desktop and 375px; map and links unchanged
-- [ ] Changelog, version bump
+- [x] Verify anon at desktop and 375px; map and links unchanged
+- [x] Changelog, version bump
 
 ## Measure
 
