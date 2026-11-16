@@ -158,6 +158,7 @@
                 <td>
                   {% if r.registration_sold_out %}Sold out
                   {% elif r.registration_open %}Open
+                  {% elif registration_opens(r) %}Opens {{ registration_opens(r) }}
                   {% elif r.registration_open == false %}Closed
                   {% endif %}
                 </td>
@@ -202,16 +203,17 @@
         <div class="detail-card">
           <h3 class="detail-card-title">Registration</h3>
           <dl class="detail-list">
-            {% if selected_race.registration_start is not none %}
+            {% set opens = registration_opens(selected_race) %}
+            {% if selected_race.registration_start is not none and not opens %}
               <div class="detail-row">
                 <dt>Opens</dt>
-                <dd>{{ selected_race.registration_start }}</dd>
+                <dd>{{ format_date_range(selected_race.registration_start, none) }}</dd>
               </div>
             {% endif %}
             {% if selected_race.registration_open is not none %}
               <div class="detail-row">
                 <dt>Status</dt>
-                <dd>{{ 'Open' if selected_race.registration_open else 'Closed' }}</dd>
+                <dd>{{ 'Open' if selected_race.registration_open else ('Opens ' ~ opens if opens else 'Closed') }}</dd>
               </div>
             {% endif %}
             {% if selected_race.registration_sold_out is not none %}
