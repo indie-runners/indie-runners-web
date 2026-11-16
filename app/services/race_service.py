@@ -73,6 +73,17 @@ def format_date_range(start: Optional[date], end: Optional[date]) -> str:
     return f"{start.strftime('%-d')} – {end.strftime('%-d %b %Y')}"
 
 
+def registration_opens(r) -> Optional[str]:
+    """'3 Nov 2026' when a closed, not-sold-out race's registration opens after today
+    and before the race (W-088); None otherwise, which reads Closed."""
+    start = r.registration_start
+    if r.registration_open is not False or r.registration_sold_out or start is None:
+        return None
+    if start <= date.today() or (r.race_date is not None and start >= r.race_date):
+        return None
+    return format_date_range(start, None)
+
+
 def gcal_url(title: str, start: Optional[date], end: Optional[date], location: Optional[str]) -> Optional[str]:
     """Google Calendar "add event" link for an all-day event; None without a start date."""
     if start is None:

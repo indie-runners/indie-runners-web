@@ -4,6 +4,31 @@ All notable changes to the Indie Runners Web project will be documented in this 
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.9.83] — 2026-11-16
+
+### Fixed — the event page says when registration opens, not "Closed" (#17)
+
+- **Wrong belief: `registration_open` alone says where a race's registration
+  stands.** False means both "opens in two days" and "is over", and the page
+  read only the boolean, so a signed-in runner saw "Closed" for a race about
+  to open, and the card printed the raw ISO start above `Status: Closed`.
+  **New belief:** closed, not sold out, with a start after today and before
+  the race, it is not closed yet. `registration_opens()` (`race_service.py`)
+  returns that start in `format_date_range`'s single-date form; the race
+  table reads `Opens 19 Nov 2026`, the card's status reads the same and its
+  `Opens` row drops, so the date prints once. Every other `Opens` row is in
+  that format, not ISO. "Today" is the server's date, as elsewhere.
+- **Verified:** helper branches by an assert script (upcoming, no race date,
+  start today, no start, start on race day, sold out, open, open unknown).
+  Signed in (minted cookie, render not sign-in), against rows from the
+  spec's query re-run today: `penyagolosa_trails/2027` and
+  `kaiserkrone_trail/2027` read Opens in table and card; a past start
+  (`bucovina_ultra_rocks`), no start (`giona_mountain_race/2026`), a start
+  on race day (`kambos_mountain_race/2027`) read Closed, with the Opens row
+  as `9 Sep 2025`; sold out (`copenhagen_marathon`) still reads Sold out.
+  Anon: the page renders, no registration block, as before. Layout not
+  checked visually: the table scrolls in `.race-table-wrap`, the cell may wrap.
+
 ## [1.9.82] — 2026-11-16
 
 ### Fixed — /stats says what "checked" means, and the countries no longer read as a ranking (#16)
