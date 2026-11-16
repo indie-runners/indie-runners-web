@@ -103,17 +103,19 @@ gcloud logging read \
 
 ## The sweep
 
-**Read these two before running a query.** Production tells you what is
+**Read these three before running a query.** Production tells you what is
 happening, not what was *expected* to change, and a sweep that reads only
 production files an expected change as a finding.
 
 1. **Your previous report** — `exports/reports/AUDIT_*.md`, most recent.
    What was open, what was carried, what a prior sweep got wrong.
-2. **The Live Checks** (`board.py list live-checks --bodies`; until the
-   PM's migration, the frozen `ROUTED_CHECKS.md`'s LIVE ones too, README
-   § Where things live) — the PM's messages to you: what a shipped
+2. **The Live Checks** (`board.py list live-checks --bodies`) — the
+   PM's messages to you: what a shipped
    fix should change in production, each with the image it applies
    from and **which direction is expected versus which is the finding.**
+3. **Handoffs to you** (`board.py list inbox Auditor --bodies`). Act on
+   each and name it in the report's opening line; the PM sets it
+   Absorbed, since you write nothing on the board.
 
 **1. Is the site up?** The cheapest check and the one that matters most.
 
@@ -191,7 +193,7 @@ Findings only. One line on what is healthy.
 
 Previous sweep: `AUDIT_20260828T0900.md`. **New:** F2. **Resolved:** F1.
 **Unchanged:** none. **Routed checks:** 1 confirmed, 2 not evaluable
-(gate). Healthy: site 200, pool within cap.
+(gate). **Handoffs acted on:** none. Healthy: site 200, pool within cap.
 
 ## F1 — <the defect, not the symptom>
 

@@ -4,6 +4,65 @@ All notable changes to the Indie Runners Web project will be documented in this 
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.9.81] — 2026-11-14
+
+### Fixed — a malformed profile id or event year answers a page, not JSON 422 (#14)
+
+- **Wrong belief: an `int` path segment only ever receives a number.**
+  `/profile/{user_id}` and `/events/{slug}/{occurrence_year}` typed it `int`,
+  so a pasted link with a stray character failed FastAPI's validation before
+  the route ran. Cost: a real Firefox visitor on `/profile/27+` got
+  `{"detail":[{"type":"int_parsing",...` (2026-11-04, AUDIT_20261105T0851 F3).
+  **New belief:** a path segment is untrusted text. Both routes take `str`;
+  anything but 1 to 18 ASCII digits gets the page an unknown value already gets:
+  `profile_hidden.html` (200, so a malformed id says nothing an unknown one
+  does not), and `event_not_found.html` with a 404 for the year. Not W-040's
+  redirect, which compares the year as a number. Two changes for event URLs
+  the old `int` accepted, both now 404 and both never linked by the site: a
+  signed year (`+2027`, `-1`) used to render or redirect, and a year of 19 or
+  more digits (the cap below) used to take W-040's redirect.
+- **The 18-digit cap (PM review R1).** `int()` refuses more than 4300 digits,
+  so an unbounded `isdigit()` had turned that case's 422 into a 500 on both
+  routes. 18 digits always fit a Postgres bigint, so the cap also ends the
+  existing 500 on `/profile/<20 digits>` ("bigint out of range").
+- **Verified** with `bash scripts/dev.sh` from the worktree (checked the
+  process cwd for `:8000`) and curl, anon and with a minted cookie (the
+  signed-in render, not sign-in). `/profile/27+`, `/profile/abc` and
+  `/profile/%C2%B2` give `text/html` 200, a body byte-identical to
+  `/profile/999999` in each tier. `/events/<slug>/2027x` gives `text/html`
+  404, "Event not found". Unchanged: `/profile/<real id>`, `/profile/999999`
+  (placeholder, 200), `/events/<slug>/<year>` (200), a year with no row
+  (302 to the live edition), an unknown slug (404). `HEAD` agrees. After R1,
+  in both tiers: 4301 and 20 digits give the placeholder (byte-identical
+  to `/profile/999999`) and the event 404. 18 digits on a profile give
+  the placeholder. `/events/<slug>/+2027` and `/<19 digits>` give 404, and
+  `/02027` still renders 2027.
+
+## [1.9.80] — 2026-11-14
+
+### Fixed — a signed-out visitor on a crew link sees the invite-only page, not a 401 (#32)
+
+- **Wrong belief: only signed-in users reach the signed-in pages.** Four HTML
+  routes took `get_required_user`: `/crews/{slug}`, `/crews`, `/crews/new`,
+  `/profile`. Cost: in production a person opening a crew link a member had
+  sent them saw `{"detail":"not authenticated"}`, on 2026-11-11 and 2026-11-13
+  (AUDIT_20261113T0829, evidence #32). ARCHITECTURE § Crews claimed a bounce to
+  Google the route never had. **New belief:** members paste the crew URL, so
+  anon traffic on it is normal. Anon `/crews/{slug}` renders `crews_hidden.html`
+  with a Sign in link back to the same URL, query string kept. The other three
+  return a 303 through `/auth/google?next=`, the mechanism `/settings` uses.
+  POST routes and `/me` keep the 401.
+- **Verified** with `bash scripts/dev.sh` from the worktree (checked the
+  process cwd for `:8000`) and curl. Anon `GET` and `HEAD`: 303 to `?next=` on
+  the three, 200 on a real and a made-up slug, with bodies identical apart from
+  the slug in `next` and no crew name. The Sign in href for `?joined=1` is
+  `next=/crews/<crew-a>%3Fjoined%3D1`, and the session `/auth/google` sets holds
+  `/crews/x?joined=1`. With minted cookies (the signed-in render, not sign-in):
+  a member gets the hub; a non-member gets the placeholder, without a Sign in
+  link, byte-identical for a real and a made-up slug;
+  and `/profile`, `/crews`, `/crews/new` behave as before. Anon `POST
+  /crews/new` still returns 401. The Google round trip itself was not run.
+
 ## [1.9.79] — 2026-11-11
 
 ### Added — round 2026-11-10's manifest and credits are committed (#26)

@@ -9,7 +9,8 @@ Read `docs/roles/README.md` first, then this.
 ## The job
 
 **Inbound — turn findings into tickets.** Read `exports/reports/AUDIT_*.md`
-and `board.py list triage` (README § Where things live). Decide what is
+and `board.py list triage` (README § Where things live); a Handoff to
+the Auditor that the report names as acted on, you set Absorbed. Decide what is
 worth doing, in what order, split into what units. File each as an Issue
 (§ Writing a ticket); a board item becomes one by `board.py promote`,
 from a public rewrite. A finding marked `Routes to: scraper repo`

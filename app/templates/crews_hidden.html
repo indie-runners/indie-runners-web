@@ -12,6 +12,9 @@
   </div>
   <h1 class="profile-hidden-title">This crew is invite-only</h1>
   <p class="crews-empty-sub">Ask a member for a link.</p>
+  {% if not current_user %}
+  <p class="crews-empty-sub">Already a member? <a href="{{ signin_url }}">Sign in</a></p>
+  {% endif %}
   <a href="/settings" class="back-link">← Settings</a>
 </div>
 {% endblock %}
