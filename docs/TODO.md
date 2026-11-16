@@ -22,4 +22,4 @@ _2026-11-16_
 
 ## What the work showed
 
-- The spec's three targets had opened; penyagolosa_trails and kaiserkrone_trail stood in
+- Of the spec's targets, eventyrsport_skytrail and kackar had opened; kaiserkrone_trail still opens 23 Nov, penyagolosa_trails (19 Nov) is the second

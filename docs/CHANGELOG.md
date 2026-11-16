@@ -26,7 +26,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   (`bucovina_ultra_rocks`), no start (`giona_mountain_race/2026`), a start
   on race day (`kambos_mountain_race/2027`) read Closed, with the Opens row
   as `9 Sep 2025`; sold out (`copenhagen_marathon`) still reads Sold out.
-  Anon: the page renders, no registration block, as before.
+  Anon: the page renders, no registration block, as before. Layout not
+  checked visually: the table scrolls in `.race-table-wrap`, the cell may wrap.
 
 ## [1.9.82] — 2026-11-16
 
