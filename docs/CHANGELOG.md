@@ -4,6 +4,22 @@ All notable changes to the Indie Runners Web project will be documented in this 
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.9.82] — 2026-11-16
+
+### Fixed — /stats says what "checked" means, and the countries no longer read as a ranking (#16)
+
+- **Wrong belief: "Upcoming events whose details we went back and looked at"
+  explains "checked"; a count-ordered `<ol>` is just a list.** Users told
+  Paulo the word was unclear (IDEAS 2026-10-30), and numbered, biggest first,
+  the countries read as a league table. **New belief:** the copy is Paulo's,
+  slips fixed ("tracked" in one sentence, "checked" says we fetch every
+  followed event constantly to keep the site current), and the countries are
+  an unnumbered `<ul>` sorted by displayed name (`stats()` sorts on
+  `name.title()`), two columns from `columns: 2 12rem`, one on a phone.
+- **Verified:** anon `/stats` at desktop and 375px; list order, counts and
+  links against the old query; map markup unchanged. Signed-in tier not
+  checked: the template has no signed-in branch.
+
 ## [1.9.81] — 2026-11-14
 
 ### Fixed — a malformed profile id or event year answers a page, not JSON 422 (#14)

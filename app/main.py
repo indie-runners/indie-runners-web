@@ -1056,7 +1056,7 @@ def stats(
     countries = [
         {"name": c, "alpha2": alpha2.get(c), "n": n,
          "shade": round(0.3 + 0.7 * math.log(n + 1) / math.log(top + 1), 2)}
-        for c, n in counts.most_common()
+        for c, n in sorted(counts.items(), key=lambda kv: kv[0].title())  # as displayed
     ]
     return templates.TemplateResponse(
         request,
