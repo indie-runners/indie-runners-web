@@ -7,10 +7,10 @@
   <h1>Stats</h1>
 
   <h2>{{ tracked }} events tracked</h2>
-  <p>Every event Indie Runners follows, whether or not it has a date coming up.</p>
+  <p>This is the total number of events we look at and follow at Indie Runners, whether or not it has a date coming up.</p>
 
   <h2>{{ checked_30d }} events checked in the last 30 days</h2>
-  <p>Upcoming events whose details we went back and looked at.</p>
+  <p>We fetch information from all the events we follow on a constant basis, so that we can keep you up to date with what is going on.</p>
 
   <h2>Recently checked</h2>
   <ul>
@@ -40,11 +40,11 @@
       {% endif %}
     {% endfor %}
   </svg>
-  <ol class="stats-countries">
+  <ul class="stats-countries">
     {% for c in countries %}
       <li><a href="/?country={{ c.name | urlencode }}">{{ c.name | title }}</a> — {{ c.n }}</li>
     {% endfor %}
-  </ol>
+  </ul>
   <p class="stats-credit">Map: <a href="https://mapsvg.com/maps/world">MapSVG</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>, cropped and simplified.</p>
 </article>
 {% endblock %}

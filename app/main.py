@@ -31,8 +31,10 @@ from app.services.race_service import (
     RACE_FORMAT_SLUGS,
     RaceService,
     RaceFilters,
+    format_date_range,
     format_tbc_expected,
     gcal_url,
+    registration_opens,
     race_format_labels,
     truncate_for_meta,
 )
@@ -156,6 +158,8 @@ def _trimnum(value) -> str:
 
 templates.env.filters["trimnum"] = _trimnum
 templates.env.globals["gcal_url"] = gcal_url
+templates.env.globals["registration_opens"] = registration_opens
+templates.env.globals["format_date_range"] = format_date_range
 
 
 @lru_cache
@@ -1056,7 +1060,7 @@ def stats(
     countries = [
         {"name": c, "alpha2": alpha2.get(c), "n": n,
          "shade": round(0.3 + 0.7 * math.log(n + 1) / math.log(top + 1), 2)}
-        for c, n in counts.most_common()
+        for c, n in sorted(counts.items(), key=lambda kv: kv[0].title())  # as displayed
     ]
     return templates.TemplateResponse(
         request,
