@@ -1,36 +1,27 @@
-# Plan: Crews v1
+# Plan: Crew growth
 
-> The PM's plan of record. Rewritten 2026-10-31. The previous arc
-> (hardening the deploy path and the read model, 2026-08-28) is in git
-> history. It was overtaken by the CI/CD plan of 2026-10-25, which lives
-> outside this repo, and its order table had been finished for weeks.
->
-> **Arc complete 2026-11-04** (triage 2026-11-05): W-098, its last step,
-> serves in `00092-vzb`. No next arc is chosen; that is Paulo's, as an
-> `IDEAS.md` entry. Until then the board runs in the order below, under
-> the batch rule.
+> The PM's plan of record. Rewritten 2026-11-17. The previous arc, Crews
+> v1 (2026-10-31, complete 2026-11-04), is in git history. Between the two
+> arcs the board ran on the Issues' labels.
 
 ## Why this arc
 
-Paulo, 2026-10-31: *"This has the highest prio until it is done, if there
-are open tickets that need to be done before, then those go higher in
-prio."* The spec is his, agreed that day, and quoted in full in
-`docs/IDEAS.md` (§ Crews v1). Its outcome: *a runner who joins a crew can
-see, in under a minute, which races the crew is converging on over the
-coming months, and can add themselves to the plan from that page.*
+Paulo chose it at triage on 2026-11-17, from three candidates: crew
+growth, GPX courses (shaped on the board, waiting on a page design from
+claude.ai) and sign-in without a Google account. Its inputs are a
+marketing session's ideas (board, 2026-11-17) and founder feedback
+carried by the scraper analyst (2026-11-16).
 
-**Amended 2026-11-01.** The last clause is dropped with W-079: a member
-adds themselves from the event page, as before. And **W-090** (names as
-`Paulo M.`) goes ahead of every remaining step, on Paulo's word.
+Growth so far has come crew by crew. Almost every new user arrives
+through a crew invite link pasted into a group chat, and the second crew
+was started, unprompted, by a member of the first who also runs with
+another group. **Goal: more crews of five or more members, started by
+someone other than Paulo.**
 
-**Half of it is already live.** Tables, create, join by link and the
-member-only page shipped in PR3. So the spec's data-model block is
-**not** a migration, and build steps 1, 2 (create) and 5 (join) are done.
-What is new is the agenda, the toggle, "Next:", leave and remove, and
-"My crews" on the profile. Paulo's six decisions on 2026-10-31 settle
-where the spec and the live code differ: two visibility levels, roles
-kept, TBC rows shown, the confirm step kept, the hidden page kept, and
-"My crews" moved to the profile.
+The outcome, when the arc is done: a person handed an invite link sees
+which crew it is before Google asks for their account; we can count which
+links and invites bring people in; and a member who runs with another
+group is invited to start a crew for it.
 
 ## Order
 
@@ -38,54 +29,49 @@ One at a time, in this order. Each step ships on its own.
 
 | # | Ticket | Why here |
 |---|---|---|
-| 0 | **W-072** (in review) | Already built. W-079's toggle wraps the two methods it changes, so it merges first. |
-| 1 | **W-076** two visibility levels | The hub promises that every crew sees your plans, and `private` breaks that promise. The only migration in the arc, and Paulo runs it after the code deploys. |
-| 2 | **W-077** hub agenda | The outcome itself. |
-| 3 | **W-078** My crews + nav | Spec step 2's other half. Leave (W-081) lands on it. |
-| 4 | ~~**W-079** attendance toggle~~ | **Dropped 2026-11-01.** Shipped as 1.9.54, reverted as 1.9.55. Paulo: *"It did not make sense to have these buttons."* |
-| 5 | **W-080** members box | Folds in W-042. **Amended 2026-11-02:** the per-member "Next:" line is dropped on Paulo's word; profile links and invite wording remain. |
-| 5b | **W-095** hub: no hint, no filter | Added 2026-11-03, Paulo's two asks of 11-02. Deletions only, before W-081 because W-081 edits the same template. **W-094** (a sign-in 500, not crews) goes ahead of it. |
-| 6 | **W-081** leave | Shares one hand-over with `delete_account`, or the leftover check 500s. |
-| 7 | **W-082** admin removes | Paulo's decision 2, beyond the spec's In list. Reuses W-081. |
-| 8 | **W-101** profile empty states | Added 2026-11-04, Paulo's "highest priority, part of the crews arc". A first-time runner's first look at crews. |
-| 9 | **W-096** tiles lose the controls | Same entry: raised into the arc. |
-| 10 | **W-098** profile in the hub's calendar format | Same entry. After W-101, which boxes the calendar's empty state this keeps. |
+| 1 | **#51** growth numbers | Baseline first: numbers taken after the invite page ships cannot show what it changed. Read-only, nothing to deploy. |
+| 2 | **#52** invite page before sign-in | The main entrance. Paulo, 2026-11-17: name, member count and planned races, link previews included. |
+| 3 | **#53** signup source | Ties each signup to a link or an invite. The arc's only migration. Extends #51 with the split by source. |
+| 4 | create-a-crew entry point | Raw on the board, two entries that are one decision. Ticketed when #52 ships, once Paulo names the placement. |
 
-**Nothing else on the board has to land first.** W-031 (Origin checks)
-does not block: W-081 and W-082 take the delete route's check
-themselves, because an only member's leave deletes a crew, and the other
-new POST is as recoverable as today's. W-052 (a crew name over 120
-characters is a 500) is not reachable from a browser. W-057 and W-060
-stay gated on Paulo and block nothing here. After the arc,
-W-107, W-108 and W-103 shipped (1.9.68 to 1.9.70), then W-102 and W-018.
-W-111, W-112 and W-104 followed (1.9.74 to 1.9.76). Next (triage
-2026-11-10, the order is the Issues' labels): **#13** W-114 (denylist hook
-gaps), #14 W-109 (raw JSON on a malformed URL), #15 W-115 (Unsplash
-skill), then #16 W-083, #17 W-088, #18 W-099, #19 W-097. W-100 dropped
-2026-11-05, Paulo.
+The arc's tickets are `p2`, so they come before the open `p3`s. Two
+exceptions. **#35** (OAuth `state`) touches the same callback as #53:
+whichever goes second reads the first's diff before starting. **#50**
+(commit label) is `not-next`, waiting on infra I-016's apply. **#54**
+(a stale ARCHITECTURE line) is docs-only and fits between steps.
 
 ## What this arc excludes
 
-From the spec's Out list: role management UI and member approval, per-crew
-settings or visibility, email invites, notifications, the matrix view. So
-**the crew digest** (IDEAS 2026-10-30) waits for v1. When it comes back it
-is an email provider, a scheduler in infra and a privacy-page change, not
-a template. Also excluded: a second edition in one year (EcoTrail Paris),
-which is `core.*` and raw on the scraper side.
+- **Email of any kind:** the crew digest, an email on Going, a magic-link
+  sign-in. All three need one sender first (provider, DNS records, the
+  privacy page), and none has been chosen.
+- **Sign-in without Google:** the likely next candidate. It is not a cap
+  emergency, because the consent screen is in Production (Paulo,
+  2026-11-17; #54).
+- **A shareable season page:** a hand-made test in group chats comes
+  first, then Paulo's yes to a public, opt-in exception to anonymous
+  profiles.
+- **GPX courses, a homepage redesign, a race map, a featured-races page,
+  short links:** raw on the board, each with what would settle it.
+- **Registration status for signed-out visitors:** dropped. Paulo keeps
+  every race detail behind sign-in.
 
 ## Standing rules this arc keeps
 
-- **Every crews ticket is `deploy: immediate`**: Paulo (2026-10-31) wants
-  each step on production as it merges, and W-076's migration can't run
-  before its code is serving. The batch rule (2026-10-21: a batch ships
-  with the next `immediate` ticket, or 14 days after a `done` fix) still
-  governs everything else, and the PM checks it every triage.
-- **A migration is written by the developer and run by Paulo.** W-076's
-  `014` is the arc's only one. If any other crews ticket starts to need
-  DDL, it was mis-scoped.
-- **One connection budget, two repos.** One DB-touching session at a time.
-- **No test suite** (W-003). Each spec carries its own Verify, signed in
-  and anon. The hub is signed-in only, so the anon check is the redirect.
-- **Close-out:** changelog with the wrong belief, its cost, the new
-  belief and the evidence; ARCHITECTURE for any contract change (§ Crews
-  and § Visibility both change in this arc); FILE_TREE for new files.
+- **`deploy: batched`** unless Paulo says otherwise on a ticket. Crews
+  v1's every-step-immediate rule was his word for that arc and is not
+  carried over.
+- **#53's migration is written by the developer and applied by Paulo**,
+  before the deploy that writes to it. Any other step that needs DDL was
+  mis-scoped.
+- **The arc's measure stays out of the repo.** #51 prints user and crew
+  counts. They go to `evidence #N`, never into a PR, a changelog or an
+  Issue (README § Boundaries).
+- **What the app shows or stores changes twice:** #52 shows crew facts to
+  people who are not signed in, and #53 stores a source on the account.
+  Each updates `docs/ARCHITECTURE.md` and, for #53, `privacy.html` in the
+  same PR.
+- **One connection budget, two repos.** **No test suite.** Each ticket is
+  verified by running it, signed out and signed in.
+- **Close-out:** the changelog carries the wrong belief, its cost, the new
+  belief and the evidence; FILE_TREE for new files.
