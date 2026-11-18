@@ -4,6 +4,27 @@ All notable changes to the Indie Runners Web project will be documented in this 
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.9.84] — 2026-11-18
+
+### Added — a private script prints the crew-growth numbers (#51)
+
+- **Wrong belief: the numbers the crew-growth arc is judged by can be read
+  off when wanted.** Nothing read them: `/debug/health` lost its user count
+  on 2026-11-09 because the route is public, and no script counted users,
+  crews or plans. Without a baseline taken now, the invite page (#52) could
+  not be shown to change anything. **New belief:** a read-only script the
+  operator runs by hand. `scripts/growth_numbers.py` opens one connection,
+  sets the transaction READ ONLY, and prints the date and five numbers to
+  stdout: users, crews of five or more, crews started by someone other than
+  the operator, the share of users with an attendance row on an edition in
+  the upcoming view, and new users per ISO week for the last 8 weeks.
+  The operator id comes from `--operator-id` or `GROWTH_OPERATOR_ID`. It must
+  be the account that runs in crews, not the one under the operator's
+  sign-in email, or the third number counts every crew (`evidence #51`).
+- **Verified:** one run against production through the local proxy. It
+  printed five numbers, and two independent queries agree with them
+  (`evidence #51`). Without an operator id it exits with a usage error.
+
 ## [1.9.83] — 2026-11-16
 
 ### Fixed — the event page says when registration opens, not "Closed" (#17)
