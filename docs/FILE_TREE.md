@@ -97,6 +97,7 @@ indie-runners-web/
 │   ├── deploy.sh                    # Builds image via Cloud Build and deploys to Cloud Run (europe-west1; image only, the service shape is indie-runners-infra/web/)
 │   ├── generate_stock_manifest.py   # Parses docs/stock_credits.md into app/imaging/stock_manifest.json; aborts on mismatch with inputs/stock/
 │   ├── generate_dedicated_manifest.py # Parses docs/dedicated_credits.md into app/imaging/dedicated_manifest.json; aborts on mismatch with inputs/dedicated/
+│   ├── growth_numbers.py            # Read-only: prints the crew-growth numbers (#51) to stdout; operator id by --operator-id or GROWTH_OPERATOR_ID; output goes to evidence, never a tracked file
 │   ├── photo_candidates.py          # Read-only: ranked shortlist of stock-tile events worth a dedicated photo (engagement, then stock collisions); reads tile locations from RaceService so they match the rendered tile; flags events with no location
 │   ├── unsplash_fetch.py            # Interactive: searches Unsplash for an event's tile location, contact sheet in the browser, on pick triggers download_location, downloads the original, appends the credit entry, regenerates the manifest and publishes; --no-publish for batching, --query for trail events
 │   ├── unsplash_round.sh            # One round from a `<slug> [query]` file: fetch each (--no-publish), manifest, publish, restart (asks y; redeploys the serving digest), backfill (sets the credits). DB session for the whole run

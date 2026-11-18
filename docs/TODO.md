@@ -1,25 +1,24 @@
-# TODO: #17 — event page says "Closed" for registration that hasn't opened yet
+# TODO: #51 — nothing reports the crew-growth numbers
 
 > The developer's per-ticket checklist, overwritten by the next ticket.
 
-_2026-11-16_
+_2026-11-18_
 
 ## Steps
 
-- [x] `registration_opens(r)` in race_service, a template global
-- [x] Race table: Sold out, Open, Opens <date>, Closed
-- [x] Card: status reads Opens <date> and the Opens row drops; else Opens row in site format
-- [x] Verify signed in (one upcoming, one past start, one null start) and anon
-- [x] Changelog, version bump
+- [x] `scripts/growth_numbers.py`: one connection, READ ONLY transaction, five numbers to stdout
+- [x] Operator id from `--operator-id` or `GROWTH_OPERATOR_ID`, never in a tracked file
+- [x] One production run; output to `evidence #51`
+- [x] FILE_TREE, changelog
 
 ## Measure
 
-- Re-run the spec's targets query (read-only) for rows to verify against
+- Cross-check crew and user totals by independent queries (`evidence #51`)
 
 ## Unsure
 
-- "Today" is the server's date (UTC on Cloud Run), as elsewhere in the app
+- Weeks are cut in the database session's time zone (UTC), Monday start
 
 ## What the work showed
 
-- Of the spec's targets, eventyrsport_skytrail and kackar had opened; kaiserkrone_trail still opens 23 Nov, penyagolosa_trails (19 Nov) is the second
+- The operator's sign-in email is not the operator's crew account: the id must be the runner account, or number 3 counts every crew
