@@ -11,8 +11,8 @@ _2026-11-19_
 - [x] Every anon Sign in link keeps the full URL (`signin_url_for`), or a landing page's utm is lost
 - [x] Written only when a user row is created; cancel clears it
 - [x] Growth script line 6; privacy.html
-- [ ] Paulo applies 016, then verify: fresh user via utm link, fresh user via invite, returning user
-- [ ] ARCHITECTURE, CHANGELOG, FILE_TREE
+- [x] 016 applied (by me, on Paulo's yes), then verified: fresh user via utm link, fresh user via invite, returning user
+- [x] ARCHITECTURE, CHANGELOG, FILE_TREE
 
 ## Measure
 

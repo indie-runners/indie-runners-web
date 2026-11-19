@@ -91,7 +91,8 @@ indie-runners-web/
 │   ├── 012_crew_invites.sql          # Creates web.crew_invites (token UNIQUE, revoked_at NULL = active)
 │   ├── 013_event_image_attribution.sql # Adds attribution_name/url/source_url to web.event_images (nullable, additive)
 │   ├── 014_visibility_two_levels.sql   # private -> crews_only, CHECK narrowed to two levels (W-076; run after the code deploys)
-│   └── 015_display_name_short.sql      # full names -> 'Paulo M.' on multi-token rows, re-runnable (W-090; run after the code deploys)
+│   ├── 015_display_name_short.sql      # full names -> 'Paulo M.' on multi-token rows, re-runnable (W-090; run after the code deploys)
+│   └── 016_users_signup_source.sql     # six nullable signup_* columns on web.users, no backfill (#53; run before the code deploys)
 ├── scripts/
 │   ├── db_proxy.sh                  # Starts Cloud SQL Auth Proxy for local development (standalone)
 │   ├── dev.sh                       # One-command local dev: starts proxy if needed, then uvicorn --reload on :8000

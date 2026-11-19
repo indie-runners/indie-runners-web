@@ -4,6 +4,38 @@ All notable changes to the Indie Runners Web project will be documented in this 
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.9.86] — 2026-11-19
+
+### Added — a new account stores the link it signed up from (#53)
+
+- **Wrong belief: a campaign or invite link's effect can be read from the
+  visit counter.** GoatCounter sees `utm_*` on visits, but nothing survived
+  the trip to Google into `web.users`. So no post, share or invite could be
+  tied to a signup, and the arc's question (which links bring people in) had
+  no answer. **New belief:** the source belongs on the account, written once
+  at creation, first touch only. **Second wrong belief, the ticket's own:
+  keep the first `utm_*` in the session on arrival.** That sets a cookie for
+  measurement before anyone signs in. Paulo, 2026-11-19: count only people who
+  sign in straight from the link, and set no cookie before Sign in. So
+  `/auth/google` reads the source from the validated `next`. For that, every
+  anon Sign in link now keeps the full URL (`signin_url_for`): the header,
+  the index tile and the event page's two links. Before, a landing page's
+  query string was dropped there (and the header and tile lost the page
+  entirely). Migration 016 adds the six columns. `privacy.html` gets "How
+  you found us", legitimate interest and retention, revised 19 November
+  2026. The growth script gains line 6, by week, source and campaign.
+- **Verified:** 016 applied to production on Paulo's yes: six nullable
+  columns, existing rows all NULL, live site 200. Locally, with three real
+  Google sign-ins (`evidence #53`): a fresh user from a `utm_*` link via the
+  header got its source, medium and campaign; a fresh user from an invite
+  got `invite` and the right crew, without joining; a returning user from a
+  link with other values kept its own. Arriving with `utm_*` sets no cookie,
+  and the Sign in links carry the query (curl, home, event, invite). A later
+  Sign in from a plain page clears a pending value (session decoded). Signed
+  in (minted cookie), the main pages render. The growth script prints line 6.
+  Cancelling at Google was not run. Order: 016 before this code, or every
+  query that loads a `User` fails.
+
 ## [1.9.85] — 2026-11-19
 
 ### Added — an invite link shows the crew before Google sign-in (#52)
