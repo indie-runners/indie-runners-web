@@ -22,11 +22,31 @@ def short_display_name(userinfo: dict) -> str | None:
     return tokens[0] if len(tokens) == 1 else f"{tokens[0]} {tokens[-1][0]}."
 
 
+# Query parameter -> users.signup_<key> (#53). crew_id is set by the invite route.
+SIGNUP_PARAMS = {"utm_source": "source", "utm_medium": "medium", "utm_campaign": "campaign",
+                 "utm_content": "content", "ref": "ref"}
+SIGNUP_KEYS = {*SIGNUP_PARAMS.values(), "crew_id"}
+SIGNUP_MAX_LEN = 100  # anyone can type anything into a link; never rendered
+
+
+def signup_touch(query_params) -> dict:
+    """The signup-source values a URL carries, trimmed and capped; {} if none."""
+    return {
+        key: value.strip()[:SIGNUP_MAX_LEN]
+        for param, key in SIGNUP_PARAMS.items()
+        if (value := query_params.get(param, "")).strip()
+    }
+
+
+assert signup_touch({"utm_source": " ig ", "ref": "", "x": "y", "utm_campaign": "c" * 200}) == {
+    "source": "ig", "campaign": "c" * SIGNUP_MAX_LEN}
+
+
 class UserService:
     def __init__(self, db: Session):
         self.db = db
 
-    def get_or_create_user_from_google(self, userinfo: dict) -> User:
+    def get_or_create_user_from_google(self, userinfo: dict, signup: dict | None = None) -> User:
         if not userinfo.get("email_verified"):
             raise ValueError("Google account email is not verified")
 
@@ -44,6 +64,8 @@ class UserService:
                 avatar_url=userinfo.get("picture"),
                 created_at=now,
                 updated_at=now,
+                # First touch, from the session (#53); a returning user's is dropped.
+                **{f"signup_{k}": v for k, v in (signup or {}).items() if k in SIGNUP_KEYS},
             )
             self.db.add(user)
             self.db.flush()

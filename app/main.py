@@ -7,7 +7,7 @@ from functools import lru_cache
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Optional
-from urllib.parse import quote, urlparse
+from urllib.parse import parse_qsl, quote, urlparse
 from xml.sax.saxutils import escape
 
 from fastapi import FastAPI, Depends, Form, HTTPException, Query, Request
@@ -24,7 +24,7 @@ from app.db import get_db
 from app.models.web import User
 from app.models.core import Race
 from app.services.auth_service import CodeExchangeRefused, GoogleAuthService
-from app.services.user_service import UserService
+from app.services.user_service import UserService, signup_touch
 from app.services.race_service import (
     event_location,
     RACE_FORMAT_CHOICES,
@@ -188,9 +188,15 @@ def get_required_user(user: Optional[User] = Depends(get_current_user)) -> User:
 
 
 def _signin_url(request: Request) -> str:
-    # Back to this exact URL after sign-in, query string kept (W-085).
+    # Back to this exact URL after sign-in, query string kept (W-085): it also
+    # carries a campaign link's utm_* into sign-in (#53). Not back into /auth/.
+    if request.url.path.startswith("/auth/"):
+        return "/auth/google"
     target = request.url.path + (f"?{request.url.query}" if request.url.query else "")
     return f"/auth/google?next={quote(target, safe='/')}"
+
+
+templates.env.globals["signin_url_for"] = _signin_url
 
 
 def _parse_filters(
@@ -942,8 +948,6 @@ def crews_join_form(
                 "member_count": len(svc.list_members(crew.id)),
                 # The hub's rows don't depend on the viewer, only the names on them.
                 "race_count": sum(len(rows) for _, rows in svc.list_agenda(crew.id, None)),
-                # The header's Sign in too, or it drops the invite.
-                "header_signin_url": _signin_url(request),
             },
         )
     return templates.TemplateResponse(
@@ -1124,12 +1128,25 @@ def _validate_next(raw: Optional[str]) -> Optional[str]:
 
 
 @app.api_route("/auth/google", methods=["GET", "HEAD"])
-def google_login(request: Request, next: Optional[str] = None):
+def google_login(request: Request, next: Optional[str] = None, db: Session = Depends(get_db)):
     validated = _validate_next(next)
     if next and validated is None:
         logger.info("rejecting unsafe next redirect")
     if validated is not None:
         request.session["post_login_redirect"] = validated
+    # Signup source (#53): only the link this Sign in was clicked from, so
+    # nothing is stored for a visitor who never signs in, and nothing carries
+    # over from an earlier visit. No cookie before Sign in (Paulo, 2026-11-19).
+    # A bare /auth/google (signin_failed's Try again) keeps the pending one.
+    if validated is not None:
+        request.session.pop("signup_touch", None)
+        target = urlparse(validated)
+        touch = signup_touch(dict(parse_qsl(target.query)))
+        token = target.path.removeprefix("/crews/join/")
+        if token != target.path and (crew := CrewService(db).find_crew_by_invite_token(token)):
+            touch |= {"source": "invite", "crew_id": crew.id}
+        if touch:
+            request.session["signup_touch"] = touch
     url = GoogleAuthService().build_authorize_url()
     return RedirectResponse(url)
 
@@ -1143,6 +1160,7 @@ async def google_callback(
     # sign-in does not land on a stale invite; a signed-in session is untouched.
     if not code:
         request.session.pop("post_login_redirect", None)
+        request.session.pop("signup_touch", None)
         return RedirectResponse("/", status_code=303)
     svc = GoogleAuthService()
     try:
@@ -1159,7 +1177,9 @@ async def google_callback(
         )
     userinfo = await svc.get_userinfo(token_data["access_token"])
     try:
-        user = UserService(db).get_or_create_user_from_google(userinfo)
+        user = UserService(db).get_or_create_user_from_google(
+            userinfo, request.session.pop("signup_touch", None)
+        )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     request.session["user_id"] = user.id

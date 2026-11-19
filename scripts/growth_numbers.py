@@ -1,4 +1,4 @@
-"""Read-only: prints the crew-growth numbers (#51, docs/PLAN.md).
+"""Read-only: prints the crew-growth numbers (#51, #53, docs/PLAN.md).
 
 One connection, a READ ONLY transaction, SELECTs only. Output goes to
 stdout; it carries user counts, so it belongs in exports/evidence/, never
@@ -60,6 +60,15 @@ def main() -> int:
             LEFT JOIN web.users u ON date_trunc('week', u.created_at) = w.week
             GROUP BY w.week ORDER BY w.week
         """)).all()
+        # Needs migration 016 (#53). Users from before it have no source.
+        by_source = db.execute(text("""
+            SELECT date_trunc('week', created_at)::date AS week,
+                   COALESCE(signup_source, '(none)') AS source,
+                   COALESCE(signup_campaign, '') AS campaign, count(*) AS n
+            FROM web.users
+            WHERE created_at >= date_trunc('week', now()) - interval '7 weeks'
+            GROUP BY 1, 2, 3 ORDER BY 1, 4 DESC, 2, 3
+        """)).all()
     finally:
         db.rollback()
         db.close()
@@ -74,6 +83,11 @@ def main() -> int:
     for row in weeks:
         y, wk, _ = row.week.isocalendar()
         print(f"   {y}-W{wk:02d} (from {row.week.isoformat()}): {row.n}")
+    print("6. new users per ISO week by source and campaign (last 8):")
+    for row in by_source:
+        y, wk, _ = row.week.isocalendar()
+        campaign = f" / {row.campaign}" if row.campaign else ""
+        print(f"   {y}-W{wk:02d}: {row.source}{campaign}: {row.n}")
     return 0
 
 

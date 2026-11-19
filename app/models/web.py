@@ -22,6 +22,13 @@ class User(Base):
     created_at: Mapped[datetime] = mapped_column(TIMESTAMP(timezone=True), nullable=False)
     updated_at: Mapped[datetime] = mapped_column(TIMESTAMP(timezone=True), nullable=False)
     visibility: Mapped[str] = mapped_column(String(16), nullable=False, default="public")
+    # Where the user signed up from, written once at creation (#53, migration 016).
+    signup_source: Mapped[str | None] = mapped_column(Text)
+    signup_medium: Mapped[str | None] = mapped_column(Text)
+    signup_campaign: Mapped[str | None] = mapped_column(Text)
+    signup_content: Mapped[str | None] = mapped_column(Text)
+    signup_ref: Mapped[str | None] = mapped_column(Text)
+    signup_crew_id: Mapped[int | None] = mapped_column(Integer)
 
     attendance: Mapped[list["Attendance"]] = relationship(back_populates="user")
     auth_identities: Mapped[list["AuthIdentity"]] = relationship(back_populates="user")
