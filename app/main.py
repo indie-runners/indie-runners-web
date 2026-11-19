@@ -1163,9 +1163,8 @@ async def google_callback(
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     request.session["user_id"] = user.id
-    # Honour a server-set post-login redirect if one is queued (e.g. an
-    # invite-URL landing while signed out). Only routes we control ever
-    # set this key, so there is no open-redirect surface.
+    # Honour a post-login redirect if one is queued: only /auth/google sets
+    # it, from a `next` that passed _validate_next, so no open redirect.
     target = request.session.pop("post_login_redirect", None)
     return RedirectResponse(target or "/")
 

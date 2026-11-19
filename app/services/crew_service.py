@@ -146,7 +146,7 @@ class CrewService:
         return [(row[0], row[1]) for row in rows]
 
     def list_agenda(
-        self, crew_id: int, viewer_user_id: int,
+        self, crew_id: int, viewer_user_id: int | None,
     ) -> list[tuple[date, list[AgendaRow]]]:
         """Non-past occurrences members have marked, grouped by month ascending.
 
