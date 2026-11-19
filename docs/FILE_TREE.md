@@ -45,6 +45,7 @@ indie-runners-web/
 │       ├── crews_detail.html      # Crew hub: agenda by month with going/interested chips, sidebar with member list, invite URL + copy + admin rotate, created/rotated/joined flashes
 │       ├── crews_hidden.html      # Placeholder for non-members and non-existent crews — no crew name surfaced
 │       ├── crews_invite_confirm.html  # Invite landing: crew name + Join button + Cancel
+│       ├── crews_invite_preview.html  # Invite landing signed out: crew name, member and planned-race counts, Sign in back to the invite; og: tags for link previews
 │       ├── crews_invite_invalid.html  # Invite placeholder: token unknown or revoked, no crew info leak
 │       ├── crews_new.html         # Create-a-crew form: single display_name input + error slot
 │       ├── event.html             # Event detail page: hero image header (title/meta/website over tile image + optional photographer credit), anon-visible short_description + meta description, action bar with attendance counts and buttons (no avatar strips), race selector (with a Format column shown only when some race in the event has a race_format) + race detail panel (gated behind a locked panel for signed-out visitors), and a Who's coming section (filtered name lists for signed-in, placeholder circles + sign-in text link for anon)

@@ -4,6 +4,34 @@ All notable changes to the Indie Runners Web project will be documented in this 
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.9.85] — 2026-11-19
+
+### Added — an invite link shows the crew before Google sign-in (#52)
+
+- **Wrong belief: a signed-out invite link can go straight to Google, because
+  the crew's name appears after sign-in.** Almost every new user arrives
+  through an invite link pasted into a group chat. They were asked for their
+  Google account before learning which crew asked them. The link preview in
+  the chat showed nothing of ours either, because the URL redirected.
+  **New belief:** the invite is the pitch, so it is a page. Signed out, a
+  valid token renders `crews_invite_preview.html`. It shows the name, the
+  member count, the planned-race count and Sign in, which returns to the
+  confirm page through `?next=`. The header's Sign in carries the same `next`
+  on this page only. The page sets no session cookie, and its `og:title` and
+  `og:description` name the crew. Planned races is the hub's `list_agenda`
+  row count, called with no viewer. Its rows don't depend on the viewer, so
+  the number matches what every member sees, and no names are collected.
+- **Verified:** signed out (curl): a valid token gives 200, the title, the two
+  `og:` tags, the counts, both Sign in links with `next=/crews/join/<token>`,
+  no `Set-Cookie`, and no member or race name. `HEAD` gives 200. A made-up
+  token and a revoked one give the invalid page. `robots.txt` still disallows
+  `/crews`. Other pages' header Sign in is unchanged. Headless Chrome
+  screenshots at 1280 and 390 px: the page lays out. The two counts equal
+  the hub's member rows and agenda rows for that crew, seen as a member.
+  Signed in (minted cookie: the render, not sign-in), a member and a
+  non-member both get the confirm page with its Join form, and the invalid
+  page for a bad token. The Google round trip itself was not run.
+
 ## [1.9.84] — 2026-11-18
 
 ### Added — a private script prints the crew-growth numbers (#51)

@@ -1,24 +1,26 @@
-# TODO: #51 — nothing reports the crew-growth numbers
+# TODO: #52 — a crew invite link shows nothing about the crew before Google sign-in
 
 > The developer's per-ticket checklist, overwritten by the next ticket.
 
-_2026-11-18_
+_2026-11-19_
 
 ## Steps
 
-- [x] `scripts/growth_numbers.py`: one connection, READ ONLY transaction, five numbers to stdout
-- [x] Operator id from `--operator-id` or `GROWTH_OPERATOR_ID`, never in a tracked file
-- [x] One production run; output to `evidence #51`
-- [x] FILE_TREE, changelog
+- [x] Signed out, valid token: `crews_invite_preview.html` (name, member count, planned races, Sign in)
+- [x] Sign in returns through `?next=`; header Sign in carries it on this page
+- [x] Invalid or rotated token signed out: `crews_invite_invalid.html`
+- [x] Verify anon (curl, headless Chrome) and signed in (minted cookie); robots.txt
+- [x] ARCHITECTURE § Crews, FILE_TREE, changelog
 
 ## Measure
 
-- Cross-check crew and user totals by independent queries (`evidence #51`)
+- Preview counts equal the hub's member and agenda rows for the same crew
 
 ## Unsure
 
-- Weeks are cut in the database session's time zone (UTC), Monday start
+- The Google round trip back to the confirm page was not run; `?next=` is the path `/crews/<slug>` already uses
 
 ## What the work showed
 
-- The operator's sign-in email is not the operator's crew account: the id must be the runner account, or number 3 counts every crew
+- The hub's agenda rows don't depend on the viewer, only the names on them do, so the count needs no visibility rule
+- The site header's Sign in dropped the invite; it now carries `next` on this page only
