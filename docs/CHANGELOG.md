@@ -13,7 +13,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   the trip to Google into `web.users`. So no post, share or invite could be
   tied to a signup, and the arc's question (which links bring people in) had
   no answer. **New belief:** the source belongs on the account, written once
-  at creation, first touch only. **Second wrong belief, the ticket's own:
+  at creation, never updated. **Second wrong belief, the ticket's own:
   keep the first `utm_*` in the session on arrival.** That sets a cookie for
   measurement before anyone signs in. Paulo, 2026-11-19: count only people who
   sign in straight from the link, and set no cookie before Sign in. So

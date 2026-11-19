@@ -1,8 +1,8 @@
 -- 016_users_signup_source.sql
--- Where a user signed up from (#53): the first utm_* / ref a visitor
--- arrived with, or 'invite' and the crew for an invite link. Written once
--- when the user row is created (UserService.get_or_create_user_from_google),
--- never updated, never rendered. First touch only.
+-- Where a user signed up from (#53): the utm_* / ref on the link the
+-- visitor clicked Sign in from, or 'invite' and the crew for an invite link
+-- (app/main.py google_login). Written once when the user row is created
+-- (UserService.get_or_create_user_from_google), never updated, never rendered.
 --
 -- Nullable, no backfill: existing users have no known source. Text, capped
 -- in the app (100 chars). signup_crew_id is a soft ref like crews.created_by:
