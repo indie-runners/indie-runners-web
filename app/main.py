@@ -921,21 +921,30 @@ def crews_join_form(
     db: Session = Depends(get_db),
     current_user: Optional[User] = Depends(get_current_user),
 ):
-    # Signed-out visitors get bounced through Google. Stash the target
-    # URL so the callback lands them back on this confirm page instead
-    # of `/`. The stash is server-set (never from a client query param),
-    # so no open-redirect surface.
-    if current_user is None:
-        request.session["post_login_redirect"] = str(request.url)
-        return RedirectResponse("/auth/google", status_code=303)
-
-    crew = CrewService(db).find_crew_by_invite_token(token)
+    svc = CrewService(db)
+    crew = svc.find_crew_by_invite_token(token)
     if crew is None:
         return templates.TemplateResponse(
             request,
             "crews_invite_invalid.html",
             {"current_user": current_user},
             status_code=200,
+        )
+    if current_user is None:
+        # Signed out: name and two counts, nobody's name (Paulo, 2026-11-17,
+        # #52). A page, not a redirect, so link previews have it too.
+        return templates.TemplateResponse(
+            request,
+            "crews_invite_preview.html",
+            {
+                "current_user": None,
+                "crew": crew,
+                "member_count": len(svc.list_members(crew.id)),
+                # The hub's rows don't depend on the viewer, only the names on them.
+                "race_count": sum(len(rows) for _, rows in svc.list_agenda(crew.id, None)),
+                # The header's Sign in too, or it drops the invite.
+                "header_signin_url": _signin_url(request),
+            },
         )
     return templates.TemplateResponse(
         request,
