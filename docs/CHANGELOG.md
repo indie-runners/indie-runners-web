@@ -4,6 +4,23 @@ All notable changes to the Indie Runners Web project will be documented in this 
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.9.87] — 2026-11-20
+
+### Fixed — the event page's official website link is behind sign-in (#62)
+
+- **Wrong belief: every race detail on the event page sits behind
+  sign-in.** The action bar's "Official website →" link rendered for
+  signed-out visitors, outside any `current_user` check, while the TBC
+  notice's link was already gated. Anyone could reach the organiser's site
+  from the anon page, the one race detail the wall missed. **New belief:**
+  the link renders only with `current_user`; nothing replaces it for anon
+  (Paulo, 2026-11-20).
+- **Verified:** locally, on an event with a website. Anon (curl, no
+  cookie): the page source contains neither the URL nor
+  `event-website-link`, and both Sign in links are present. Signed in
+  (minted cookie, render not sign-in): the link renders in the action bar
+  as before.
+
 ## [1.9.86] — 2026-11-19
 
 ### Added — a new account stores the link it signed up from (#53)
