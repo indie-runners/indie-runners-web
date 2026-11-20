@@ -84,7 +84,7 @@
     </div>
     {% endif %}
     {% if not current_user %}
-      <a href="/auth/google" class="hover-cta">Sign in to join →</a>
+      <a href="{{ signin_url_for(request) }}" class="hover-cta">Sign in to join →</a>
     {% elif race.user_status %}
       {# A status, not a control: the event page is the only place to mark a race (W-096) #}
       <div class="attendance-status">

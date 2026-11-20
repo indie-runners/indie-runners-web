@@ -80,7 +80,7 @@
     {% set gcal = event.gcal_url if current_user else none %}
     <div class="event-attendance" data-event-id="{{ event.event_id }}" data-occurrence-id="{{ event.occurrence_id }}"{% if gcal %} data-gcal-url="{{ gcal }}"{% endif %}>
       {% if not current_user %}
-        <a href="/auth/google?next={{ request.url.path }}" class="attendance-btn attendance-btn--signin">Sign in to join</a>
+        <a href="{{ signin_url_for(request) }}" class="attendance-btn attendance-btn--signin">Sign in to join</a>
       {% elif user_status %}
         <div class="attendance-status">
           <span class="attendance-status-label">
@@ -492,7 +492,7 @@
       <p class="locked-panel-body">
         Distances, climb, prices, cutoffs and registration status for every race at this event. Free once you sign in.
       </p>
-      <a href="/auth/google?next={{ request.url.path }}" class="attendance-btn attendance-btn--signin locked-panel-cta">
+      <a href="{{ signin_url_for(request) }}" class="attendance-btn attendance-btn--signin locked-panel-cta">
         Sign in to see race details
       </a>
     </div>
