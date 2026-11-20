@@ -41,6 +41,10 @@ The board answers a read sent just after a write from a slightly older
 copy (seen 2026-11-13: an item absent for a few seconds after its create,
 present after its delete). Writes go by id and are unaffected; re-read
 before concluding a write did not land.
+
+A rate-limit refusal is retried after 60, 120 and 240 s, a line on stderr
+each time. Still refused after that, it exits non-zero naming the call:
+the write did not happen, and the session that ran it reports it.
 """
 import argparse
 import json
@@ -48,6 +52,7 @@ import re
 import subprocess
 import sys
 import tempfile
+import time
 
 OWNER, NUMBER = "indie-runners", "2"
 REPOS = ("web", "scraper", "infra")
@@ -69,11 +74,27 @@ PROMOTED = {"Idea": "Promoted", "Drive-by": "Ticketed"}
 ISSUE_REPOS = ("web",)
 
 
+# GitHub on a rate-limit refusal: wait at least a minute, then back off. A
+# refused call did not happen, so a mutation is safe to resend. Seen
+# 2026-11-16 and 11-20 with thousands of hourly points left (a secondary limit).
+WAITS = (60, 120, 240)
+
+
+def rate_limited(stderr):
+    return "rate limit" in stderr.lower()
+
+
 def sh(*args, stdin=None):
-    r = subprocess.run(args, capture_output=True, text=True, input=stdin)
-    if r.returncode:
-        sys.exit(f"{' '.join(args[:4])} ...: {r.stderr.strip()}")
-    return r.stdout
+    for wait in (*WAITS, None):
+        r = subprocess.run(args, capture_output=True, text=True, input=stdin)
+        if not r.returncode:
+            return r.stdout
+        if wait is None or not rate_limited(r.stderr):
+            sys.exit(f"{' '.join(args[:4])} ...: {r.stderr.strip()}"
+                     + (f" (refused after {len(WAITS)} retries)" if wait is None else ""))
+        print(f"rate limited ({' '.join(args[:3])} ...); retrying in {wait}s",
+              file=sys.stderr, flush=True)
+        time.sleep(wait)
 
 
 def gql(query, **variables):
@@ -363,6 +384,9 @@ def selftest():
             raise AssertionError(f"{kind}/{status} accepted")
         except SystemExit:
             pass
+    assert rate_limited("GraphQL: API rate limit exceeded for user ID 871314.")
+    assert rate_limited("HTTP 403: You have exceeded a secondary rate limit")
+    assert not rate_limited("GraphQL: Could not resolve to a node")
     print("selftest ok")
 
 
