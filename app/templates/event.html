@@ -72,7 +72,7 @@
     {% if event.short_description %}
       <p class="event-description"><span>{{ event.short_description }}</span></p>
     {% endif %}
-    {% if event.event_website_url %}
+    {% if current_user and event.event_website_url %}
       <a href="{{ event.event_website_url }}" target="_blank" rel="noopener noreferrer" class="event-website-link">
         Official website →
       </a>
