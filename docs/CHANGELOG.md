@@ -11,19 +11,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **Wrong belief: a Google callback with a valid `code` is a sign-in this
   browser asked for.** `/auth/google` sent no `state` and the callback took
   any `code`, so a link carrying someone else's code could sign a visitor
-  in to that account (login CSRF, RFC 6749 §10.12). No misuse seen in the
-  logs. **New belief:** each `/auth/google` stores a fresh random
-  `oauth_state` in the session and sends it as `state`. The callback pops
-  it first and refuses a missing or different `state` before the code
-  exchange, through the same branch as a refused code (W-094): signed in,
-  `303` on; signed out, the sign-in-failed page at `400`.
+  in to that account (login CSRF, RFC 6749 §10.12). A forced sign-in would
+  look like any other in the logs, so their silence shows nothing.
+  **New belief:** each `/auth/google` stores a fresh random `oauth_state`
+  in the session and sends it as `state`. The callback pops it from this
+  browser's session (a signed cookie, so not server-side single use) and
+  refuses a missing or different `state` before the code exchange,
+  through the same branch as a refused code (W-094): signed in, `303` on;
+  signed out, the sign-in-failed page at `400`. Cost: two tabs signing in
+  at once, or a cookie lost on the way to Google, now fail until Try
+  again (ARCHITECTURE).
 - **Verified:** locally (`dev.sh`, this worktree on `:8000`), curl:
   the authorize URL's `state` equals the cookie's, and a bare Try again
   gets a fresh one with the queued redirect kept. A forged, missing or
   non-ASCII `state`, or no session at all, gets a `400` sign-in-failed
   page, never a `500`. A matching `state` reaches Google, which refuses
-  the bogus code. Replaying that `state` is refused by the state check
-  (used once). Signed in (minted cookie) with a stale `state`: `303` to
+  the bogus code. Replaying that `state` with the cookie the first
+  callback returned is refused by the state check. Signed in (minted cookie) with a stale `state`: `303` to
   the queued `/settings`. Cancel: `303 /`, session cleared.
   Real sign-in through Google (Paulo's browser,
   2026-11-20): event page `next`, `/settings`, an invite link, and two
