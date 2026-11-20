@@ -25,4 +25,4 @@ _2026-11-20_
 
 ## What the work showed
 
-- A matching `state` with a reload of a successful callback could not be produced in the browser (cache); the W-094 shape is checked by curl with a minted signed-in session
+- A matching `state` with a reload of a successful callback did not reach the server from the browser (not in the log); the W-094 shape is checked by curl with a minted signed-in session

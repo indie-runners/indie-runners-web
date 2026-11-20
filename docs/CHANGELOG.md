@@ -29,7 +29,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   2026-11-20): event page `next`, `/settings`, an invite link, and two
   cancels each landed where expected, with no errors in the log. The
   reload-after-success step reported fine, but no replayed callback
-  reached the server (browser cache); that path is the curl check above.
+  reached the server's log; that path is the curl check above.
 
 ## [1.9.87] — 2026-11-20
 
