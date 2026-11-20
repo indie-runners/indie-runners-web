@@ -1,28 +1,13 @@
-# TODO: #35 — the sign-in request carries no OAuth state
+# TODO: #18 — search misses races typed with ß, accents, spacing or a country
 
 > The developer's per-ticket checklist, overwritten by the next ticket.
 
 _2026-11-20_
 
-## Steps
-
-- [x] `/auth/google`: fresh `secrets.token_urlsafe` in `session["oauth_state"]` on every hit (bare Try again included), sent as `state`
-- [x] Callback: pop `oauth_state` first (used once on every path); no-`code` branch unchanged; then compare before any code exchange
-- [x] Mismatch shares the `CodeExchangeRefused` handling: signed in → 303 to the queued redirect or `/` (W-094); signed out → `signin_failed.html` 400
-- [x] Compare bytes, guard `None`: `compare_digest` raises on `None` and non-ASCII `str`
-- [x] ARCHITECTURE: flow (§ sign-in), session paragraph, the event-page "no `state` round-trip" line
-- [x] Changelog 1.9.88
-
-## Measure
-
-- Authorize `Location` carries `state`, equal to the cookie's
-- Forged / missing `state` → 400 sign-in-failed page; cancel → 303 `/`; signed-in mismatch → 303
-- Matching `state` + bogus code → Google refuses → sign-in-failed (state check passed)
-
-## Unsure
-
-- A full Google round trip (event `next`, `/settings`, invite stash) needs a browser and an account: ask Paulo, or say plainly it was not exercised
-
-## What the work showed
-
-- A matching `state` with a reload of a successful callback did not reach the server from the browser (not in the log); the W-094 shape is checked by curl with a minted signed-in session
+- [x] Fold term and columns the same way in the query (`_search_fold`, two passes for ä→ae / ä→a)
+- [x] Match `event_country_code` too
+- [x] Acceptance 3, anon `/?search=`: `Großglockner` → Grossglockner Ultra Trail; `Fränkische` → Lowa Ultratrail Fraenkische; `Valdaran` → Val Daran Pyrenees; `Malta` → Gozo Trail Run, Valletta Marathon (4 tiles in all)
+- [x] Acceptance 4: `Kiev`, `Transilvania`, `Julien` → 0 (spellings, not folds)
+- [x] Acceptance 5: `glockner` 1, `trail` 60, `berlin` 32 tiles; old ⊆ new over 12 terms
+- Disproved: nothing. Unsure: cost of 10 folded comparisons per row, unmeasured; the view is small.
+- Paulo's aliases idea (nicknames, former sponsor names) is on the board for the scraper, not here.

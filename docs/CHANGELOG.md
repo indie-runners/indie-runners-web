@@ -4,6 +4,32 @@ All notable changes to the Indie Runners Web project will be documented in this 
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.9.89] — 2026-11-20
+
+### Fixed — search finds races typed with ß, accents, umlauts, spacing or a country (#18)
+
+- **Wrong belief: `ILIKE '%term%'` is close enough for a search box.** It
+  folds case only, so `Großglockner`, `Fränkische`, `Valdaran` and `Malta`
+  found nothing, although the catalogue has Grossglockner Ultra Trail, Lowa
+  Ultratrail Fraenkische, Val Daran Pyrenees and two Maltese races (analyst,
+  2026-10-13 → 11-01). The country was only the dropdown's filter.
+  **New belief:** term and columns go through the same fold in the query
+  (`_search_fold`: lower, ß→ss, accents stripped by `translate()`, spaces
+  and hyphens dropped). It runs twice, ä/ö/ü→ae/oe/ue and then →a/o/u, so a
+  typed `ä` finds both `ae` and `a`. `event_country_code` is searched too.
+  No `unaccent`/`pg_trgm`: those would be a scraper migration.
+- **Not fixed, on purpose:** `Kiev`, `Transilvania` and `Julien` still
+  miss. They are other spellings, not folds, and need aliases (W-099
+  option E, on the board for the scraper).
+- **Verified:** locally (`dev.sh`, this worktree on `:8000`). Anon curl of
+  `/?search=`: `Großglockner`, `Fränkische` and `Valdaran` return 1 tile each
+  (the events above), `Malta` returns 4 including Gozo Trail Run and Valletta
+  Marathon. `Kiev`, `Transilvania` and `Julien` return 0. Signed in (minted
+  cookie, render not sign-in): `Malta` 4 and `Großglockner` 1. Old against new
+  filter over the whole view, distinct events, for 12 terms (`glockner`,
+  `trail`, `berlin`, `road`, `ultra`, `10k`, `zürich`, `münchen` among them):
+  nothing the old filter found is lost.
+
 ## [1.9.88] — 2026-11-20
 
 ### Fixed — sign-in checks that it started the Google round trip it finishes (#35)

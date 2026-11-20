@@ -14,6 +14,20 @@ from app.services.attendance_service import is_locked
 
 logger = logging.getLogger(__name__)
 
+# Search fold (W-099): no unaccent/pg_trgm in the DB, so translate() it is.
+_ACCENTS_FROM = "àáâãåāăąçćčďđèéêëēėęěğìíîïīįıłñńňòóôõøōőŕřśšşťùúûūůűųýÿźżž"
+_ACCENTS_TO = "aaaaaaaacccddeeeeeeeegiiiiiiilnnnooooooorrssstuuuuuuuyyzzz"
+assert len(_ACCENTS_FROM) == len(_ACCENTS_TO)
+
+
+def _search_fold(expr, umlaut: bool):
+    """lower, ß→ss, ä/ö/ü→ae/oe/ue (umlaut) or a/o/u, accents stripped, spaces and hyphens dropped."""
+    e = func.replace(func.lower(expr), "ß", "ss")
+    for ch, base in (("ä", "a"), ("ö", "o"), ("ü", "u")):
+        e = func.replace(e, ch, base + "e" if umlaut else base)
+    e = func.translate(e, _ACCENTS_FROM, _ACCENTS_TO)
+    return func.replace(func.replace(e, " ", ""), "-", "")
+
 _NORDIC = {"finland", "sweden", "norway", "iceland", "denmark"}
 _COASTAL = {"portugal", "ireland", "croatia"}
 
@@ -240,13 +254,22 @@ class RaceService:
         if filters.country:
             stmt = stmt.where(Race.event_country_code.ilike(filters.country))
         if filters.search:
-            term = f"%{filters.search.strip()}%"
+            term = filters.search.strip()
+            cols = (
+                Race.event_display_name,
+                Race.event_name,
+                Race.race_location,
+                Race.terrain_type,
+                Race.event_country_code,
+            )
+            # Two folds so ä matches both "ae" and "a" (W-099).
             stmt = stmt.where(
                 or_(
-                    Race.event_display_name.ilike(term),
-                    Race.event_name.ilike(term),
-                    Race.race_location.ilike(term),
-                    Race.terrain_type.ilike(term),
+                    *(
+                        _search_fold(c, umlaut).contains(_search_fold(term, umlaut))
+                        for c in cols
+                        for umlaut in (True, False)
+                    )
                 )
             )
 
