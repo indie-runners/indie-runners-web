@@ -2,6 +2,7 @@ import hashlib
 import json
 import logging
 import math
+import secrets
 from collections import Counter
 from functools import lru_cache
 from datetime import date, datetime, timedelta, timezone
@@ -1147,14 +1148,32 @@ def google_login(request: Request, next: Optional[str] = None, db: Session = Dep
             touch |= {"source": "invite", "crew_id": crew.id}
         if touch:
             request.session["signup_touch"] = touch
-    url = GoogleAuthService().build_authorize_url()
-    return RedirectResponse(url)
+    # OAuth state (#35): the callback only takes a code this browser asked for.
+    state = request.session["oauth_state"] = secrets.token_urlsafe(32)
+    return RedirectResponse(GoogleAuthService().build_authorize_url(state))
+
+
+def _signin_refused(request: Request):
+    # A session that already holds user_id was signed in by the first use of
+    # this callback URL (reload, back, double tap): go where it was going (W-094).
+    if request.session.get("user_id"):
+        target = request.session.pop("post_login_redirect", None)
+        return RedirectResponse(target or "/", status_code=303)
+    # Signed out: say so. The queued redirect stays so Try again still lands there.
+    return templates.TemplateResponse(
+        request, "signin_failed.html", {"current_user": None}, status_code=400
+    )
 
 
 @app.api_route("/auth/google/callback", methods=["GET", "HEAD"])
 async def google_callback(
-    request: Request, code: Optional[str] = None, db: Session = Depends(get_db)
+    request: Request,
+    code: Optional[str] = None,
+    state: Optional[str] = None,
+    db: Session = Depends(get_db),
 ):
+    # Popped before any branch, so each stored state is good for one callback.
+    expected = request.session.pop("oauth_state", None)
     # Google sends no `code` when the visitor cancels on the consent screen
     # (error=access_denied). Drop the queued redirect so a later, unrelated
     # sign-in does not land on a stale invite; a signed-in session is untouched.
@@ -1162,19 +1181,16 @@ async def google_callback(
         request.session.pop("post_login_redirect", None)
         request.session.pop("signup_touch", None)
         return RedirectResponse("/", status_code=303)
+    # Bytes, not str: compare_digest raises on a non-ASCII str, and state is the caller's.
+    if not (state and expected and secrets.compare_digest(state.encode(), expected.encode())):
+        # WARNING, not INFO: INFO never reaches Cloud Logging (W-051). Never the values.
+        logger.warning("sign-in callback refused: state missing or not this session's")
+        return _signin_refused(request)
     svc = GoogleAuthService()
     try:
         token_data = await svc.exchange_code_for_token(code)
     except CodeExchangeRefused:
-        # A one-time code replayed (reload, back, double tap) after a sign-in
-        # that worked: the session is already signed in, so go where it was going.
-        if request.session.get("user_id"):
-            target = request.session.pop("post_login_redirect", None)
-            return RedirectResponse(target or "/", status_code=303)
-        # Signed out: say so. The queued redirect stays so Try again still lands there.
-        return templates.TemplateResponse(
-            request, "signin_failed.html", {"current_user": None}, status_code=400
-        )
+        return _signin_refused(request)
     userinfo = await svc.get_userinfo(token_data["access_token"])
     try:
         user = UserService(db).get_or_create_user_from_google(

@@ -6,12 +6,12 @@ _2026-11-20_
 
 ## Steps
 
-- [ ] `/auth/google`: fresh `secrets.token_urlsafe` in `session["oauth_state"]` on every hit (bare Try again included), sent as `state`
-- [ ] Callback: pop `oauth_state` first (used once on every path); no-`code` branch unchanged; then compare before any code exchange
-- [ ] Mismatch shares the `CodeExchangeRefused` handling: signed in → 303 to the queued redirect or `/` (W-094); signed out → `signin_failed.html` 400
-- [ ] Compare bytes, guard `None`: `compare_digest` raises on `None` and non-ASCII `str`
-- [ ] ARCHITECTURE: flow (§ sign-in), session paragraph, the event-page "no `state` round-trip" line
-- [ ] Changelog 1.9.88
+- [x] `/auth/google`: fresh `secrets.token_urlsafe` in `session["oauth_state"]` on every hit (bare Try again included), sent as `state`
+- [x] Callback: pop `oauth_state` first (used once on every path); no-`code` branch unchanged; then compare before any code exchange
+- [x] Mismatch shares the `CodeExchangeRefused` handling: signed in → 303 to the queued redirect or `/` (W-094); signed out → `signin_failed.html` 400
+- [x] Compare bytes, guard `None`: `compare_digest` raises on `None` and non-ASCII `str`
+- [x] ARCHITECTURE: flow (§ sign-in), session paragraph, the event-page "no `state` round-trip" line
+- [x] Changelog 1.9.88
 
 ## Measure
 
@@ -22,3 +22,7 @@ _2026-11-20_
 ## Unsure
 
 - A full Google round trip (event `next`, `/settings`, invite stash) needs a browser and an account: ask Paulo, or say plainly it was not exercised
+
+## What the work showed
+
+- A matching `state` with a reload of a successful callback could not be produced in the browser (cache); the W-094 shape is checked by curl with a minted signed-in session
