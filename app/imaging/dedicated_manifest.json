@@ -1,5 +1,12 @@
 [
   {
+    "event_slug": "10_hunsrueck_trail",
+    "title": "10 Hunsrueck Trail",
+    "photographer_name": "Jonathan Kemper",
+    "photographer_url": "https://unsplash.com/@jupp?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText",
+    "photo_url": "https://unsplash.com/photos/people-walking-on-bridge-during-day-pnzJyUHbSlk?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
+  },
+  {
     "event_slug": "13_valleys_ultra",
     "title": "13 Valleys Ultra (brown and green mountains under blue sky)",
     "photographer_name": "Tobias Rademacher",
@@ -385,6 +392,13 @@
     "photo_url": "https://unsplash.com/photos/a-large-building-with-towers-and-a-bridge-over-a-body-of-water-4l0p2z1iABE?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
   },
   {
+    "event_slug": "castle_trail_la",
+    "title": "Castle Trail La",
+    "photographer_name": "Henri Dongo",
+    "photographer_url": "https://unsplash.com/@hd_photography_?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText",
+    "photo_url": "https://unsplash.com/photos/a-grand-chateau-covered-in-ivy-with-formal-gardens--65X1iEZQ7A?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
+  },
+  {
     "event_slug": "chester_marathon",
     "title": "Chester Marathon",
     "photographer_name": "Rachel Hannah Photo",
@@ -439,6 +453,13 @@
     "photographer_name": "Febiyan",
     "photographer_url": "https://unsplash.com/@febiyanr?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText",
     "photo_url": "https://unsplash.com/photos/two-people-biking-and-other-people-walking-on-pathway-near-buildings-under-white-and-blue-sky-0PSCd1wIrm4?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
+  },
+  {
+    "event_slug": "costa_blanca_trails",
+    "title": "Costa Blanca Trails",
+    "photographer_name": "Dean Milenkovic",
+    "photographer_url": "https://unsplash.com/@deanmilenkovic?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText",
+    "photo_url": "https://unsplash.com/photos/a-view-of-a-city-with-a-mountain-in-the-background-qqAcQNJ9gQ0?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
   },
   {
     "event_slug": "country_capital_ultra",
@@ -691,6 +712,13 @@
     "photographer_name": "Karsten W\u00fcrth",
     "photographer_url": "https://unsplash.com/@karsten_wuerth?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText",
     "photo_url": "https://unsplash.com/photos/brown-wooden-bench-on-green-grass-field-near-body-of-water-during-daytime-i4KN755cTi4?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
+  },
+  {
+    "event_slug": "garmin_ultra_race",
+    "title": "Garmin Ultra Race",
+    "photographer_name": "Eduardo Casaj\u00fas Gorostiaga",
+    "photographer_url": "https://unsplash.com/@eduardo_cg?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText",
+    "photo_url": "https://unsplash.com/photos/aerial-photography-of-brown-and-white-houses-viewing-body-of-water-during-daytime-qC2aGhNQOSc?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
   },
   {
     "event_slug": "gauja_trail",
@@ -1363,6 +1391,13 @@
     "photographer_name": "Elisa Schmidt",
     "photographer_url": "https://unsplash.com/@elisasch?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText",
     "photo_url": "https://unsplash.com/photos/white-boats-at-a-dock--jGQaEA3YC0?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
+  },
+  {
+    "event_slug": "marseille_outdoor_experiences",
+    "title": "Marseille Outdoor Experiences",
+    "photographer_name": "ISHM",
+    "photographer_url": "https://unsplash.com/@notishmm?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText",
+    "photo_url": "https://unsplash.com/photos/aerial-view-of-body-of-water-during-daytime-kbpahPWB8Xw?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
   },
   {
     "event_slug": "martin_mountain_festival",
@@ -2338,6 +2373,13 @@
     "photo_url": "https://unsplash.com/photos/a-river-running-through-a-city-next-to-tall-buildings-2jVB2nt2qT4?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
   },
   {
+    "event_slug": "tschirgant_skyrun",
+    "title": "Tschirgant Skyrun",
+    "photographer_name": "Nadot Yannick",
+    "photographer_url": "https://unsplash.com/@swiss_secret_design?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText",
+    "photo_url": "https://unsplash.com/photos/a-clock-tower-in-the-middle-of-a-village-99_IIwrSZIU?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
+  },
+  {
     "event_slug": "ultra_heroica_mino",
     "title": "Ultra Heroica Mino",
     "photographer_name": "Javier Balseiro",
@@ -2576,6 +2618,13 @@
     "photo_url": "https://unsplash.com/photos/a-statue-of-a-person-riding-a-horse-iZ9gUPv6eNs?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
   },
   {
+    "event_slug": "woerthersee_trail_festival",
+    "title": "Woerthersee Trail Festival",
+    "photographer_name": "Branislav Knappek",
+    "photographer_url": "https://unsplash.com/@branci?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText",
+    "photo_url": "https://unsplash.com/photos/birds-eye-photography-of-forest-and-body-of-water-ZXMVtcKAfHQ?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
+  },
+  {
     "event_slug": "wolfgangseelauf",
     "title": "Wolfgangseelauf",
     "photographer_name": "Alejandra Cifre Gonz\u00e1lez",
@@ -2653,6 +2702,13 @@
     "photo_url": "https://unsplash.com/photos/a-person-standing-in-front-of-a-white-building-with-a-red-roof-b5pNdvkMDs0?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
   },
   {
+    "event_slug": "zimowy_ultramaraton_karkonoski",
+    "title": "Zimowy Ultramaraton Karkonoski",
+    "photographer_name": "Pavel Pe\u0161ek",
+    "photographer_url": "https://unsplash.com/@pajda_p?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText",
+    "photo_url": "https://unsplash.com/photos/person-taking-photo-of-green-mountain-during-sunrise-AbjJCnNlbxI?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
+  },
+  {
     "event_slug": "zlaty_maraton_emila",
     "title": "Zlaty Maraton Emila",
     "photographer_name": "Victoria Chernitsova",
@@ -2665,6 +2721,13 @@
     "photographer_name": "Matthias Schr\u00f6der",
     "photographer_url": "https://unsplash.com/@trancepole?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText",
     "photo_url": "https://unsplash.com/photos/body-of-water-during-daytime-64aCN1BEV-M?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
+  },
+  {
+    "event_slug": "zurich_marato_barcelona",
+    "title": "Zurich Marato Barcelona",
+    "photographer_name": "ian kelsall",
+    "photographer_url": "https://unsplash.com/@iankelsall1?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText",
+    "photo_url": "https://unsplash.com/photos/people-sitting-on-bench-near-building-during-sunset-dXDHJ1wXEL0?utm_source=indie_runners&utm_medium=referral&utm_content=creditCopyText"
   },
   {
     "event_slug": "zurich_maraton_sevilla",
