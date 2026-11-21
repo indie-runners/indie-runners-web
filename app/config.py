@@ -13,6 +13,8 @@ class Settings(BaseSettings):
     # because Settings forbids extra inputs, so an undeclared key in .env
     # fails every import of this module — including uvicorn's.
     unsplash_access_key: str | None = None
+    # The scraper's robots.txt token, named on /bot; set by infra on the service.
+    crawler_name: str | None = None
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 

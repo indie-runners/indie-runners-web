@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Our crawler — Indie Runners{% endblock %}
+
+{% block content %}
+<article class="legal-page">
+  <h1>Our crawler</h1>
+
+  <h2>Who it is</h2>
+  <p>{% if crawler_name %}<code>{{ crawler_name }}</code> is the crawler{% else %}The crawler that sent you here is the one{% endif %}
+  behind <a href="/">indierunners.co</a>, a calendar of running races. Its user agent links to this page.</p>
+
+  <h2>What it collects</h2>
+  <p>Race facts: dates, distances, fees and registration. It reads them from organisers' own sites.</p>
+
+  <h2>What it obeys</h2>
+  <p>When it crawls a site, it reads that site's robots.txt and checks it before every page. It follows
+  the group for its own name if there is one, otherwise the <code>*</code> group. A group that names
+  only AI crawlers (GPTBot, ClaudeBot, CCBot) is not read as covering it.</p>
+  <p><code>Crawl-delay</code> is honoured up to 60 seconds. A site asking for more is not crawled at all.</p>
+
+  <h2>How to opt out</h2>
+  {% if crawler_name %}
+  <p>Add this group to your robots.txt:</p>
+  <pre><code>User-agent: {{ crawler_name }}
+Disallow: /</code></pre>
+  {% else %}
+  <p>Add a group to your robots.txt with <code>Disallow: /</code>, under <code>User-agent:</code> followed
+  by the crawler's name: the part of its user agent before <code>/1.0</code>.</p>
+  {% endif %}
+  <p>Or email <a href="mailto:crawler@indierunners.co">crawler@indierunners.co</a>.</p>
+
+  <p class="legal-footnote">This describes the crawler as of version 0.100.0 of the Indie Runners scraper.</p>
+</article>
+{% endblock %}

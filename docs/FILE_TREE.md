@@ -42,6 +42,7 @@ indie-runners-web/
 │   │   └── user_service.py   # UserService: get_or_create_user_from_google, delete_account
 │   └── templates/
 │       ├── base.html              # Common layout: nav (avatar dropdown: My profile / Settings / Log out), fonts, footer
+│       ├── bot.html               # /bot: who the scraper's crawler is, what it obeys, how to opt out; names it from CRAWLER_NAME when set
 │       ├── crews_detail.html      # Crew hub: agenda by month with going/interested chips, sidebar with member list, invite URL + copy + admin rotate, created/rotated/joined flashes
 │       ├── crews_hidden.html      # Placeholder for non-members and non-existent crews — no crew name surfaced
 │       ├── crews_invite_confirm.html  # Invite landing: crew name + Join button + Cancel

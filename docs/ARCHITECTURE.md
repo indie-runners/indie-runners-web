@@ -232,7 +232,7 @@ Every route that serves a page is declared `@app.api_route(..., methods=["GET", 
 
 ## Crawl surface
 
-`/robots.txt` disallows the signed-in surfaces (1.9.21) and points at `/sitemap.xml` (1.9.22). The sitemap lists the anon-public pages (`/`, `/stats`, `/imprint`, `/privacy`, `/terms`) and one URL per event from `RaceService.list_races(RaceFilters())`, the index's own unfiltered query before its 60-tile cut, so it cannot list an event the site would not render. **Built live per request, not cached:** about 400 rows, roughly 0.2 s locally, the same `list_races` cost `/stats` already pays, and a cache would add a TTL and with it a window where the sitemap lists an edition that has left the view. No `lastmod`/`changefreq`/`priority`: this app reads no per-event modification time, so a `lastmod` would be made up. Revisit caching or an index file if the corpus nears ~25,000 events. Verified against one local run on 2026-10-25 (1.9.22 changelog).
+`/robots.txt` disallows the signed-in surfaces (1.9.21) and points at `/sitemap.xml` (1.9.22). The sitemap lists the anon-public pages (`/`, `/stats`, `/imprint`, `/privacy`, `/terms`, `/bot`) and one URL per event from `RaceService.list_races(RaceFilters())`, the index's own unfiltered query before its 60-tile cut, so it cannot list an event the site would not render. **Built live per request, not cached:** about 400 rows, roughly 0.2 s locally, the same `list_races` cost `/stats` already pays, and a cache would add a TTL and with it a window where the sitemap lists an edition that has left the view. No `lastmod`/`changefreq`/`priority`: this app reads no per-event modification time, so a `lastmod` would be made up. Revisit caching or an index file if the corpus nears ~25,000 events. Verified against one local run on 2026-10-25 (1.9.22 changelog).
 
 ## Authentication
 
@@ -381,6 +381,7 @@ Required variables:
 - `GOOGLE_CLIENT_SECRET` — from Google Cloud Console
 - `GOOGLE_REDIRECT_URI` — callback URL registered with Google (prod: `https://indierunners.co/auth/google/callback`)
 - `TILE_VERSION` — tile prefix served for event tiles. Default lives in `app/config.py` (currently `v02`); the env var only needs setting to override for a temporary trial. Corresponds to `gs://indie-runners-web-tiles/tiles/<version>/`. To make a new version permanent, edit `app/config.py`, commit, redeploy.
+- `CRAWLER_NAME` — optional. The scraper's robots.txt token, named on `/bot` (#33). Unset, the page names no crawler and its opt-out tells the reader to take the name from the user agent; it still answers `200`. Set on the service by infra, never hard-coded here, so the page follows the scraper's configured name.
 
 Optional, workstation only:
 

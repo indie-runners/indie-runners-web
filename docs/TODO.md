@@ -1,13 +1,14 @@
-# TODO: #18 — search misses races typed with ß, accents, spacing or a country
+# TODO: #33 — /bot, the page the scraper's user agent names, is a 404
 
 > The developer's per-ticket checklist, overwritten by the next ticket.
 
 _2026-11-20_
 
-- [x] Fold term and columns the same way in the query (`_search_fold`, two passes for ä→ae / ä→a)
-- [x] Match `event_country_code` too
-- [x] Acceptance 3, anon `/?search=`: `Großglockner` → Grossglockner Ultra Trail; `Fränkische` → Lowa Ultratrail Fraenkische; `Valdaran` → Val Daran Pyrenees; `Malta` → Gozo Trail Run, Valletta Marathon (4 tiles in all)
-- [x] Acceptance 4: `Kiev`, `Transilvania`, `Julien` → 0 (spellings, not folds)
-- [x] Acceptance 5: `glockner` 1, `trail` 60, `berlin` 32 tiles; old ⊆ new over 12 terms
-- Disproved: nothing. Unsure: cost of 10 folded comparisons per row, unmeasured; the view is small.
-- Paulo's aliases idea (nicknames, former sponsor names) is on the board for the scraper, not here.
+- [x] `CRAWLER_NAME: str | None = None` in `Settings`
+- [x] `GET`/`HEAD /bot` → `bot.html` in the site layout, anon and signed in
+- [x] Four facts, checked against scraper `src/crawl_policy.py` at 0.100.0: who, what it collects, what it obeys, how to opt out (`crawler@indierunners.co`)
+- [x] Name unset: 200, no crawler named, no placeholder; robots example says to use the name in the user agent
+- [x] `/bot` in `sitemap.xml`; not disallowed by `robots.txt`
+- [x] No link to `docs/CRAWLING.md`: it does not exist in the scraper (checked 2026-11-20), and that repo is private
+- Measure: page text both ways (name set / unset), both tiers; sitemap and robots bodies.
+- Disproved: that the policy module covers every request (#73 R1). The hand-run add/move one-page check skips robots.txt; the page claims robots.txt for crawls only.
