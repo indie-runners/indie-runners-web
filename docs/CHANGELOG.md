@@ -4,6 +4,37 @@ All notable changes to the Indie Runners Web project will be documented in this 
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.9.90] — 2026-11-20
+
+### Added — `/bot`, the page the scraper's user agent names (#33)
+
+- **Wrong belief: the crawler's contact URL can wait for this repo.** Since
+  scraper 0.92.0 every request it sends, robots.txt included, carries
+  `+https://indierunners.co/bot`, and that was a `404` to about 700 hosts
+  reading their logs. The scraper repo cannot go public before it answers.
+  **New belief:** `/bot` answers `GET` and `HEAD` in the site layout and
+  states who the crawler is, what it collects, what it obeys and how to opt
+  out (`Disallow: /` for its name, or `crawler@indierunners.co`). The name
+  comes from `CRAWLER_NAME` (optional on `Settings`), so a renamed crawler
+  needs no release here. `/bot` is in the sitemap; robots.txt never blocked it.
+- **Second wrong belief (mine, #73 R1): reading the robots policy shows
+  what every request does.** `src/crawl_policy.py` at 0.100.0 (own group else
+  `*`, AI-only groups not ours, `Crawl-delay` ceiling 60 s) holds for the
+  crawls, but not every sender of the user agent goes through it: the
+  one-page check when a race is added or moved, run by hand, reads no
+  robots.txt (`git grep "user_agent()"` on the scraper's `main`). The first
+  draft said "checks it before every fetch", false for that request.
+  **Now:** the page claims robots.txt for crawls only ("when it crawls a
+  site") and names no request that is not a crawl (Paulo, 2026-11-21). No
+  link to a `docs/CRAWLING.md`: none exists, and that repo is private.
+- **Verified:** locally (`dev.sh`, this worktree on `:8000`). `CRAWLER_NAME`
+  unset: `GET` and `HEAD /bot` `200` anon, `200` signed in (minted cookie,
+  render not sign-in; header shows the signed-in links); page text names no
+  crawler and contains no `None` or placeholder; the opt-out says to use the
+  name before `/1.0` in the user agent. `CRAWLER_NAME=TestBot`: `200` both
+  tiers, article identical in both, names `TestBot` and shows `User-agent: TestBot` /
+  `Disallow: /`. `/sitemap.xml` lists `/bot`; `/robots.txt` unchanged.
+
 ## [1.9.89] — 2026-11-20
 
 ### Fixed — search finds races typed with ß, accents, umlauts, spacing or a country (#18)

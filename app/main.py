@@ -981,6 +981,15 @@ def imprint(request: Request, current_user: Optional[User] = Depends(get_current
     )
 
 
+@app.api_route("/bot", methods=["GET", "HEAD"])
+def bot(request: Request, current_user: Optional[User] = Depends(get_current_user)):
+    return templates.TemplateResponse(
+        request,
+        "bot.html",
+        {"current_user": current_user, "crawler_name": settings.crawler_name},
+    )
+
+
 # Browsers request /favicon.ico at the root whatever <head> says.
 @app.api_route("/favicon.ico", methods=["GET", "HEAD"])
 def favicon():
@@ -1006,7 +1015,7 @@ def robots():
 # Anon-public pages only; nothing robots.txt disallows.
 @app.api_route("/sitemap.xml", methods=["GET", "HEAD"])
 def sitemap(db: Session = Depends(get_db)):
-    paths = ["/", "/stats", "/imprint", "/privacy", "/terms"] + [
+    paths = ["/", "/stats", "/imprint", "/privacy", "/terms", "/bot"] + [
         f"/events/{e.event_slug}/{e.occurrence_year}"
         for e in RaceService(db).list_races(RaceFilters())
         if e.event_slug and e.occurrence_year
