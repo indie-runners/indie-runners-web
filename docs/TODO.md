@@ -1,14 +1,12 @@
-# TODO: #33 — /bot, the page the scraper's user agent names, is a 404
+# TODO: #63 — links to the site show no preview in WhatsApp
 
 > The developer's per-ticket checklist, overwritten by the next ticket.
 
-_2026-11-20_
+_2026-11-23_
 
-- [x] `CRAWLER_NAME: str | None = None` in `Settings`
-- [x] `GET`/`HEAD /bot` → `bot.html` in the site layout, anon and signed in
-- [x] Four facts, checked against scraper `src/crawl_policy.py` at 0.100.0: who, what it collects, what it obeys, how to opt out (`crawler@indierunners.co`)
-- [x] Name unset: 200, no crawler named, no placeholder; robots example says to use the name in the user agent
-- [x] `/bot` in `sitemap.xml`; not disallowed by `robots.txt`
-- [x] No link to `docs/CRAWLING.md`: it does not exist in the scraper (checked 2026-11-20), and that repo is private
-- Measure: page text both ways (name set / unset), both tiers; sitemap and robots bodies.
-- Disproved: that the policy module covers every request (#73 R1). The hand-run add/move one-page check skips robots.txt; the page claims robots.txt for crawls only.
+- [ ] `base.html`: `og:` tags on every page, title and description in blocks
+- [ ] Invite preview overrides the blocks and drops its own tags (else they duplicate)
+- [ ] Event page keeps its meta description as `og:description`: a generic one would replace what crawlers fall back to today
+- [ ] CHANGELOG, ARCHITECTURE
+- Measure: each tag once on `/`, an event page, an invalid and a valid invite; `og:url` drops the query and escapes the path; image `200 image/png`; signed in too.
+- Unsure: whether the missing image is the cause. Only a phone after deploy can say.
