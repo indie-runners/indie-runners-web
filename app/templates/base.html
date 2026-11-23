@@ -14,6 +14,14 @@
   <link rel="manifest" href="{{ static_url('brand/favicon/site.webmanifest') }}">
   <script data-goatcounter="https://indierunners.goatcounter.com/count"
           async src="//gc.zgo.at/count.js"></script>
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{% block og_title %}{{ self.title() }}{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}Find out where your friends are running.{% endblock %}">
+  <meta property="og:url" content="https://indierunners.co{{ request.url.path | urlencode }}">
+  {# Absolute: WhatsApp ignores a relative image. #}
+  <meta property="og:image" content="https://indierunners.co{{ static_url('brand/social/og-image.png') }}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
   {% block head %}{% endblock %}
 </head>
 <body>

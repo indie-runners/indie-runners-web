@@ -10,6 +10,8 @@
 
 {% block title %}{{ event.event_display_name }} — Indie Runners{% endblock %}
 
+{% block og_description %}{{ meta_description or super() }}{% endblock %}
+
 {% block head %}
   {% if meta_description %}
     <meta name="description" content="{{ meta_description }}">

@@ -2,11 +2,9 @@
 
 {% block title %}Join {{ crew.display_name }} — Indie Runners{% endblock %}
 
-{% block head %}
-  <meta property="og:title" content="Join {{ crew.display_name }} on Indie Runners">
-  <meta property="og:description" content="You're invited to {{ crew.display_name }} on Indie Runners: {{ member_count }} member{{ '' if member_count == 1 else 's' }}, {{ race_count }} planned race{{ '' if race_count == 1 else 's' }}.">
-  <meta property="og:type" content="website">
-{% endblock %}
+{% block og_title %}Join {{ crew.display_name }} on Indie Runners{% endblock %}
+
+{% block og_description %}You're invited to {{ crew.display_name }} on Indie Runners: {{ member_count }} member{{ '' if member_count == 1 else 's' }}, {{ race_count }} planned race{{ '' if race_count == 1 else 's' }}.{% endblock %}
 
 {% block content %}
 <div class="crews-page">
