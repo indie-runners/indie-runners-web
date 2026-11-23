@@ -25,7 +25,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   `/?search=x`, an event page, an event with no description, a made-up and a
   valid invite, `/bot`, `/stats` and an event 404 each have all 7 `og:`
   tags once, with absolute URLs; `?search=x` gives `og:url` `…/`; a path of
-  `"><b>` comes out escaped. Signed in (minted cookie, render not sign-in):
+  `"><b>` or `ß x` comes out percent-encoded. Signed in (minted cookie, render not sign-in):
   the same once each, plus `/settings`, `/crews/new` and `/terms`. The image
   URL, `?v=` included, answers `200 image/png`. **Not verified:** that any
   chat app shows a preview; that needs the deploy and a phone (#63).
