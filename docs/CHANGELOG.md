@@ -4,6 +4,32 @@ All notable changes to the Indie Runners Web project will be documented in this 
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.9.91] — 2026-11-23
+
+### Fixed — every page carries Open Graph tags, image included (#63)
+
+- **Wrong belief (#52): a title and a description are enough for an invite
+  link to preview.** 1.9.85 set `og:title`, `og:description` and `og:type`
+  on the invite page only, and WhatsApp showed nothing for it, nor for `/`.
+  Invite links in group chats are how most new users arrive. **New belief,
+  still untested:** the missing `og:image` is the cause. `base.html` now
+  gives every page `og:image` (the brand image, absolute, with its size),
+  `og:url` (canonical host plus path, no query), `og:type`, and
+  `og:title`/`og:description` in blocks a page can override.
+- **Defaults that take nothing away.** `og:title` defaults to the page's own
+  `<title>`, and the event page passes its meta description on: a fixed
+  default would replace the race name and text a crawler can read there today.
+  The invite preview's wording is unchanged; its tags moved into the blocks,
+  since left in `head` they would have appeared twice.
+- **Verified:** locally (`dev.sh`, this worktree on `:8000`). Signed out, `/`,
+  `/?search=x`, an event page, an event with no description, a made-up and a
+  valid invite, `/bot`, `/stats` and an event 404 each have all 7 `og:`
+  tags once, with absolute URLs; `?search=x` gives `og:url` `…/`; a path of
+  `"><b>` comes out escaped. Signed in (minted cookie, render not sign-in):
+  the same once each, plus `/settings`, `/crews/new` and `/terms`. The image
+  URL, `?v=` included, answers `200 image/png`. **Not verified:** that any
+  chat app shows a preview; that needs the deploy and a phone (#63).
+
 ## [1.9.90] — 2026-11-20
 
 ### Added — `/bot`, the page the scraper's user agent names (#33)

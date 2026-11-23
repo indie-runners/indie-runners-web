@@ -548,6 +548,12 @@ It refuses when that file is missing or has no non-blank term too. The refusal n
 and line (or `filename hit`) and the term. `--no-verify` skips it on purpose. It does not scan
 whole files, history, or what cherry-pick and rebase replay; a fast-forward makes no commit.
 
+**Link-preview tags (1.9.91, #63).** `base.html` writes the `og:` tags for every page, with
+`https://indierunners.co` fixed rather than taken from the request, because chat apps need an
+absolute image. A page changes them through the `og_title` and `og_description` blocks, never
+with its own `og:` tag in `head`, which would duplicate one. `og_title` defaults to the `title`
+block, so a page that must not name something in previews must not name it in its title.
+
 **Cache policy for `/static/` (1.9.48, W-074 / W-064).** The templates write no `/static/`
 path by hand (`GET /favicon.ico` still redirects to the unversioned icon, so that one revalidates); `static_url('css/main.css')` renders `/static/css/main.css?v=<8 hex of md5>`,
 computed once per process from the file in the image. `StaticCacheMiddleware` answers a
