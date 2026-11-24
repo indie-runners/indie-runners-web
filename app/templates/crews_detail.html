@@ -123,6 +123,12 @@
         </li>
       {% endfor %}
     </ul>
+    {% if start_prompt %}
+      <form method="post" action="/crews/{{ crew.slug }}/start-prompt/dismiss" class="crew-invite-rotate">
+        <span class="settings-preview-note">Run with another group too? <a href="/crews/new?ref=crew-page" class="crews-cta">Start a crew for them.</a></span>
+        <button type="submit" class="crew-rotate-btn" aria-label="Dismiss the start-a-crew suggestion">Dismiss</button>
+      </form>
+    {% endif %}
   </section>
 
   <section class="settings-section">

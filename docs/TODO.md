@@ -4,8 +4,9 @@
 
 _2026-11-24_
 
-- [ ] Crew page: one line under the member list, for a member who is `created_by` of no crew
-- [ ] Dismissal: server-set cookie, one year (Safari caps script-set cookies at 7 days)
-- [ ] privacy.html, ARCHITECTURE, CHANGELOG
+- [x] Crew page: one line under the member list, for a member who is `created_by` of no crew
+- [x] Dismissal: server-set cookie, one year (Safari caps script-set cookies at 7 days)
+- [x] privacy.html, ARCHITECTURE, CHANGELOG
 - Measure: member, creator, non-member, signed out; dismissed on one crew, gone on another; `/crews/new` with and without `ref`.
 - Unsure: how GoatCounter shows `?ref=`. It counts nothing on localhost.
+- Disproved: nothing. On a phone the line sits below the whole agenda, as the member list does.
