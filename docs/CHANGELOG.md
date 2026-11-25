@@ -15,7 +15,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   **New belief, still untested:** a button where a user's crews are listed
   gets found. It sits under the list, or under the empty message, and links to
   `/crews/new?ref=my-crews`; the heading link is gone, and `.crews-cta`, now
-  unused, with it.
+  unused, with it. It is larger than the crew page's, and full width at phone
+  size: at the same size it did not get enough attention (Paulo, 2026-11-25).
 - **Verified:** locally (`dev.sh`, this worktree on `:8000`), signed in by
   minted cookie (render, not sign-in). Every account's own profile, in crews
   or in none, has the button once; the new empty line shows only for an owner
