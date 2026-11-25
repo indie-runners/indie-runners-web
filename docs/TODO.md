@@ -4,8 +4,9 @@
 
 _2026-11-25_
 
-- [ ] Letters added to the fold
-- [ ] Uppercase: measure what `lower()` does in this database, then decide
-- [ ] CHANGELOG (fixed list), ARCHITECTURE if it describes the fold
+- [x] Letters added to the fold
+- [x] Uppercase: measure what `lower()` does in this database, then decide
+- [x] CHANGELOG (fixed list), ARCHITECTURE if it describes the fold
 - Measure: non-ASCII letters the searched columns hold; LC_CTYPE; result sets before and after; the #18 terms; both tiers.
-- Unsure: whether any of æ œ ð þ is in the catalogue.
+- Found: æ is (two names); none of the nine required letters is. `lower()` folds capitals here (en_US.UTF8).
+- ARCHITECTURE does not describe the fold.

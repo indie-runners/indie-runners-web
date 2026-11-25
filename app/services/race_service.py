@@ -15,14 +15,17 @@ from app.services.attendance_service import is_locked
 logger = logging.getLogger(__name__)
 
 # Search fold (W-099): no unaccent/pg_trgm in the DB, so translate() it is.
-_ACCENTS_FROM = "àáâãåāăąçćčďđèéêëēėęěğìíîïīįıłñńňòóôõøōőŕřśšşťùúûūůűųýÿźżž"
-_ACCENTS_TO = "aaaaaaaacccddeeeeeeeegiiiiiiilnnnooooooorrssstuuuuuuuyyzzz"
+# A fixed list, lowercase only (lower() runs first): a letter not here is not folded.
+_ACCENTS_FROM = "àáâãåāăąçćčďđèéêëēėęěğìíîïīįıłñńňòóôõøōőŕřśšşťùúûūůűųýÿźżžșțţľĺģķļņð"
+_ACCENTS_TO = "aaaaaaaacccddeeeeeeeegiiiiiiilnnnooooooorrssstuuuuuuuyyzzzsttllgklnd"
 assert len(_ACCENTS_FROM) == len(_ACCENTS_TO)
 
 
 def _search_fold(expr, umlaut: bool):
-    """lower, ß→ss, ä/ö/ü→ae/oe/ue (umlaut) or a/o/u, accents stripped, spaces and hyphens dropped."""
-    e = func.replace(func.lower(expr), "ß", "ss")
+    """lower, ß→ss, æ/œ/þ→ae/oe/th, ä/ö/ü→ae/oe/ue (umlaut) or a/o/u, the accents listed above stripped, spaces and hyphens dropped."""
+    e = func.lower(expr)
+    for ch, pair in (("ß", "ss"), ("æ", "ae"), ("œ", "oe"), ("þ", "th")):
+        e = func.replace(e, ch, pair)
     for ch, base in (("ä", "a"), ("ö", "o"), ("ü", "u")):
         e = func.replace(e, ch, base + "e" if umlaut else base)
     e = func.translate(e, _ACCENTS_FROM, _ACCENTS_TO)
