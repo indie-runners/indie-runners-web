@@ -167,6 +167,7 @@ html { scroll-padding-top: calc(68px + 1rem); }
   padding: 1.1rem 2.5rem;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 1.5rem;
   flex-wrap: wrap;
   position: sticky;
@@ -231,6 +232,11 @@ html { scroll-padding-top: calc(68px + 1rem); }
   padding: 0 0 1.1rem;
 }
 
+@media (min-width: 601px) {
+  .filters-advanced-summary { text-align: center; }
+  .filters-advanced-body { justify-content: center; }
+}
+
 .filter-group--wrap {
   flex-wrap: wrap;
 }
@@ -293,8 +299,19 @@ select.filter-input {
   background: var(--border);
 }
 
+/* The bar, then the panel, wraps below this; a divider left at a row's end pulls it off centre. */
+@media (max-width: 1535px) { .filters-bar .filter-divider { display: none; } }
+@media (max-width: 899px) { .filters-advanced .filter-divider { display: none; } }
+
+.results-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
 .filter-results {
-  margin-left: auto;
+  margin-right: auto;
   font-size: 13px;
   color: var(--text-light);
   white-space: nowrap;
@@ -690,7 +707,8 @@ select.filter-input {
 
 .clear-filters:hover { color: var(--text-dark); }
 
-/* SUGGEST BTN (filter bar) */
+/* Results row: shared by the activity button and the suggest link */
+.activity-btn,
 .suggest-btn {
   display: inline-flex;
   align-items: center;
@@ -711,6 +729,12 @@ select.filter-input {
   white-space: nowrap;
 }
 
+.activity-btn[aria-pressed="true"] {
+  background: var(--forest);
+  color: #fff;
+}
+
+.activity-btn:hover,
 .suggest-btn:hover {
   background: var(--forest);
   color: #fff;
@@ -919,9 +943,9 @@ footer a:hover { color: var(--accent-light); }
 
   .filter-label { display: none; }
   .filter-divider { display: none; }
-  .filter-results { margin-left: 0; }
-
-  .suggest-btn { width: 100%; justify-content: center; }
+  .results-row { flex-wrap: wrap; gap: 0.75rem; }
+  .filter-results { width: 100%; }
+  .activity-btn, .suggest-btn { flex: 1; justify-content: center; }
 
   .filter-group {
     width: 100%;

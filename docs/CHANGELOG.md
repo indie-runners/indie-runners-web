@@ -4,6 +4,42 @@ All notable changes to the Indie Runners Web project will be documented in this 
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.9.95] — 2026-11-25
+
+### Changed — the race list is in date order; races with people going are a filter (#85)
+
+- **Wrong belief: races with people going belong at the top.** It held while
+  a handful had activity. The first 60 tiles, all the page shows, had become
+  mostly pinned races out of date order, and a reader had to set the Date
+  filter to see what is next. **New belief: date is the order and activity is
+  a choice.** The list sorts on `_sort_date` alone. A "With indie
+  runners" button (`?activity=1`) keeps the events whose tile shows a count
+  above zero. It acts on click, keeps the other filters, and needs no script.
+- **The ticket put the filter under Advanced; Paulo moved it on seeing it
+  run.** A results row above the grid now holds the count, the button and
+  "Suggest a race", phones included. The filter bar and Advanced filters
+  are centred above 600px (Paulo); the bar's dividers show only from 1536px, where it no longer wraps.
+- **A tile with nobody going shows no going row,** front or hover: in date
+  order most of the first screen would read "0 going" (Paulo).
+- **Back left the blank filter fields disabled:** the submit script disables
+  them and the browser restores the page that way. Re-enabled on `pageshow`.
+- **The filter sits in the route, not in `list_races`:** it reads the summary
+  counts already on the tiles, so there is no second query or rule, and it
+  runs before the 60 cut. A value other than `1` is off, as with `?format=`.
+- **Verified:** locally against live data (`dev.sh`, this worktree on
+  `:8000`), signed out and signed in (minted cookie, render not sign-in).
+  Tile dates parsed off the page: out of order before, in order after, plain,
+  with a distance or date filter, and with the button on alone and with
+  country, format, cutoff and search; TBC tiles included. On, every tile has a count
+  above zero, events and counts equal those the old sort put first, and
+  it holds events missing from the unfiltered 60; both tiers list the same
+  events and counts. With the button on:
+  pressed, Clear filters shown, Advanced closed. Junk value: same page as
+  none. No match: empty grid. In Chrome at 375px and 1280px, both tiers, by
+  click: on, Back, off, Apply with it on, off with a format, on with a country
+  and a typed distance; by keyboard too. Figures: `evidence #85`.
+  **Not verified:** production.
+
 ## [1.9.94] — 2026-11-25
 
 ### Fixed — search folds letters its accent list missed (#72)

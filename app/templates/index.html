@@ -51,18 +51,12 @@
       </select>
     </div>
 
-    <button type="submit" class="apply-btn">Apply</button>
+    {# First submit button, so Enter uses it too: both keep the results row's filter on. #}
+    <button type="submit" class="apply-btn"{% if has_activity_filter %} name="activity" value="1"{% endif %}>Apply</button>
 
     {% if has_active_filters %}
       <a href="/" class="clear-filters">Clear filters</a>
     {% endif %}
-
-    <span class="filter-results">Showing {{ races | length }}{% if total_races > races | length %} of {{ total_races }}{% endif %} races</span>
-
-    <a href="https://forms.gle/TSE2djQbkFyPLfXe7" target="_blank" rel="noopener noreferrer" class="suggest-btn">
-      <span class="suggest-btn-icon">+</span>
-      Suggest a race
-    </a>
   </div>
 
   {# <details> carries its own open/closed state, keyboard support and
@@ -108,9 +102,25 @@
       if (el.value === '') el.disabled = true;
     });
   });
+  // Back can restore the page with those fields still disabled.
+  window.addEventListener('pageshow', function () {
+    document.querySelectorAll('#filter-form :disabled').forEach(function (el) { el.disabled = false; });
+  });
 </script>
 
 <section class="grid-section">
+  <div class="results-row">
+    <span class="filter-results">Showing {{ races | length }}{% if total_races > races | length %} of {{ total_races }}{% endif %} races</span>
+    {# Submits the filter form, so every other filter is kept; pressed, it submits without its own. #}
+    <button type="submit" form="filter-form" class="activity-btn" aria-pressed="{{ 'true' if has_activity_filter else 'false' }}"{% if not has_activity_filter %} name="activity" value="1"{% endif %}>
+      With indie runners
+    </button>
+    <a href="https://forms.gle/TSE2djQbkFyPLfXe7" target="_blank" rel="noopener noreferrer" class="suggest-btn">
+      <span class="suggest-btn-icon">+</span>
+      Suggest a race
+    </a>
+  </div>
+
   <div class="race-grid">
     {% for race in races %}
       {% set tile_index = loop.index0 %}

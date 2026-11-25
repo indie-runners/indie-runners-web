@@ -254,6 +254,7 @@ def index(
     formats: list[str] = Query(default=[], alias="format"),
     cutoff_min: Optional[str] = None,
     cutoff_max: Optional[str] = None,
+    activity: Optional[str] = None,
     db: Session = Depends(get_db),
     current_user: Optional[User] = Depends(get_current_user),
 ):
@@ -321,7 +322,12 @@ def index(
             return date(r.expected_year, r.expected_month or 12, 1)
         return r.race_date or date.max
 
-    races.sort(key=lambda r: (-r.going_count, -r.interested_count, _sort_date(r)))
+    races.sort(key=_sort_date)
+    # Here, not in list_races: the counts it reads are set just above.
+    # A junk value is off, as with ?format=.
+    has_activity_filter = activity == "1"
+    if has_activity_filter:
+        races = [r for r in races if r.going_count or r.interested_count]
     total_races = len(races)
     races = races[:60]
 
@@ -341,6 +347,7 @@ def index(
         filters.date_to is not None,
         filters.country,
         filters.search,
+        has_activity_filter,
         has_advanced_filters,
     ])
 
@@ -358,6 +365,7 @@ def index(
             "current_user": current_user,
             "has_active_filters": has_active_filters,
             "has_advanced_filters": has_advanced_filters,
+            "has_activity_filter": has_activity_filter,
             "race_format_choices": RACE_FORMAT_CHOICES,
         },
     )
