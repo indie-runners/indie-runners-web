@@ -4,6 +4,30 @@ All notable changes to the Indie Runners Web project will be documented in this 
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.9.92] — 2026-11-24
+
+### Added — the crew page invites a member to start a crew (#64)
+
+- **Wrong belief: a member who wants a second crew will find the form.** The
+  only link to `/crews/new` was on the profile page, and a user who wanted
+  one could not find it. A crew started by another crew's member is the
+  growth the arc is after, and it happened by chance. **New belief, still
+  untested:** asking where the members are listed is enough. Under the list,
+  every member sees "Run with another group too?" over a **Start your crew**
+  button to `/crews/new?ref=crew-page`. The ticket asked for a text link,
+  hidden from anyone who owns a crew and dismissible by cookie; Paulo changed
+  the first two and dropped dismissal on seeing it (2026-11-25). So no
+  cookie, no new route and no privacy change.
+- **Verified:** locally (`dev.sh`, this worktree on `:8000`), signed in by
+  minted cookie (render, not sign-in). A member with no crew of their own and
+  every creator still in their crew see the prompt once. A signed-in
+  non-member and a signed-out visitor get the placeholder, without it.
+  `/crews/new` is byte-identical with and without `?ref`, and signed out
+  keeps it in `next`. Layout seen at 1280px and 375px (headless Chrome).
+  **Not verified:** how GoatCounter shows the clicks: it does not count on
+  localhost. Its help lists `ref` as a campaign source and does not say
+  whether it stays in the path.
+
 ## [1.9.91] — 2026-11-23
 
 ### Fixed — every page carries Open Graph tags, image included (#63)

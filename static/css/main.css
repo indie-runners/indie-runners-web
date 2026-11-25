@@ -2266,6 +2266,9 @@ footer a:hover { color: var(--accent-light); }
 
 .crew-rotate-btn:hover { background: var(--forest-mid); color: #fff; }
 
+/* A link styled as a button: inline-block so its padding takes up space. */
+.crew-start-btn { display: inline-block; margin-top: 0; text-decoration: none; }
+
 .crew-invite-copied {
   color: var(--forest-mid);
   font-size: 12px;

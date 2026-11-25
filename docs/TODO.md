@@ -1,12 +1,11 @@
-# TODO: #63 — links to the site show no preview in WhatsApp
+# TODO: #64 — nothing invites a crew member to start another crew
 
 > The developer's per-ticket checklist, overwritten by the next ticket.
 
-_2026-11-23_
+_2026-11-25_
 
-- [x] `base.html`: `og:` tags on every page, title and description in blocks
-- [x] Invite preview overrides the blocks and drops its own tags (else they duplicate)
-- [x] Event page keeps its meta description as `og:description`: a generic one would replace what crawlers fall back to today
-- [x] CHANGELOG, ARCHITECTURE
-- Measure: each tag once on `/`, an event page, an invalid and a valid invite; `og:url` drops the query and escapes the path; image `200 image/png`; signed in too.
-- Unsure: whether the missing image is the cause. Only a phone after deploy can say.
+- [x] Crew page: one line and a Start your crew button under the member list, for every member (Paulo, 2026-11-25; the spec had a link, hidden from owners)
+- [x] CHANGELOG, ARCHITECTURE. Dismissal was built, then dropped by Paulo
+- Measure: member, creator, non-member, signed out; `/crews/new` with and without `ref`.
+- Unsure: how GoatCounter shows `?ref=`. It counts nothing on localhost.
+- On a phone the prompt sits below the whole agenda, as the member list does.
