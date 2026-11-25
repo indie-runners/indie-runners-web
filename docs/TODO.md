@@ -1,10 +1,11 @@
-# TODO: #82 — "Create a crew" on My crews is a small text link
+# TODO: #72 — search fold misses ș ț ľ and other letters; uppercase accents unverified
 
 > The developer's per-ticket checklist, overwritten by the next ticket.
 
 _2026-11-25_
 
-- [x] profile.html: Start your crew button under the list or the empty message, heading link gone
-- [x] CHANGELOG, ARCHITECTURE
-- Measure: owner with crews, owner with none, other viewer, `?preview=1`, signed out; `/crews/new` with and without `ref`; 375px and desktop.
-- Unsure: spacing in the profile section, where the button has never been.
+- [ ] Letters added to the fold
+- [ ] Uppercase: measure what `lower()` does in this database, then decide
+- [ ] CHANGELOG (fixed list), ARCHITECTURE if it describes the fold
+- Measure: non-ASCII letters the searched columns hold; LC_CTYPE; result sets before and after; the #18 terms; both tiers.
+- Unsure: whether any of æ œ ð þ is in the catalogue.
