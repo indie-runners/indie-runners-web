@@ -167,6 +167,7 @@ html { scroll-padding-top: calc(68px + 1rem); }
   padding: 1.1rem 2.5rem;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 1.5rem;
   flex-wrap: wrap;
   position: sticky;
@@ -292,6 +293,9 @@ select.filter-input {
   height: 24px;
   background: var(--border);
 }
+
+/* The bar wraps below this; a divider left at a row's end pulls it off centre. */
+@media (max-width: 1535px) { .filters-bar .filter-divider { display: none; } }
 
 .results-row {
   display: flex;
@@ -933,8 +937,9 @@ footer a:hover { color: var(--accent-light); }
 
   .filter-label { display: none; }
   .filter-divider { display: none; }
-  /* The banner under the grid carries it on a phone. */
-  .suggest-btn { display: none; }
+  .results-row { flex-wrap: wrap; gap: 0.75rem; }
+  .filter-results { width: 100%; }
+  .activity-btn, .suggest-btn { flex: 1; justify-content: center; }
 
   .filter-group {
     width: 100%;
