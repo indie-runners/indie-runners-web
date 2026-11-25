@@ -17,8 +17,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   above zero. It acts on click, keeps the other filters, and needs no script.
 - **The ticket put the filter under Advanced; Paulo moved it on seeing it
   run.** A results row above the grid now holds the count, the button and
-  "Suggest a race", phones included. The filter bar is centred (Paulo), and
-  its dividers show only from 1536px, where it no longer wraps.
+  "Suggest a race", phones included. The filter bar and Advanced filters
+  are centred above 600px (Paulo); the bar's dividers show only from 1536px, where it no longer wraps.
 - **A tile with nobody going shows no going row,** front or hover: in date
   order most of the first screen would read "0 going" (Paulo).
 - **Back left the blank filter fields disabled:** the submit script disables

@@ -113,7 +113,6 @@
     <span class="filter-results">Showing {{ races | length }}{% if total_races > races | length %} of {{ total_races }}{% endif %} races</span>
     {# Submits the filter form, so every other filter is kept; pressed, it submits without its own. #}
     <button type="submit" form="filter-form" class="activity-btn" aria-pressed="{{ 'true' if has_activity_filter else 'false' }}"{% if not has_activity_filter %} name="activity" value="1"{% endif %}>
-      {% if has_activity_filter %}<span aria-hidden="true">✓</span>{% endif %}
       With indie runners
     </button>
     <a href="https://forms.gle/TSE2djQbkFyPLfXe7" target="_blank" rel="noopener noreferrer" class="suggest-btn">
