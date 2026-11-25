@@ -4,6 +4,31 @@ All notable changes to the Indie Runners Web project will be documented in this 
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.9.94] — 2026-11-25
+
+### Fixed — search folds letters its accent list missed (#72)
+
+- **Wrong belief (1.9.89): the fold strips accents.** It strips the ones in
+  **a fixed list**, 58 letters then, and any other letter stays as typed, so a
+  name holding one is missed by its plain spelling. **If a letter is not in
+  `_ACCENTS_FROM` (or the pairs above it) it is not folded: add it.** Now
+  added: ș ț ţ ľ ĺ ģ ķ ļ ņ ð, and æ→ae, œ→oe, þ→th. All four optional letters
+  were taken because the catalogue holds æ: `Rosnaes` missed `Røsnæs`.
+- **The nine required letters are preventive.** The columns search reads hold
+  none of them today (checked over distinct values), and `Brașov` and `Brasov`
+  both find nothing because no race has that name.
+- **Uppercase needed no list.** This database is `en_US.UTF8`, where `lower()`
+  folds non-ASCII capitals: the uppercase of every letter in the list folds
+  as its lowercase does. A database with another `LC_CTYPE` was not checked.
+- **Verified:** locally, read-only. Every letter, both cases, folds to its
+  base in Postgres. 33 terms before and after: no result lost, one gained. On
+  `/` (`dev.sh`, this worktree on `:8000`), signed out and signed in (minted
+  cookie, render not sign-in), same results in both: `FRÄNKISCHE` and
+  `Fränkische` (the Fraenkische tile), `Großglockner`, `GROẞGLOCKNER`,
+  `Valdaran`, `Malta`, `Rosnaes`, `RØSNÆS`, `Lillebaelt`. Cost: one search
+  took a median 168 ms against 142 ms over 12 local runs each, proxy
+  included. **Not verified:** production timing.
+
 ## [1.9.93] — 2026-11-25
 
 ### Changed — My crews has a Start your crew button (#82)
