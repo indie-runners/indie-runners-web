@@ -317,6 +317,35 @@ select.filter-input {
   white-space: nowrap;
 }
 
+/* Beside the count above phone size: takes over the auto margin that pushes the buttons right. */
+@media (min-width: 601px) {
+  .filter-results:has(+ .view-toggle) { margin-right: 0; }
+  .view-toggle { margin-right: auto; }
+}
+/* Same size, border and text as .activity-btn and .suggest-btn beside it. */
+.view-toggle, .activity-btn, .suggest-btn { box-sizing: border-box; width: 140px; justify-content: center; }
+.view-toggle {
+  display: inline-flex;
+  height: 36px;
+  border: 1px solid var(--forest);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.view-toggle a {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  padding: 0 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--forest);
+  text-decoration: none;
+}
+.view-toggle a:hover,
+.view-toggle a[aria-current] { background: var(--forest); color: #fff; }
+.view-toggle a:focus-visible { outline: 2px solid currentColor; outline-offset: -4px; }
+
 /* GRID */
 .grid-section {
   padding: 2.5rem 2.5rem 4rem;
@@ -943,9 +972,12 @@ footer a:hover { color: var(--accent-light); }
 
   .filter-label { display: none; }
   .filter-divider { display: none; }
-  .results-row { flex-wrap: wrap; gap: 0.75rem; }
+  /* All three controls on one line from 360px; narrower wraps. */
+  .results-row { flex-wrap: wrap; gap: 8px; }
   .filter-results { width: 100%; }
-  .activity-btn, .suggest-btn { flex: 1; justify-content: center; }
+  .view-toggle, .activity-btn, .suggest-btn { flex: 1 1 90px; white-space: nowrap; }
+  .view-toggle a, .activity-btn, .suggest-btn { padding: 0 2px; font-size: 11px; }
+  .suggest-btn { gap: 4px; }
 
   .filter-group {
     width: 100%;
