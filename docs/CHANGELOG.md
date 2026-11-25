@@ -23,7 +23,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   Tile dates parsed off the page: out of order before, in order after, plain,
   with a distance or date filter, and with the box ticked alone and with
   country, format, cutoff and search; TBC tiles included. Ticked, every tile has a count
-  above zero, the total matches the active tiles the old sort put first, and
+  above zero, events and counts equal those the old sort put first, and
   it holds events missing from the unfiltered 60; both tiers list the same
   events and counts. Ticked URL: box checked, panel open, Clear filters
   shown. Junk value: same page as none. No match: empty grid, as any empty
