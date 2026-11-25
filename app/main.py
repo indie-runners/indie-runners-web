@@ -8,7 +8,7 @@ from functools import lru_cache
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Optional
-from urllib.parse import parse_qsl, quote, urlparse
+from urllib.parse import parse_qsl, quote, urlencode, urlparse
 from xml.sax.saxutils import escape
 
 from fastapi import FastAPI, Depends, Form, HTTPException, Query, Request
@@ -240,6 +240,13 @@ def _parse_filters(
     )
 
 
+# What the List/Cards links carry. Not the whole query: a utm_* would count its campaign again.
+_INDEX_FILTER_PARAMS = {
+    "distance_min", "distance_max", "date_from", "date_to", "country", "search",
+    "format", "cutoff_min", "cutoff_max", "activity",
+}
+
+
 @app.api_route("/", methods=["GET", "HEAD"])
 def index(
     request: Request,
@@ -255,6 +262,7 @@ def index(
     cutoff_min: Optional[str] = None,
     cutoff_max: Optional[str] = None,
     activity: Optional[str] = None,
+    view: Optional[str] = None,
     db: Session = Depends(get_db),
     current_user: Optional[User] = Depends(get_current_user),
 ):
@@ -351,6 +359,13 @@ def index(
         has_advanced_filters,
     ])
 
+    # A junk value, or no session, is cards.
+    list_view = current_user is not None and view == "list"
+    filter_params = [
+        (k, v) for k, v in request.query_params.multi_items() if v and k in _INDEX_FILTER_PARAMS
+    ]
+    cards_query = urlencode(filter_params)
+
     if current_user:
         logger.info(f"Rendering index page for user {current_user.id}")
 
@@ -366,6 +381,9 @@ def index(
             "has_active_filters": has_active_filters,
             "has_advanced_filters": has_advanced_filters,
             "has_activity_filter": has_activity_filter,
+            "list_view": list_view,
+            "cards_href": f"/?{cards_query}" if cards_query else "/",
+            "list_href": "/?" + urlencode(filter_params + [("view", "list")]),
             "race_format_choices": RACE_FORMAT_CHOICES,
         },
     )

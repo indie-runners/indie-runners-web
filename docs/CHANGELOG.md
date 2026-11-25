@@ -4,6 +4,39 @@ All notable changes to the Indie Runners Web project will be documented in this 
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.9.96] — 2026-11-25
+
+### Added — signed in, the race list has a compact List view (#86)
+
+- **Wrong belief: one view, large photo cards, suits every reader.** A
+  signed-in user asked for more races at a glance; at 375px a screen holds
+  little more than one card. **New belief, untested beyond that feedback: a
+  runner scanning dates wants rows.** `?view=list` gives one row per
+  event, seven to a screen at 375px, behind a List/Cards toggle by the count.
+  Cards stay the default and nothing is stored. Signed out, or with any other
+  value, the page is cards.
+- **The row is the crew page's, with two differences.** There are no month
+  headings here, so the date cell shows the month where the crew's shows the
+  weekday, and the sub line carries the full date. A TBC row says TBC and
+  its expected month, never `race_date`, which may be the previous edition's.
+  It shows counts only, so it names nobody.
+- **The toggle is links, not form buttons:** the form carries the view in a
+  hidden field, so Apply, Enter and "With indie runners" keep it, and a
+  Cards button would send that field too. The links carry only the filters
+  in the URL, so a `utm_*` is not counted again. Cost: a filter typed but not
+  applied is lost on switching view, unlike on "With indie runners".
+- **Verified:** locally against live data (`dev.sh`, this worktree on
+  `:8000`), signed out and signed in (minted cookie, render not sign-in).
+  List and cards have the same events, order, going and interested counts and
+  "Showing" line: plain, activity, country, two formats, distance with
+  activity, search with a date, and no match. Both links keep a repeated
+  `format`. Signed out, `?view=list` equals `/` but for the sign-in link's
+  `next`; signed in, `?view=zzz` equals `/`. In Chrome at 375px and 1280px by
+  click: List, the activity button on and off, Apply, Cards, List, Enter,
+  Clear filters, Back; no sideways scroll. The event page's back link returns
+  to the list. A crew page with 7 agenda rows is pixel-identical at both
+  widths under master's stylesheet and this one. **Not verified:** production.
+
 ## [1.9.95] — 2026-11-25
 
 ### Changed — the race list is in date order; races with people going are a filter (#85)

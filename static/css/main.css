@@ -317,6 +317,26 @@ select.filter-input {
   white-space: nowrap;
 }
 
+/* Beside the count: takes over the auto margin that pushes the buttons right. */
+.filter-results:has(+ .view-toggle) { margin-right: 0; }
+.view-toggle {
+  display: inline-flex;
+  margin-right: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.view-toggle a {
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--forest);
+  text-decoration: none;
+}
+.view-toggle a[aria-current] { background: var(--forest); color: #fff; }
+.view-toggle a:focus-visible { outline: 2px solid var(--forest); outline-offset: -4px; }
+.view-toggle a[aria-current]:focus-visible { outline-color: #fff; }
+
 /* GRID */
 .grid-section {
   padding: 2.5rem 2.5rem 4rem;
@@ -945,6 +965,8 @@ footer a:hover { color: var(--accent-light); }
   .filter-divider { display: none; }
   .results-row { flex-wrap: wrap; gap: 0.75rem; }
   .filter-results { width: 100%; }
+  .filter-results:has(+ .view-toggle) { width: auto; margin-right: auto; }
+  .view-toggle { margin-right: 0; }
   .activity-btn, .suggest-btn { flex: 1; justify-content: center; }
 
   .filter-group {

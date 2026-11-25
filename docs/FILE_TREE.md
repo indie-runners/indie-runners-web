@@ -53,7 +53,7 @@ indie-runners-web/
 │       ├── event_not_found.html  # 404 page for an event slug the view has no edition of
 │       ├── signin_failed.html  # 400 page when Google refuses the code and the visitor is signed out (W-094)
 │       ├── imprint.html           # Legal notice per § 5 DDG (linked in footer)
-│       ├── index.html             # Hero, filter bar, collapsible advanced filters (<details>: race format checkboxes, cutoff hour range), race grid, suggest banner
+│       ├── index.html             # Hero, filter bar, collapsible advanced filters (<details>: race format checkboxes, cutoff hour range), List/Cards toggle (signed in), race grid or list, suggest banner
 │       ├── privacy.html           # GDPR privacy policy (linked in footer)
 │       ├── profile.html           # User profile: stats strip (been there / going / interested), self-only visibility summary linking to /settings, a Race calendar list (going + interested, date-sorted, per-row status flag) and a Been there section below it; both render through one shared race_row macro
 │       ├── profile_hidden.html    # Generic placeholder for private / crews-blocked profiles — no name, avatar, or stats
@@ -62,6 +62,7 @@ indie-runners-web/
 │       ├── terms.html             # Terms of Use (linked in footer)
 │       └── partials/
 │           ├── avatar_strip.html  # Shared macro: renders visible avatars, then stock silhouettes for hidden attendees, then +N overflow
+│           ├── race_row.html      # Single event as a compact row on the crew agenda row's styles (?view=list, signed in)
 │           └── race_tile.html     # Single event tile with hover overlay; stretched .tile-link makes the whole tile navigate (overlay buttons keep priority)
 ├── .claude/skills/       # How each role is opened (/audit /triage /review /dev-ticket /cos); routes to docs/roles/, holds recipes not rules
 │   ├── unsplash-round/SKILL.md  # Paulo's /unsplash-round, not a role: shortlist, agreed queries, imports/ round file, prints the unsplash_round.sh command, then opens and merges the round's PR (W-115)
