@@ -813,9 +813,6 @@ def crews_new_submit(
     return RedirectResponse(f"/crews/{crew.slug}?created=1", status_code=303)
 
 
-_START_PROMPT_COOKIE = "crew_start_prompt_dismissed"
-
-
 @app.api_route("/crews/{slug}", methods=["GET", "HEAD"])
 def crews_detail(
     request: Request,
@@ -854,36 +851,12 @@ def crews_detail(
             "members": members,
             "is_admin": is_admin,
             "invite_url": invite_url,
-            "start_prompt": _START_PROMPT_COOKIE not in request.cookies,
             "created": created == "1",
             "rotated": rotated == "1",
             "joined": joined == "1",
             "removed": removed == "1",
         },
     )
-
-
-@app.post("/crews/{slug}/start-prompt/dismiss")
-def crews_dismiss_start_prompt(
-    slug: str,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_required_user),
-):
-    svc = CrewService(db)
-    crew = svc.get_crew_by_slug(slug)
-    if crew is None or not svc.is_member(current_user.id, crew.id):
-        raise HTTPException(status_code=404, detail="Crew not found")
-    response = RedirectResponse(f"/crews/{crew.slug}", status_code=303)
-    # Set here, not in JS: Safari drops a script-set cookie after 7 days.
-    response.set_cookie(
-        _START_PROMPT_COOKIE,
-        "1",
-        max_age=365 * 24 * 3600,
-        httponly=True,
-        samesite="lax",
-        secure=not settings.debug,
-    )
-    return response
 
 
 @app.post("/crews/{slug}/invite/rotate")

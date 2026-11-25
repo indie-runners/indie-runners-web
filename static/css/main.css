@@ -2266,9 +2266,8 @@ footer a:hover { color: var(--accent-light); }
 
 .crew-rotate-btn:hover { background: var(--forest-mid); color: #fff; }
 
-/* The button is a link: no underline, level with Dismiss. */
-.crew-start-prompt .settings-help { margin-bottom: 0; }
-.crew-start-prompt .settings-submit { margin: 0; text-decoration: none; }
+/* A link styled as a button: inline-block so its padding takes up space. */
+.crew-start-btn { display: inline-block; margin-top: 0; text-decoration: none; }
 
 .crew-invite-copied {
   color: var(--forest-mid);
