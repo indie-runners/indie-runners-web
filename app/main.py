@@ -338,7 +338,6 @@ def index(
         filters.formats,
         filters.cutoff_min is not None,
         filters.cutoff_max is not None,
-        has_activity_filter,
     ])
 
     has_active_filters = any([
@@ -348,6 +347,7 @@ def index(
         filters.date_to is not None,
         filters.country,
         filters.search,
+        has_activity_filter,
         has_advanced_filters,
     ])
 

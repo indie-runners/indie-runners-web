@@ -13,22 +13,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   mostly pinned races out of date order, and a reader had to set the Date
   filter to see what is next. **New belief: date is the order and activity is
   a choice.** The list sorts on `_sort_date` alone; a "People going or
-  interested" checkbox under Advanced filters (`?activity=1`) keeps the
-  events whose tile shows a count above zero.
+  interested" switch in the filter bar (`?activity=1`) keeps the events whose
+  tile shows a count above zero. The ticket put it under Advanced filters;
+  Paulo moved it on seeing it run. It is a checkbox, applied with Apply.
 - **The filter sits in the route, not in `list_races`:** it reads the summary
   counts already on the tiles, so there is no second query or rule, and it
   runs before the 60 cut. A value other than `1` is off, as with `?format=`.
 - **Verified:** locally against live data (`dev.sh`, this worktree on
   `:8000`), signed out and signed in (minted cookie, render not sign-in).
   Tile dates parsed off the page: out of order before, in order after, plain,
-  with a distance or date filter, and with the box ticked alone and with
-  country, format, cutoff and search; TBC tiles included. Ticked, every tile has a count
+  with a distance or date filter, and with the switch on alone and with
+  country, format, cutoff and search; TBC tiles included. On, every tile has a count
   above zero, events and counts equal those the old sort put first, and
   it holds events missing from the unfiltered 60; both tiers list the same
-  events and counts. Ticked URL: box checked, panel open, Clear filters
-  shown. Junk value: same page as none. No match: empty grid, as any empty
-  search. Rendered in Chrome at 375px and 1280px, both tiers; tick and Apply
-  clicked in headless Chrome, signed out. Figures: `evidence #85`.
+  events and counts. Ticked URL: switch on, Advanced panel closed, Clear
+  filters shown. Junk value: same page as none. No match: empty grid, as any empty
+  search. Rendered in Chrome at 375px and 1280px, both tiers; the switch and
+  Apply clicked in headless Chrome, signed out. Figures: `evidence #85`.
   **Not verified:** production.
 
 ## [1.9.94] — 2026-11-25
