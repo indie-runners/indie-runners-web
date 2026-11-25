@@ -16,7 +16,7 @@ longer in date order, and the large photos leave few races on a screen.
 
 The outcome, when the arc is done: the list reads in date order, a reader
 can narrow it to races where people are going or interested, and a
-signed-in reader can see it as compact rows.
+reader can see it as compact rows, signed in or not.
 
 ## Order
 
@@ -25,7 +25,7 @@ One at a time, in this order. Each step ships on its own.
 | # | Ticket | Why here |
 |---|---|---|
 | 1 | **#85** date order and activity filter | One Issue: only 60 events show, so in date order a later race with people going leaves the page, and the filter is how it is found. |
-| 2 | **#86** List/Cards toggle | Draws the results #85 decides. `not-next` until #85 merges. |
+| 2 | **#86** List/Cards toggle | Draws the results #85 decides. For everyone, signed out too (Paulo, 2026-11-25, on seeing it run). |
 
 Both are `p3`. The other open Issues run on their labels and fit between
 steps.
@@ -35,7 +35,6 @@ steps.
 - **Remembering the view per user.** Paulo, 2026-11-25: cards is the
   default and `?view=list` is the list. Nothing is stored, so no
   migration and no privacy-page change.
-- **The toggle for signed-out visitors:** they always see cards.
 - **Paging, or a limit other than 60.**
 - **"Recently added" and "hot races" carousels:** when activity is dense
   enough to change weekly.
