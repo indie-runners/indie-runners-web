@@ -322,10 +322,10 @@ select.filter-input {
   .filter-results:has(+ .view-toggle) { margin-right: 0; }
   .view-toggle { margin-right: auto; }
 }
-/* Same height, border and text as .activity-btn and .suggest-btn beside it. */
+/* Same size, border and text as .activity-btn and .suggest-btn beside it. */
+.view-toggle, .activity-btn, .suggest-btn { box-sizing: border-box; width: 140px; justify-content: center; }
 .view-toggle {
   display: inline-flex;
-  box-sizing: border-box;
   height: 36px;
   border: 1px solid var(--forest);
   border-radius: 8px;
@@ -333,7 +333,7 @@ select.filter-input {
 }
 .view-toggle a {
   display: flex;
-  flex: 1 1 auto;
+  flex: 1;
   align-items: center;
   justify-content: center;
   padding: 0 14px;
@@ -975,8 +975,8 @@ footer a:hover { color: var(--accent-light); }
   /* All three controls on one line from 360px; narrower wraps. */
   .results-row { flex-wrap: wrap; gap: 8px; }
   .filter-results { width: 100%; }
-  .view-toggle, .activity-btn, .suggest-btn { flex: 1 1 auto; justify-content: center; white-space: nowrap; }
-  .view-toggle a, .activity-btn, .suggest-btn { padding: 0 6px; font-size: 11px; }
+  .view-toggle, .activity-btn, .suggest-btn { flex: 1 1 90px; white-space: nowrap; }
+  .view-toggle a, .activity-btn, .suggest-btn { padding: 0 2px; font-size: 11px; }
   .suggest-btn { gap: 4px; }
 
   .filter-group {

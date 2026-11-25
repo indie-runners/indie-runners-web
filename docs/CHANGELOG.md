@@ -16,9 +16,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   Cards stay the default, nothing is stored, and any other value is cards.
 - **The ticket kept it to signed-in readers; Paulo opened it to everyone on
   seeing it run.** A row holds no more than a signed-out card does. He also
-  asked for the toggle at the size of the two buttons beside it, and for all
-  three in view on a phone: one line from 360px up, in 11px text at 600px and
-  below, under the count; at 320px the last one wraps.
+  asked for the toggle at the size of the two buttons beside it, width too
+  (140px each, the buttons 4 to 5px wider than before), and for all three in
+  view on a phone: equal thirds of one line from 360px up, in 11px text at
+  600px and below, under the count; at 320px the last one wraps.
 - **The row is the crew page's, with two differences.** There are no month
   headings here, so the date cell shows the month where the crew's shows the
   weekday, and the sub line carries the full date. A TBC row says TBC and
