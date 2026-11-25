@@ -13,8 +13,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   one could not find it. A crew started by another crew's member is the
   growth the arc is after, and it happened by chance. **New belief, still
   untested:** asking where the members are listed is enough. Under the list,
-  a member who is `created_by` of no crew sees "Run with another group too?
-  Start a crew for them.", linked to `/crews/new?ref=crew-page`.
+  every member sees "Run with another group too?" over a **Start your crew**
+  button to `/crews/new?ref=crew-page`. The ticket asked for a text link,
+  hidden from anyone who owns a crew; Paulo changed both on seeing it
+  (2026-11-25).
 - **Dismissal is a cookie set by the server**, `crew_start_prompt_dismissed=1`
   for a year, through a form POST that writes no row. Not script-set: Safari
   deletes those after 7 days, and the line would come back. Per browser, so
@@ -22,11 +24,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   privacy page described a single cookie; it now describes both.
 - **Verified:** locally (`dev.sh`, this worktree on `:8000`), signed in by
   minted cookie (render, not sign-in). A member with no crew of their own
-  sees the line once; after the POST (`303` back, cookie `HttpOnly`,
+  sees the prompt once; after the POST (`303` back, cookie `HttpOnly`,
   `Max-Age=31536000`) it is gone, on a second load too. The same cookie
   hides it for members of other crews. Every creator still in their crew sees
-  none. A signed-in non-member and a signed-out visitor, with or without the
-  cookie, get the placeholder, without the line. The POST answers `401`
+  it once. A signed-in non-member and a signed-out visitor, with or without the
+  cookie, get the placeholder, without the prompt. The POST answers `401`
   signed out, `404` to a non-member, `403` cross-origin. `/crews/new` is
   byte-identical with and without `?ref`, and signed out keeps it in `next`.
   `/privacy` shows the new cookie in both tiers. Layout seen at 1280px and

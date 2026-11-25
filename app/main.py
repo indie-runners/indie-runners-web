@@ -854,10 +854,7 @@ def crews_detail(
             "members": members,
             "is_admin": is_admin,
             "invite_url": invite_url,
-            "start_prompt": (
-                _START_PROMPT_COOKIE not in request.cookies
-                and not svc.owns_any_crew(current_user.id)
-            ),
+            "start_prompt": _START_PROMPT_COOKIE not in request.cookies,
             "created": created == "1",
             "rotated": rotated == "1",
             "joined": joined == "1",

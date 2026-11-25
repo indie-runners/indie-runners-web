@@ -133,11 +133,6 @@ class CrewService:
             ))
         ).scalar_one()
 
-    def owns_any_crew(self, user_id: int) -> bool:
-        return self.db.execute(
-            select(exists().where(Crew.created_by == user_id))
-        ).scalar_one()
-
     def list_members(self, crew_id: int) -> list[tuple[User, str]]:
         rows = self.db.execute(
             select(User, CrewMembership.role, CrewMembership.joined_at)
