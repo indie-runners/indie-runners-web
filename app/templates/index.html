@@ -94,6 +94,16 @@
                value="{{ filters.cutoff_max | trimnum }}">
       </div>
 
+      <div class="filter-divider"></div>
+
+      <div class="filter-group">
+        <label class="filter-check">
+          <input type="checkbox" name="activity" value="1"
+                 {% if has_activity_filter %}checked{% endif %}>
+          People going or interested
+        </label>
+      </div>
+
     </div>
   </details>
 </form>
