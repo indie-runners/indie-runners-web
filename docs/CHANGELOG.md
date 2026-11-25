@@ -34,7 +34,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   `next`; signed in, `?view=zzz` equals `/`. In Chrome at 375px and 1280px by
   click: List, the activity button on and off, Apply, Cards, List, Enter,
   Clear filters, Back; no sideways scroll. The event page's back link returns
-  to the list. A crew page with 7 agenda rows is pixel-identical at both
+  to the list. No script error in the list. A crew page with agenda rows is pixel-identical at both
   widths under master's stylesheet and this one. **Not verified:** production.
 
 ## [1.9.95] — 2026-11-25
