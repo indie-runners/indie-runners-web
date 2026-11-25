@@ -21,12 +21,14 @@
   <div class="tile-base">
     <div class="tile-name">{{ race.name }}</div>
     <div class="tile-meta">{{ race.country | title if race.country else '—' }}&nbsp;·&nbsp;{{ date_label }}</div>
+    {% if race.going_count > 0 %}
     <div class="tile-attendees">
       <div class="avatars">
         {{ avatar_strip(race.going_users, race.going_hidden_count, race.going_count, 3) }}
       </div>
       <span class="going-count">{{ race.going_count }} going</span>
     </div>
+    {% endif %}
     {% if race.interested_count > 0 %}
     <div class="tile-attendees tile-attendees--interested">
       <div class="avatars">
@@ -75,9 +77,11 @@
       </div>
       {% endif %}
     </div>
+    {% if race.going_count > 0 %}
     <div class="hover-attendees">
       <div class="hover-attendee-label">{{ race.going_count }} from your community going</div>
     </div>
+    {% endif %}
     {% if race.interested_count > 0 %}
     <div class="hover-attendees hover-attendees--interested">
       <div class="hover-attendee-label">{{ race.interested_count }} interested</div>

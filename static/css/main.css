@@ -253,37 +253,6 @@ html { scroll-padding-top: calc(68px + 1rem); }
   cursor: pointer;
 }
 
-.filter-check .filter-switch {
-  appearance: none;
-  position: relative;
-  flex: none;
-  width: 32px;
-  height: 18px;
-  border-radius: 9px;
-  background: #8a8f8b;
-  transition: background 0.15s;
-}
-
-.filter-switch::before {
-  content: "";
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: #fff;
-  transition: transform 0.15s;
-}
-
-.filter-check .filter-switch:checked { background: var(--forest-mid); }
-.filter-switch:checked::before { transform: translateX(14px); }
-
-.filter-switch:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
 .filter-group label {
   font-size: 12px;
   color: var(--text-mid);
@@ -324,8 +293,15 @@ select.filter-input {
   background: var(--border);
 }
 
+.results-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
 .filter-results {
-  margin-left: auto;
+  margin-right: auto;
   font-size: 13px;
   color: var(--text-light);
   white-space: nowrap;
@@ -721,7 +697,8 @@ select.filter-input {
 
 .clear-filters:hover { color: var(--text-dark); }
 
-/* SUGGEST BTN (filter bar) */
+/* Results row: shared by the activity button and the suggest link */
+.activity-btn,
 .suggest-btn {
   display: inline-flex;
   align-items: center;
@@ -742,6 +719,12 @@ select.filter-input {
   white-space: nowrap;
 }
 
+.activity-btn[aria-pressed="true"] {
+  background: var(--forest);
+  color: #fff;
+}
+
+.activity-btn:hover,
 .suggest-btn:hover {
   background: var(--forest);
   color: #fff;
@@ -950,9 +933,8 @@ footer a:hover { color: var(--accent-light); }
 
   .filter-label { display: none; }
   .filter-divider { display: none; }
-  .filter-results { margin-left: 0; }
-
-  .suggest-btn { width: 100%; justify-content: center; }
+  /* The banner under the grid carries it on a phone. */
+  .suggest-btn { display: none; }
 
   .filter-group {
     width: 100%;
