@@ -15,7 +15,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   a choice.** The list sorts on `_sort_date` alone; a "People going or
   interested" switch in the filter bar (`?activity=1`) keeps the events whose
   tile shows a count above zero. The ticket put it under Advanced filters;
-  Paulo moved it on seeing it run. It is a checkbox, applied with Apply.
+  Paulo moved it on seeing it run. It is a
+  checkbox that submits the form when flipped, so the other filters are kept
+  and no Apply is needed (Paulo); without JavaScript Apply still applies it.
 - **The filter sits in the route, not in `list_races`:** it reads the summary
   counts already on the tiles, so there is no second query or rule, and it
   runs before the 60 cut. A value other than `1` is off, as with `?format=`.
@@ -28,8 +30,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   it holds events missing from the unfiltered 60; both tiers list the same
   events and counts. Ticked URL: switch on, Advanced panel closed, Clear
   filters shown. Junk value: same page as none. No match: empty grid, as any empty
-  search. Rendered in Chrome at 375px and 1280px, both tiers; the switch and
-  Apply clicked in headless Chrome, signed out. Figures: `evidence #85`.
+  search. Rendered in Chrome at 375px and 1280px, both tiers; the switch
+  flipped on and off in Chrome, both tiers and widths, then Back, with a country
+  set and a distance typed, and by keyboard. Figures: `evidence #85`.
   **Not verified:** production.
 
 ## [1.9.94] — 2026-11-25

@@ -118,6 +118,14 @@
       if (el.value === '') el.disabled = true;
     });
   });
+
+  // On/off, so flipping it is the choice: no Apply. Without JS, Apply still works.
+  var activitySwitch = document.querySelector('.filter-switch');
+  activitySwitch.addEventListener('change', function () { this.form.requestSubmit(); });
+  // Back restores the flipped switch over the unfiltered list.
+  window.addEventListener('pageshow', function () {
+    activitySwitch.checked = activitySwitch.defaultChecked;
+  });
 </script>
 
 <section class="grid-section">
