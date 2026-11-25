@@ -359,8 +359,8 @@ def index(
         has_advanced_filters,
     ])
 
-    # A junk value, or no session, is cards.
-    list_view = current_user is not None and view == "list"
+    # A junk value is cards.
+    list_view = view == "list"
     filter_params = [
         (k, v) for k, v in request.query_params.multi_items() if v and k in _INDEX_FILTER_PARAMS
     ]

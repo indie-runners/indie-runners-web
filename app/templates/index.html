@@ -112,13 +112,11 @@
 <section class="grid-section">
   <div class="results-row">
     <span class="filter-results">Showing {{ races | length }}{% if total_races > races | length %} of {{ total_races }}{% endif %} races</span>
-    {% if current_user %}
     {# shortcut: links, so filters typed but not applied are lost on a switch; upgrade if someone reports it. #}
     <div class="view-toggle" role="group" aria-label="View">
       <a href="{{ list_href }}"{% if list_view %} aria-current="true"{% endif %}>List</a>
       <a href="{{ cards_href }}"{% if not list_view %} aria-current="true"{% endif %}>Cards</a>
     </div>
-    {% endif %}
     {# Submits the filter form, so every other filter is kept; pressed, it submits without its own. #}
     <button type="submit" form="filter-form" class="activity-btn" aria-pressed="{{ 'true' if has_activity_filter else 'false' }}"{% if not has_activity_filter %} name="activity" value="1"{% endif %}>
       With indie runners
