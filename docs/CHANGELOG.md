@@ -4,6 +4,29 @@ All notable changes to the Indie Runners Web project will be documented in this 
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.9.93] — 2026-11-25
+
+### Changed — My crews has a Start your crew button (#82)
+
+- **Wrong belief: the crew page's button (1.9.92) covers people who want a
+  crew.** A user in no crew has no crew page. Their one way in was a small
+  text link by the "My crews" heading, the link the founder feedback behind
+  #64 could not find, and the empty state's "Create one" was not a link.
+  **New belief, still untested:** a button where a user's crews are listed
+  gets found. It sits under the list, or under the empty message, and links to
+  `/crews/new?ref=my-crews`; the heading link is gone, and `.crews-cta`, now
+  unused, with it. It is larger than the crew page's, and full width at phone
+  size: at the same size it did not get enough attention (Paulo, 2026-11-25).
+- **Verified:** locally (`dev.sh`, this worktree on `:8000`), signed in by
+  minted cookie (render, not sign-in). Every account's own profile, in crews
+  or in none, has the button once; the new empty line shows only for an owner
+  with no crew, the old link for neither owner checked. Another signed-in
+  viewer, `?preview=1` (an owner with crews, one without) and a signed-out
+  visitor get no My crews section. `/crews/new` is byte-identical with and
+  without `?ref`, and signed out keeps it in `next`. Layout seen at 375px and
+  1280px, with crews and without (headless Chrome). **Not verified:** how
+  GoatCounter shows the clicks, as in 1.9.92.
+
 ## [1.9.92] — 2026-11-24
 
 ### Added — the crew page invites a member to start a crew (#64)

@@ -2118,14 +2118,6 @@ footer a:hover { color: var(--accent-light); }
   color: var(--text-dark);
 }
 
-.crews-cta {
-  color: var(--forest-mid);
-  font-weight: 500;
-  text-decoration: none;
-}
-
-.crews-cta:hover { text-decoration: underline; }
-
 .crew-list {
   list-style: none;
   padding: 0;
@@ -2268,6 +2260,10 @@ footer a:hover { color: var(--accent-light); }
 
 /* A link styled as a button: inline-block so its padding takes up space. */
 .crew-start-btn { display: inline-block; margin-top: 0; text-decoration: none; }
+.profile-section .crew-start-btn { margin-top: 1rem; padding: 1rem 2.5rem; font-size: 17px; }
+@media (max-width: 600px) {
+  .profile-section .crew-start-btn { display: block; text-align: center; }
+}
 
 .crew-invite-copied {
   color: var(--forest-mid);
