@@ -112,7 +112,6 @@
   <section class="profile-section" id="crews">
     <div class="crews-head">
       <h2 class="section-title">My crews</h2>
-      <a href="/crews/new" class="crews-cta">Create a crew</a>
     </div>
     {% if left %}
       {# shortcut: any ?left= text shows here, autoescaped; move it to the session if a crafted link is ever abused #}
@@ -131,10 +130,11 @@
       <div class="crews-empty">
         <p>You're not in any crews yet.</p>
         <p class="crews-empty-sub">
-          Create one, or ask a friend for an invite link.
+          Start your own, or ask a friend for an invite link.
         </p>
       </div>
     {% endif %}
+    <a href="/crews/new?ref=my-crews" class="settings-submit crew-start-btn">Start your crew</a>
   </section>
   {% endif %}
 

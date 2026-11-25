@@ -4,7 +4,7 @@
 
 _2026-11-25_
 
-- [ ] profile.html: Start your crew button under the list or the empty message, heading link gone
-- [ ] CHANGELOG, ARCHITECTURE
+- [x] profile.html: Start your crew button under the list or the empty message, heading link gone
+- [x] CHANGELOG, ARCHITECTURE
 - Measure: owner with crews, owner with none, other viewer, `?preview=1`, signed out; `/crews/new` with and without `ref`; 375px and desktop.
 - Unsure: spacing in the profile section, where the button has never been.
