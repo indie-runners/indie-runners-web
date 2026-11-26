@@ -1,0 +1,30 @@
+{# The crew hub's agenda row (crews_detail.html). No month headings here, so the month
+   is in the date cell and the year in the sub line. Counts only: no row names anyone.
+   TBC first: such a row can carry the previous edition's race_date. #}
+<div class="crew-agenda-row">
+  <div class="crew-agenda-date">
+    {% if race.race_date and not race.is_tbc %}
+      <div class="profile-race-date-day">{{ race.race_date.strftime('%-d') }}</div>
+      <div class="profile-race-date-mo">{{ race.race_date.strftime('%b') }}</div>
+    {% else %}
+      <div class="profile-race-date-tbc">TBC</div>
+    {% endif %}
+  </div>
+  <div class="crew-agenda-main">
+    <div class="profile-race-name">
+      <a href="/events/{{ race.event_slug }}/{{ race.occurrence_year }}">{{ race.name }}</a>
+    </div>
+    <div class="profile-race-sub">
+      {{- race.race_date_display or '—' }}
+      {%- set place = (not race.is_tbc and race.location) or (race.country | title if race.country) %}
+      {%- if place %} · {{ place }}{% endif %}
+      {%- if race.distances and not race.is_tbc %} · {% for d in race.distances %}{{ d | int if d == d | int else d }} km{% if not loop.last %}, {% endif %}{% endfor %}{% endif -%}
+    </div>
+    {% if race.going_count or race.interested_count %}
+    <div class="crew-chips">
+      {% if race.going_count %}<span class="crew-chip">{{ race.going_count }} going</span>{% endif %}
+      {% if race.interested_count %}<span class="crew-chip crew-chip--interested">{{ race.interested_count }} interested</span>{% endif %}
+    </div>
+    {% endif %}
+  </div>
+</div>

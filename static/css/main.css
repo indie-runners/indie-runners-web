@@ -167,6 +167,7 @@ html { scroll-padding-top: calc(68px + 1rem); }
   padding: 1.1rem 2.5rem;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 1.5rem;
   flex-wrap: wrap;
   position: sticky;
@@ -231,6 +232,11 @@ html { scroll-padding-top: calc(68px + 1rem); }
   padding: 0 0 1.1rem;
 }
 
+@media (min-width: 601px) {
+  .filters-advanced-summary { text-align: center; }
+  .filters-advanced-body { justify-content: center; }
+}
+
 .filter-group--wrap {
   flex-wrap: wrap;
 }
@@ -293,12 +299,52 @@ select.filter-input {
   background: var(--border);
 }
 
+/* The bar, then the panel, wraps below this; a divider left at a row's end pulls it off centre. */
+@media (max-width: 1535px) { .filters-bar .filter-divider { display: none; } }
+@media (max-width: 899px) { .filters-advanced .filter-divider { display: none; } }
+
+.results-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
 .filter-results {
-  margin-left: auto;
+  margin-right: auto;
   font-size: 13px;
   color: var(--text-light);
   white-space: nowrap;
 }
+
+/* Beside the count above phone size: takes over the auto margin that pushes the buttons right. */
+@media (min-width: 601px) {
+  .filter-results:has(+ .view-toggle) { margin-right: 0; }
+  .view-toggle { margin-right: auto; }
+}
+/* Same size, border and text as .activity-btn and .suggest-btn beside it. */
+.view-toggle, .activity-btn, .suggest-btn { box-sizing: border-box; width: 140px; justify-content: center; }
+.view-toggle {
+  display: inline-flex;
+  height: 36px;
+  border: 1px solid var(--forest);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.view-toggle a {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  padding: 0 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--forest);
+  text-decoration: none;
+}
+.view-toggle a:hover,
+.view-toggle a[aria-current] { background: var(--forest); color: #fff; }
+.view-toggle a:focus-visible { outline: 2px solid currentColor; outline-offset: -4px; }
 
 /* GRID */
 .grid-section {
@@ -690,7 +736,8 @@ select.filter-input {
 
 .clear-filters:hover { color: var(--text-dark); }
 
-/* SUGGEST BTN (filter bar) */
+/* Results row: shared by the activity button and the suggest link */
+.activity-btn,
 .suggest-btn {
   display: inline-flex;
   align-items: center;
@@ -711,6 +758,12 @@ select.filter-input {
   white-space: nowrap;
 }
 
+.activity-btn[aria-pressed="true"] {
+  background: var(--forest);
+  color: #fff;
+}
+
+.activity-btn:hover,
 .suggest-btn:hover {
   background: var(--forest);
   color: #fff;
@@ -919,9 +972,12 @@ footer a:hover { color: var(--accent-light); }
 
   .filter-label { display: none; }
   .filter-divider { display: none; }
-  .filter-results { margin-left: 0; }
-
-  .suggest-btn { width: 100%; justify-content: center; }
+  /* All three controls on one line from 360px; narrower wraps. */
+  .results-row { flex-wrap: wrap; gap: 8px; }
+  .filter-results { width: 100%; }
+  .view-toggle, .activity-btn, .suggest-btn { flex: 1 1 90px; white-space: nowrap; }
+  .view-toggle a, .activity-btn, .suggest-btn { padding: 0 2px; font-size: 11px; }
+  .suggest-btn { gap: 4px; }
 
   .filter-group {
     width: 100%;
@@ -2118,14 +2174,6 @@ footer a:hover { color: var(--accent-light); }
   color: var(--text-dark);
 }
 
-.crews-cta {
-  color: var(--forest-mid);
-  font-weight: 500;
-  text-decoration: none;
-}
-
-.crews-cta:hover { text-decoration: underline; }
-
 .crew-list {
   list-style: none;
   padding: 0;
@@ -2265,6 +2313,13 @@ footer a:hover { color: var(--accent-light); }
 }
 
 .crew-rotate-btn:hover { background: var(--forest-mid); color: #fff; }
+
+/* A link styled as a button: inline-block so its padding takes up space. */
+.crew-start-btn { display: inline-block; margin-top: 0; text-decoration: none; }
+.profile-section .crew-start-btn { margin-top: 1rem; padding: 1rem 2.5rem; font-size: 17px; }
+@media (max-width: 600px) {
+  .profile-section .crew-start-btn { display: block; text-align: center; }
+}
 
 .crew-invite-copied {
   color: var(--forest-mid);

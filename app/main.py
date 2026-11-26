@@ -2,12 +2,13 @@ import hashlib
 import json
 import logging
 import math
+import secrets
 from collections import Counter
 from functools import lru_cache
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Optional
-from urllib.parse import quote, urlparse
+from urllib.parse import parse_qsl, quote, urlencode, urlparse
 from xml.sax.saxutils import escape
 
 from fastapi import FastAPI, Depends, Form, HTTPException, Query, Request
@@ -24,7 +25,7 @@ from app.db import get_db
 from app.models.web import User
 from app.models.core import Race
 from app.services.auth_service import CodeExchangeRefused, GoogleAuthService
-from app.services.user_service import UserService
+from app.services.user_service import UserService, signup_touch
 from app.services.race_service import (
     event_location,
     RACE_FORMAT_CHOICES,
@@ -188,9 +189,15 @@ def get_required_user(user: Optional[User] = Depends(get_current_user)) -> User:
 
 
 def _signin_url(request: Request) -> str:
-    # Back to this exact URL after sign-in, query string kept (W-085).
+    # Back to this exact URL after sign-in, query string kept (W-085): it also
+    # carries a campaign link's utm_* into sign-in (#53). Not back into /auth/.
+    if request.url.path.startswith("/auth/"):
+        return "/auth/google"
     target = request.url.path + (f"?{request.url.query}" if request.url.query else "")
     return f"/auth/google?next={quote(target, safe='/')}"
+
+
+templates.env.globals["signin_url_for"] = _signin_url
 
 
 def _parse_filters(
@@ -233,6 +240,13 @@ def _parse_filters(
     )
 
 
+# What the List/Cards links carry. Not the whole query: a utm_* would count its campaign again.
+_INDEX_FILTER_PARAMS = {
+    "distance_min", "distance_max", "date_from", "date_to", "country", "search",
+    "format", "cutoff_min", "cutoff_max", "activity",
+}
+
+
 @app.api_route("/", methods=["GET", "HEAD"])
 def index(
     request: Request,
@@ -247,6 +261,8 @@ def index(
     formats: list[str] = Query(default=[], alias="format"),
     cutoff_min: Optional[str] = None,
     cutoff_max: Optional[str] = None,
+    activity: Optional[str] = None,
+    view: Optional[str] = None,
     db: Session = Depends(get_db),
     current_user: Optional[User] = Depends(get_current_user),
 ):
@@ -314,7 +330,12 @@ def index(
             return date(r.expected_year, r.expected_month or 12, 1)
         return r.race_date or date.max
 
-    races.sort(key=lambda r: (-r.going_count, -r.interested_count, _sort_date(r)))
+    races.sort(key=_sort_date)
+    # Here, not in list_races: the counts it reads are set just above.
+    # A junk value is off, as with ?format=.
+    has_activity_filter = activity == "1"
+    if has_activity_filter:
+        races = [r for r in races if r.going_count or r.interested_count]
     total_races = len(races)
     races = races[:60]
 
@@ -334,8 +355,16 @@ def index(
         filters.date_to is not None,
         filters.country,
         filters.search,
+        has_activity_filter,
         has_advanced_filters,
     ])
+
+    # A junk value is cards.
+    list_view = view == "list"
+    filter_params = [
+        (k, v) for k, v in request.query_params.multi_items() if v and k in _INDEX_FILTER_PARAMS
+    ]
+    cards_query = urlencode(filter_params)
 
     if current_user:
         logger.info(f"Rendering index page for user {current_user.id}")
@@ -351,6 +380,10 @@ def index(
             "current_user": current_user,
             "has_active_filters": has_active_filters,
             "has_advanced_filters": has_advanced_filters,
+            "has_activity_filter": has_activity_filter,
+            "list_view": list_view,
+            "cards_href": f"/?{cards_query}" if cards_query else "/",
+            "list_href": "/?" + urlencode(filter_params + [("view", "list")]),
             "race_format_choices": RACE_FORMAT_CHOICES,
         },
     )
@@ -942,8 +975,6 @@ def crews_join_form(
                 "member_count": len(svc.list_members(crew.id)),
                 # The hub's rows don't depend on the viewer, only the names on them.
                 "race_count": sum(len(rows) for _, rows in svc.list_agenda(crew.id, None)),
-                # The header's Sign in too, or it drops the invite.
-                "header_signin_url": _signin_url(request),
             },
         )
     return templates.TemplateResponse(
@@ -976,6 +1007,15 @@ def imprint(request: Request, current_user: Optional[User] = Depends(get_current
     )
 
 
+@app.api_route("/bot", methods=["GET", "HEAD"])
+def bot(request: Request, current_user: Optional[User] = Depends(get_current_user)):
+    return templates.TemplateResponse(
+        request,
+        "bot.html",
+        {"current_user": current_user, "crawler_name": settings.crawler_name},
+    )
+
+
 # Browsers request /favicon.ico at the root whatever <head> says.
 @app.api_route("/favicon.ico", methods=["GET", "HEAD"])
 def favicon():
@@ -1001,7 +1041,7 @@ def robots():
 # Anon-public pages only; nothing robots.txt disallows.
 @app.api_route("/sitemap.xml", methods=["GET", "HEAD"])
 def sitemap(db: Session = Depends(get_db)):
-    paths = ["/", "/stats", "/imprint", "/privacy", "/terms"] + [
+    paths = ["/", "/stats", "/imprint", "/privacy", "/terms", "/bot"] + [
         f"/events/{e.event_slug}/{e.occurrence_year}"
         for e in RaceService(db).list_races(RaceFilters())
         if e.event_slug and e.occurrence_year
@@ -1124,42 +1164,73 @@ def _validate_next(raw: Optional[str]) -> Optional[str]:
 
 
 @app.api_route("/auth/google", methods=["GET", "HEAD"])
-def google_login(request: Request, next: Optional[str] = None):
+def google_login(request: Request, next: Optional[str] = None, db: Session = Depends(get_db)):
     validated = _validate_next(next)
     if next and validated is None:
         logger.info("rejecting unsafe next redirect")
     if validated is not None:
         request.session["post_login_redirect"] = validated
-    url = GoogleAuthService().build_authorize_url()
-    return RedirectResponse(url)
+    # Signup source (#53): only the link this Sign in was clicked from, so
+    # nothing is stored for a visitor who never signs in, and nothing carries
+    # over from an earlier visit. No cookie before Sign in (Paulo, 2026-11-19).
+    # A bare /auth/google (signin_failed's Try again) keeps the pending one.
+    if validated is not None:
+        request.session.pop("signup_touch", None)
+        target = urlparse(validated)
+        touch = signup_touch(dict(parse_qsl(target.query)))
+        token = target.path.removeprefix("/crews/join/")
+        if token != target.path and (crew := CrewService(db).find_crew_by_invite_token(token)):
+            touch |= {"source": "invite", "crew_id": crew.id}
+        if touch:
+            request.session["signup_touch"] = touch
+    # OAuth state (#35): the callback only takes a code this browser asked for.
+    state = request.session["oauth_state"] = secrets.token_urlsafe(32)
+    return RedirectResponse(GoogleAuthService().build_authorize_url(state))
+
+
+def _signin_refused(request: Request):
+    # A session that already holds user_id was signed in by the first use of
+    # this callback URL (reload, back, double tap): go where it was going (W-094).
+    if request.session.get("user_id"):
+        target = request.session.pop("post_login_redirect", None)
+        return RedirectResponse(target or "/", status_code=303)
+    # Signed out: say so. The queued redirect stays so Try again still lands there.
+    return templates.TemplateResponse(
+        request, "signin_failed.html", {"current_user": None}, status_code=400
+    )
 
 
 @app.api_route("/auth/google/callback", methods=["GET", "HEAD"])
 async def google_callback(
-    request: Request, code: Optional[str] = None, db: Session = Depends(get_db)
+    request: Request,
+    code: Optional[str] = None,
+    state: Optional[str] = None,
+    db: Session = Depends(get_db),
 ):
+    # Popped before any branch, so each stored state is good for one callback.
+    expected = request.session.pop("oauth_state", None)
     # Google sends no `code` when the visitor cancels on the consent screen
     # (error=access_denied). Drop the queued redirect so a later, unrelated
     # sign-in does not land on a stale invite; a signed-in session is untouched.
     if not code:
         request.session.pop("post_login_redirect", None)
+        request.session.pop("signup_touch", None)
         return RedirectResponse("/", status_code=303)
+    # Bytes, not str: compare_digest raises on a non-ASCII str, and state is the caller's.
+    if not (state and expected and secrets.compare_digest(state.encode(), expected.encode())):
+        # WARNING, not INFO: INFO never reaches Cloud Logging (W-051). Never the values.
+        logger.warning("sign-in callback refused: state missing or not this session's")
+        return _signin_refused(request)
     svc = GoogleAuthService()
     try:
         token_data = await svc.exchange_code_for_token(code)
     except CodeExchangeRefused:
-        # A one-time code replayed (reload, back, double tap) after a sign-in
-        # that worked: the session is already signed in, so go where it was going.
-        if request.session.get("user_id"):
-            target = request.session.pop("post_login_redirect", None)
-            return RedirectResponse(target or "/", status_code=303)
-        # Signed out: say so. The queued redirect stays so Try again still lands there.
-        return templates.TemplateResponse(
-            request, "signin_failed.html", {"current_user": None}, status_code=400
-        )
+        return _signin_refused(request)
     userinfo = await svc.get_userinfo(token_data["access_token"])
     try:
-        user = UserService(db).get_or_create_user_from_google(userinfo)
+        user = UserService(db).get_or_create_user_from_google(
+            userinfo, request.session.pop("signup_touch", None)
+        )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     request.session["user_id"] = user.id

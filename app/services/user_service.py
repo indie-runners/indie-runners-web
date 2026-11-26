@@ -22,11 +22,34 @@ def short_display_name(userinfo: dict) -> str | None:
     return tokens[0] if len(tokens) == 1 else f"{tokens[0]} {tokens[-1][0]}."
 
 
+# Query parameter -> users.signup_<key> (#53). google_login adds source 'invite' and crew_id.
+SIGNUP_PARAMS = {"utm_source": "source", "utm_medium": "medium", "utm_campaign": "campaign",
+                 "utm_content": "content", "ref": "ref"}
+SIGNUP_KEYS = {*SIGNUP_PARAMS.values(), "crew_id"}
+SIGNUP_MAX_LEN = 100  # anyone can type anything into a link; never rendered
+
+
+def signup_touch(query_params) -> dict:
+    """The signup-source values a URL carries: printable only, trimmed, capped; {} if none."""
+    touch = {}
+    for param, key in SIGNUP_PARAMS.items():
+        # A crafted link can carry %00, which Postgres text refuses: a 500 at signup.
+        value = "".join(ch for ch in query_params.get(param, "") if ch.isprintable()).strip()
+        if value:
+            touch[key] = value[:SIGNUP_MAX_LEN]
+    return touch
+
+
+assert signup_touch({"utm_source": " ig ", "ref": "\x00\n", "x": "y", "utm_campaign": "c" * 200,
+                     "utm_medium": "a\x00b\u200bc"}) == {
+    "source": "ig", "campaign": "c" * SIGNUP_MAX_LEN, "medium": "abc"}
+
+
 class UserService:
     def __init__(self, db: Session):
         self.db = db
 
-    def get_or_create_user_from_google(self, userinfo: dict) -> User:
+    def get_or_create_user_from_google(self, userinfo: dict, signup: dict | None = None) -> User:
         if not userinfo.get("email_verified"):
             raise ValueError("Google account email is not verified")
 
@@ -44,6 +67,8 @@ class UserService:
                 avatar_url=userinfo.get("picture"),
                 created_at=now,
                 updated_at=now,
+                # The link Sign in was clicked from (#53); a returning user's is dropped.
+                **{f"signup_{k}": v for k, v in (signup or {}).items() if k in SIGNUP_KEYS},
             )
             self.db.add(user)
             self.db.flush()

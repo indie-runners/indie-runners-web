@@ -10,6 +10,8 @@
 
 {% block title %}{{ event.event_display_name }} — Indie Runners{% endblock %}
 
+{% block og_description %}{{ meta_description or super() }}{% endblock %}
+
 {% block head %}
   {% if meta_description %}
     <meta name="description" content="{{ meta_description }}">
@@ -72,7 +74,7 @@
     {% if event.short_description %}
       <p class="event-description"><span>{{ event.short_description }}</span></p>
     {% endif %}
-    {% if event.event_website_url %}
+    {% if current_user and event.event_website_url %}
       <a href="{{ event.event_website_url }}" target="_blank" rel="noopener noreferrer" class="event-website-link">
         Official website →
       </a>
@@ -80,7 +82,7 @@
     {% set gcal = event.gcal_url if current_user else none %}
     <div class="event-attendance" data-event-id="{{ event.event_id }}" data-occurrence-id="{{ event.occurrence_id }}"{% if gcal %} data-gcal-url="{{ gcal }}"{% endif %}>
       {% if not current_user %}
-        <a href="/auth/google?next={{ request.url.path }}" class="attendance-btn attendance-btn--signin">Sign in to join</a>
+        <a href="{{ signin_url_for(request) }}" class="attendance-btn attendance-btn--signin">Sign in to join</a>
       {% elif user_status %}
         <div class="attendance-status">
           <span class="attendance-status-label">
@@ -492,7 +494,7 @@
       <p class="locked-panel-body">
         Distances, climb, prices, cutoffs and registration status for every race at this event. Free once you sign in.
       </p>
-      <a href="/auth/google?next={{ request.url.path }}" class="attendance-btn attendance-btn--signin locked-panel-cta">
+      <a href="{{ signin_url_for(request) }}" class="attendance-btn attendance-btn--signin locked-panel-cta">
         Sign in to see race details
       </a>
     </div>

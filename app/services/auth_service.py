@@ -16,7 +16,7 @@ class CodeExchangeRefused(Exception):
 
 
 class GoogleAuthService:
-    def build_authorize_url(self) -> str:
+    def build_authorize_url(self, state: str) -> str:
         params = httpx.QueryParams({
             "client_id": settings.google_client_id,
             "redirect_uri": settings.google_redirect_uri,
@@ -24,6 +24,7 @@ class GoogleAuthService:
             "scope": "openid email profile",
             "access_type": "offline",
             "prompt": "consent",
+            "state": state,
         })
         return f"{GOOGLE_AUTHORIZE_URL}?{params}"
 

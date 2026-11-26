@@ -4,6 +4,316 @@ All notable changes to the Indie Runners Web project will be documented in this 
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.9.96] — 2026-11-25
+
+### Added — the race list has a compact List view (#86)
+
+- **Wrong belief: one view, large photo cards, suits every reader.** A
+  signed-in user asked for more races at a glance; at 375px a screen holds
+  little more than one card. **New belief, untested beyond that feedback: a
+  runner scanning dates wants rows.** `?view=list` gives one row per
+  event, seven to a screen at 375px, behind a List/Cards toggle by the count.
+  Cards stay the default, nothing is stored, and any other value is cards.
+- **The ticket kept it to signed-in readers; Paulo opened it to everyone on
+  seeing it run.** A row holds no more than a signed-out card does. He also
+  asked for the toggle at the size of the two buttons beside it, width too
+  (140px each, the buttons 4 to 5px wider than before), and for all three in
+  view on a phone: equal thirds of one line from 360px up, in 11px text at
+  600px and below, under the count; at 320px the last one wraps.
+- **The row is the crew page's, with two differences.** There are no month
+  headings here, so the date cell shows the month where the crew's shows the
+  weekday, and the sub line carries the full date. A TBC row says TBC and
+  its expected month, never `race_date`, which may be the previous edition's.
+  It shows counts only, so it names nobody.
+- **The toggle is links, not form buttons:** the form carries the view in a
+  hidden field, so Apply, Enter and "With indie runners" keep it, and a
+  Cards button would send that field too. The links carry only the filters
+  in the URL, so a `utm_*` is not counted again. Cost: a filter typed but not
+  applied is lost on switching view, unlike on "With indie runners".
+- **Verified:** locally against live data (`dev.sh`, this worktree on
+  `:8000`), signed out and signed in (minted cookie, render not sign-in).
+  List and cards have the same events, order, going and interested counts and
+  "Showing" line: plain, activity, country, two formats, distance with
+  activity, search with a date, and no match. Both links keep a repeated
+  `format`. Both tiers list the same rows; `?view=zzz` equals `/`. In Chrome by
+  click, signed in at 375px and 1280px (before the restyle): List, the
+  activity button on and off, Apply, Cards, List, Enter, Clear filters, Back;
+  signed out at 375px: the same but Enter and Back. Control sizes measured at
+  320, 360, 375, 600, 768 and 1280px, both tiers: 36px high, no sideways scroll. The event page's back link returns
+  to the list. No script error in the list. A crew page with agenda rows is pixel-identical at both
+  widths under master's stylesheet and this one. **Not verified:** production.
+
+## [1.9.95] — 2026-11-25
+
+### Changed — the race list is in date order; races with people going are a filter (#85)
+
+- **Wrong belief: races with people going belong at the top.** It held while
+  a handful had activity. The first 60 tiles, all the page shows, had become
+  mostly pinned races out of date order, and a reader had to set the Date
+  filter to see what is next. **New belief: date is the order and activity is
+  a choice.** The list sorts on `_sort_date` alone. A "With indie
+  runners" button (`?activity=1`) keeps the events whose tile shows a count
+  above zero. It acts on click, keeps the other filters, and needs no script.
+- **The ticket put the filter under Advanced; Paulo moved it on seeing it
+  run.** A results row above the grid now holds the count, the button and
+  "Suggest a race", phones included. The filter bar and Advanced filters
+  are centred above 600px (Paulo); the bar's dividers show only from 1536px, where it no longer wraps.
+- **A tile with nobody going shows no going row,** front or hover: in date
+  order most of the first screen would read "0 going" (Paulo).
+- **Back left the blank filter fields disabled:** the submit script disables
+  them and the browser restores the page that way. Re-enabled on `pageshow`.
+- **The filter sits in the route, not in `list_races`:** it reads the summary
+  counts already on the tiles, so there is no second query or rule, and it
+  runs before the 60 cut. A value other than `1` is off, as with `?format=`.
+- **Verified:** locally against live data (`dev.sh`, this worktree on
+  `:8000`), signed out and signed in (minted cookie, render not sign-in).
+  Tile dates parsed off the page: out of order before, in order after, plain,
+  with a distance or date filter, and with the button on alone and with
+  country, format, cutoff and search; TBC tiles included. On, every tile has a count
+  above zero, events and counts equal those the old sort put first, and
+  it holds events missing from the unfiltered 60; both tiers list the same
+  events and counts. With the button on:
+  pressed, Clear filters shown, Advanced closed. Junk value: same page as
+  none. No match: empty grid. In Chrome at 375px and 1280px, both tiers, by
+  click: on, Back, off, Apply with it on, off with a format, on with a country
+  and a typed distance; by keyboard too. Figures: `evidence #85`.
+  **Not verified:** production.
+
+## [1.9.94] — 2026-11-25
+
+### Fixed — search folds letters its accent list missed (#72)
+
+- **Wrong belief (1.9.89): the fold strips accents.** It strips the ones in
+  **a fixed list**, 58 letters then, and any other letter stays as typed, so a
+  name holding one is missed by its plain spelling. **If a letter is not in
+  `_ACCENTS_FROM` (or the pairs above it) it is not folded: add it.** Now
+  added: ș ț ţ ľ ĺ ģ ķ ļ ņ ð, and æ→ae, œ→oe, þ→th. All four optional letters
+  were taken because the catalogue holds æ: `Rosnaes` missed `Røsnæs`.
+- **The nine required letters are preventive.** The columns search reads hold
+  none of them today (checked over distinct values), and `Brașov` and `Brasov`
+  both find nothing because no race has that name.
+- **Uppercase needed no list.** This database is `en_US.UTF8`, where `lower()`
+  folds non-ASCII capitals: the uppercase of every letter in the list folds
+  as its lowercase does. A database with another `LC_CTYPE` was not checked.
+- **Verified:** locally, read-only. Every letter, both cases, folds to its
+  base in Postgres. 33 terms before and after: no result lost, one gained. On
+  `/` (`dev.sh`, this worktree on `:8000`), signed out and signed in (minted
+  cookie, render not sign-in), same results in both: `FRÄNKISCHE` and
+  `Fränkische` (the Fraenkische tile), `Großglockner`, `GROẞGLOCKNER`,
+  `Valdaran`, `Malta`, `Rosnaes`, `RØSNÆS`, `Lillebaelt`. Cost: one search
+  took a median 168 ms against 142 ms over 12 local runs each, proxy
+  included. **Not verified:** production timing.
+
+## [1.9.93] — 2026-11-25
+
+### Changed — My crews has a Start your crew button (#82)
+
+- **Wrong belief: the crew page's button (1.9.92) covers people who want a
+  crew.** A user in no crew has no crew page. Their one way in was a small
+  text link by the "My crews" heading, the link the founder feedback behind
+  #64 could not find, and the empty state's "Create one" was not a link.
+  **New belief, still untested:** a button where a user's crews are listed
+  gets found. It sits under the list, or under the empty message, and links to
+  `/crews/new?ref=my-crews`; the heading link is gone, and `.crews-cta`, now
+  unused, with it. It is larger than the crew page's, and full width at phone
+  size: at the same size it did not get enough attention (Paulo, 2026-11-25).
+- **Verified:** locally (`dev.sh`, this worktree on `:8000`), signed in by
+  minted cookie (render, not sign-in). Every account's own profile, in crews
+  or in none, has the button once; the new empty line shows only for an owner
+  with no crew, the old link for neither owner checked. Another signed-in
+  viewer, `?preview=1` (an owner with crews, one without) and a signed-out
+  visitor get no My crews section. `/crews/new` is byte-identical with and
+  without `?ref`, and signed out keeps it in `next`. Layout seen at 375px and
+  1280px, with crews and without (headless Chrome). **Not verified:** how
+  GoatCounter shows the clicks, as in 1.9.92.
+
+## [1.9.92] — 2026-11-24
+
+### Added — the crew page invites a member to start a crew (#64)
+
+- **Wrong belief: a member who wants a second crew will find the form.** The
+  only link to `/crews/new` was on the profile page, and a user who wanted
+  one could not find it. A crew started by another crew's member is the
+  growth the arc is after, and it happened by chance. **New belief, still
+  untested:** asking where the members are listed is enough. Under the list,
+  every member sees "Run with another group too?" over a **Start your crew**
+  button to `/crews/new?ref=crew-page`. The ticket asked for a text link,
+  hidden from anyone who owns a crew and dismissible by cookie; Paulo changed
+  the first two and dropped dismissal on seeing it (2026-11-25). So no
+  cookie, no new route and no privacy change.
+- **Verified:** locally (`dev.sh`, this worktree on `:8000`), signed in by
+  minted cookie (render, not sign-in). A member with no crew of their own and
+  every creator still in their crew see the prompt once. A signed-in
+  non-member and a signed-out visitor get the placeholder, without it.
+  `/crews/new` is byte-identical with and without `?ref`, and signed out
+  keeps it in `next`. Layout seen at 1280px and 375px (headless Chrome).
+  **Not verified:** how GoatCounter shows the clicks: it does not count on
+  localhost. Its help lists `ref` as a campaign source and does not say
+  whether it stays in the path.
+
+## [1.9.91] — 2026-11-23
+
+### Fixed — every page carries Open Graph tags, image included (#63)
+
+- **Wrong belief (#52): a title and a description are enough for an invite
+  link to preview.** 1.9.85 set `og:title`, `og:description` and `og:type`
+  on the invite page only, and WhatsApp showed nothing for it, nor for `/`.
+  Invite links in group chats are how most new users arrive. **New belief,
+  still untested:** the missing `og:image` is the cause. `base.html` now
+  gives every page `og:image` (the brand image, absolute, with its size),
+  `og:url` (canonical host plus path, no query), `og:type`, and
+  `og:title`/`og:description` in blocks a page can override.
+- **Defaults that take nothing away.** `og:title` defaults to the page's own
+  `<title>`, and the event page passes its meta description on: a fixed
+  default would replace the race name and text a crawler can read there today.
+  The invite preview's wording is unchanged; its tags moved into the blocks,
+  since left in `head` they would have appeared twice.
+- **Verified:** locally (`dev.sh`, this worktree on `:8000`). Signed out, `/`,
+  `/?search=x`, an event page, an event with no description, a made-up and a
+  valid invite, `/bot`, `/stats` and an event 404 each have all 7 `og:`
+  tags once, with absolute URLs; `?search=x` gives `og:url` `…/`; a path of
+  `"><b>` or `ß x` comes out percent-encoded. Signed in (minted cookie, render not sign-in):
+  the same once each, plus `/settings`, `/crews/new` and `/terms`. The image
+  URL, `?v=` included, answers `200 image/png`. **Not verified:** that any
+  chat app shows a preview; that needs the deploy and a phone (#63).
+
+## [1.9.90] — 2026-11-20
+
+### Added — `/bot`, the page the scraper's user agent names (#33)
+
+- **Wrong belief: the crawler's contact URL can wait for this repo.** Since
+  scraper 0.92.0 every request it sends, robots.txt included, carries
+  `+https://indierunners.co/bot`, and that was a `404` to about 700 hosts
+  reading their logs. The scraper repo cannot go public before it answers.
+  **New belief:** `/bot` answers `GET` and `HEAD` in the site layout and
+  states who the crawler is, what it collects, what it obeys and how to opt
+  out (`Disallow: /` for its name, or `crawler@indierunners.co`). The name
+  comes from `CRAWLER_NAME` (optional on `Settings`), so a renamed crawler
+  needs no release here. `/bot` is in the sitemap; robots.txt never blocked it.
+- **Second wrong belief (mine, #73 R1): reading the robots policy shows
+  what every request does.** `src/crawl_policy.py` at 0.100.0 (own group else
+  `*`, AI-only groups not ours, `Crawl-delay` ceiling 60 s) holds for the
+  crawls, but not every sender of the user agent goes through it: the
+  one-page check when a race is added or moved, run by hand, reads no
+  robots.txt (`git grep "user_agent()"` on the scraper's `main`). The first
+  draft said "checks it before every fetch", false for that request.
+  **Now:** the page claims robots.txt for crawls only ("when it crawls a
+  site") and names no request that is not a crawl (Paulo, 2026-11-21). No
+  link to a `docs/CRAWLING.md`: none exists, and that repo is private.
+- **Verified:** locally (`dev.sh`, this worktree on `:8000`). `CRAWLER_NAME`
+  unset: `GET` and `HEAD /bot` `200` anon, `200` signed in (minted cookie,
+  render not sign-in; header shows the signed-in links); page text names no
+  crawler and contains no `None` or placeholder; the opt-out says to use the
+  name before `/1.0` in the user agent. `CRAWLER_NAME=TestBot`: `200` both
+  tiers, article identical in both, names `TestBot` and shows `User-agent: TestBot` /
+  `Disallow: /`. `/sitemap.xml` lists `/bot`; `/robots.txt` unchanged.
+
+## [1.9.89] — 2026-11-20
+
+### Fixed — search finds races typed with ß, accents, umlauts, spacing or a country (#18)
+
+- **Wrong belief: `ILIKE '%term%'` is close enough for a search box.** It
+  folds case only, so `Großglockner`, `Fränkische`, `Valdaran` and `Malta`
+  found nothing, although the catalogue has Grossglockner Ultra Trail, Lowa
+  Ultratrail Fraenkische, Val Daran Pyrenees and two Maltese races (analyst,
+  2026-10-13 → 11-01). The country was only the dropdown's filter.
+  **New belief:** term and columns go through the same fold in the query
+  (`_search_fold`: lower, ß→ss, accents stripped by `translate()`, spaces
+  and hyphens dropped). It runs twice, ä/ö/ü→ae/oe/ue and then →a/o/u, so a
+  typed `ä` finds both `ae` and `a`. `event_country_code` is searched too.
+  No `unaccent`/`pg_trgm`: those would be a scraper migration.
+- **Not fixed, on purpose:** `Kiev`, `Transilvania` and `Julien` still
+  miss. They are other spellings, not folds, and need aliases (W-099
+  option E, on the board for the scraper).
+- **Verified:** locally (`dev.sh`, this worktree on `:8000`). Anon curl of
+  `/?search=`: `Großglockner`, `Fränkische` and `Valdaran` return 1 tile each
+  (the events above), `Malta` returns 4 including Gozo Trail Run and Valletta
+  Marathon. `Kiev`, `Transilvania` and `Julien` return 0. Signed in (minted
+  cookie, render not sign-in): `Malta` 4 and `Großglockner` 1. Old against new
+  filter over the whole view, distinct events, for 12 terms (`glockner`,
+  `trail`, `berlin`, `road`, `ultra`, `10k`, `zürich`, `münchen` among them):
+  nothing the old filter found is lost.
+
+## [1.9.88] — 2026-11-20
+
+### Fixed — sign-in checks that it started the Google round trip it finishes (#35)
+
+- **Wrong belief: a Google callback with a valid `code` is a sign-in this
+  browser asked for.** `/auth/google` sent no `state` and the callback took
+  any `code`, so a link carrying someone else's code could sign a visitor
+  in to that account (login CSRF, RFC 6749 §10.12). A forced sign-in would
+  look like any other in the logs, so their silence shows nothing.
+  **New belief:** each `/auth/google` stores a fresh random `oauth_state`
+  in the session and sends it as `state`. The callback pops it from this
+  browser's session (a signed cookie, so not server-side single use) and
+  refuses a missing or different `state` before the code exchange,
+  through the same branch as a refused code (W-094): signed in, `303` on;
+  signed out, the sign-in-failed page at `400`. Cost: two tabs signing in
+  at once, or a cookie lost on the way to Google, now fail until Try
+  again (ARCHITECTURE).
+- **Verified:** locally (`dev.sh`, this worktree on `:8000`), curl:
+  the authorize URL's `state` equals the cookie's, and a bare Try again
+  gets a fresh one with the queued redirect kept. A forged, missing or
+  non-ASCII `state`, or no session at all, gets a `400` sign-in-failed
+  page, never a `500`. A matching `state` reaches Google, which refuses
+  the bogus code. Replaying that `state` with the cookie the first
+  callback returned is refused by the state check. Signed in (minted cookie) with a stale `state`: `303` to
+  the queued `/settings`. Cancel: `303 /`, session cleared.
+  Real sign-in through Google (Paulo's browser,
+  2026-11-20): event page `next`, `/settings`, an invite link, and two
+  cancels each landed where expected, with no errors in the log. The
+  reload-after-success step reported fine, but no replayed callback
+  reached the server's log; that path is the curl check above.
+
+## [1.9.87] — 2026-11-20
+
+### Fixed — the event page's official website link is behind sign-in (#62)
+
+- **Wrong belief: every race detail on the event page sits behind
+  sign-in.** The action bar's "Official website →" link rendered for
+  signed-out visitors, outside any `current_user` check, while the TBC
+  notice's link was already gated. Anyone could reach the organiser's site
+  from the anon page, the one race detail the wall missed. **New belief:**
+  the link renders only with `current_user`; nothing replaces it for anon
+  (Paulo, 2026-11-20).
+- **Verified:** locally, on an event with a website. Anon (curl, no
+  cookie): the page source contains neither the URL nor
+  `event-website-link`, and both Sign in links are present. Signed in
+  (minted cookie, render not sign-in): the link renders in the action bar
+  as before.
+
+## [1.9.86] — 2026-11-19
+
+### Added — a new account stores the link it signed up from (#53)
+
+- **Wrong belief: a campaign or invite link's effect can be read from the
+  visit counter.** GoatCounter sees `utm_*` on visits, but nothing survived
+  the trip to Google into `web.users`. So no post, share or invite could be
+  tied to a signup, and the arc's question (which links bring people in) had
+  no answer. **New belief:** the source belongs on the account, written once
+  at creation, never updated. **Second wrong belief, the ticket's own:
+  keep the first `utm_*` in the session on arrival.** That sets a cookie for
+  measurement before anyone signs in. Paulo, 2026-11-19: count only people who
+  sign in straight from the link, and set no cookie before Sign in. So
+  `/auth/google` reads the source from the validated `next`. For that, every
+  anon Sign in link now keeps the full URL (`signin_url_for`): the header,
+  the index tile and the event page's two links. Before, a landing page's
+  query string was dropped there (and the header and tile lost the page
+  entirely). Migration 016 adds the six columns. `privacy.html` gets "How
+  you found us", legitimate interest and retention, revised 19 November
+  2026. The growth script gains line 6, by week, source and campaign.
+- **Verified:** 016 applied to production on Paulo's yes: six nullable
+  columns, existing rows all NULL, live site 200. Locally, with three real
+  Google sign-ins (`evidence #53`): a fresh user from a `utm_*` link via the
+  header got its source, medium and campaign; a fresh user from an invite
+  got `invite` and the right crew, without joining; a returning user from a
+  link with other values kept its own. Arriving with `utm_*` sets no cookie,
+  and the Sign in links carry the query (curl, home, event, invite). A later
+  Sign in from a plain page clears a pending value (session decoded). Signed
+  in (minted cookie), the main pages render. The growth script prints line 6.
+  Cancelling at Google was not run. Order: 016 before this code, or every
+  query that loads a `User` fails.
+
 ## [1.9.85] — 2026-11-19
 
 ### Added — an invite link shows the crew before Google sign-in (#52)
