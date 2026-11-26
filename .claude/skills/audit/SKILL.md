@@ -60,7 +60,8 @@ the cap, the serving view's movement, auth. Then every Live Check.
 scraper's pipelines.
 
 A recipe that fails is a finding: report the sweep as partial, never as
-clean, and do not hunt for a way around it.
+clean, and do not hunt for a way around it. One unchanged retry of a
+failed connect is allowed if the report names it (the brief).
 
 ## 3. The report
 
