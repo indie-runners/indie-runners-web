@@ -142,10 +142,10 @@ a convention, since GitHub lets either edit both.
 - **Deploy is a decision, not a reflex** — `deploy: immediate | batched`,
   set when the ticket is written. This service is public.
 
-**Paulo's, not a session's:** rulesets, variables, environments, the
-org Projects board, interaction limits if strangers' Issues get noisy
-(never Issues off). No role reads that board; labels carry the fields.
-The Working board is a different one, and every role reads it.
+**Paulo's, not a session's:** rulesets, variables, environments,
+interaction limits if strangers' Issues get noisy (never Issues off).
+Org Project #1 was closed 2026-11-16: the Issues are the only ticket
+list, and labels carry the fields.
 
 ## The other repo
 
