@@ -37,6 +37,9 @@ this out again costs the same minutes every time — and an invented
 command is where read-only gets breached.
 
 If a recipe stops working, that is a **finding**: report it and stop.
+One unchanged retry of a failed connect is allowed, and the report names
+it (AUDIT_20261120T1323 F1: one refused connect, the retry worked);
+a second failure, or any change to the recipe, is the finding.
 
 ### The database
 

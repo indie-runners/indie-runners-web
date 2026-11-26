@@ -118,7 +118,8 @@ a convention, since GitHub lets either edit both.
 - **Tracked files, Issues, PR bodies and comments are public, in all
   three repos.** Never write into a tracked file: real user names, crew names or slugs, user IDs tied to
   privacy settings, user/signup/traffic counts, visitor logs or search
-  terms, pasted IAM policy or registry output, descriptions of unfixed
+  terms, the name of a race organiser or race platform (beyond the race
+  data the site itself shows), pasted IAM policy or registry output, descriptions of unfixed
   privilege weaknesses, local machine paths, or any line tying a
   person's email to an admin/Owner role. GCP project ID, Cloud SQL name,
   bucket and service account names are public on purpose and may stay,
@@ -142,10 +143,10 @@ a convention, since GitHub lets either edit both.
 - **Deploy is a decision, not a reflex** — `deploy: immediate | batched`,
   set when the ticket is written. This service is public.
 
-**Paulo's, not a session's:** rulesets, variables, environments, the
-org Projects board, interaction limits if strangers' Issues get noisy
-(never Issues off). No role reads that board; labels carry the fields.
-The Working board is a different one, and every role reads it.
+**Paulo's, not a session's:** rulesets, variables, environments,
+interaction limits if strangers' Issues get noisy (never Issues off).
+Org Project #1 was closed 2026-11-16: the Issues are the only ticket
+list, and labels carry the fields.
 
 ## The other repo
 

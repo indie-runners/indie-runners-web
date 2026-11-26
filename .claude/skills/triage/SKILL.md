@@ -41,10 +41,11 @@ Inbound duty only. A branch review is `/review`.
    number,title,labels`, and `gh pr list` for what is in flight. Then
    the frozen `tickets/BACKLOG.csv`'s rows still `open`: an empty Issue
    list is not an empty backlog while one of them is wanted. Refile what
-   is as `W-###: <title>` (`pm.md` § Writing a ticket); drop one by
-   refiling it and closing it as not planned; leave the rest. A row
-   with an Issue of either state is done with (`gh issue list --state
-   all --search "W-### in:title"`).
+   is as `[TYPE] <title>`, body `Spec: tickets/W-###-<slug>.md` (`pm.md`
+   § Writing a ticket); drop one by refiling it and closing it as not
+   planned; leave the rest. A row with an Issue of either state is done
+   with (`gh issue list --state all --search '"Spec: tickets/W-###"
+   in:body'`).
 4. `board.py list live-checks --bodies` — your own standing predictions,
    to see which this report confirmed or falsified.
    `./scripts/deploy.sh --check` prints the serving revision the gates
@@ -80,7 +81,7 @@ otherwise named as `AUDIT_<ts> F<n>` · acceptance that is observable ·
 **out of scope**, always · source. Labels, one of each, set now:
 
 ```bash
-gh issue create --title "<defect>" --body-file <file> \
+gh issue create --title "[BUG] <defect>" --body-file <file> \
   --label p3,effort:S,deploy:batched,area:templates
 ```
 
@@ -89,7 +90,7 @@ file, under a public title (never the draft's), and the draft keeps its
 evidence:
 
 ```bash
-board.py promote ITEM --title "<public title>" --body-file <public.md> \
+board.py promote ITEM --title "[TYPE] <public title>" --body-file <public.md> \
   --label p3 --label effort:S --label deploy:batched --label area:templates
 ```
 
