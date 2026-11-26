@@ -173,6 +173,14 @@ out of scope, and why · source.
 create`); `not-next` plus a comment on what it waits on. **A frozen
 `W-###`** is refiled when wanted, body `Spec: tickets/W-###-<slug>.md`.
 
+**The title starts with its type** (Paulo, 2026-11-16): `[BUG]` the site
+does something wrong · `[FEATURE]` something new for users · `[COPY]`
+wording only · `[CHORE]` tooling, deploy, docs · `[OPS]` an operator
+step, no code. No `W-###` in a title; whether a frozen one was refiled
+is a body search, `gh issue list --state all --search '"Spec:
+tickets/W-###" in:body'`. **No security prefix:** on a public repo it
+points strangers at an unfixed weakness.
+
 ## `deploy: immediate | batched | none`
 
 Set it when you write the ticket, not when the developer is tired.
